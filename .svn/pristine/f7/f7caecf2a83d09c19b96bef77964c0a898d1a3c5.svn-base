@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/parentview"
+        android:background="@drawable/charge_item"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/y80"
+        android:orientation="vertical">
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/dou_count"
+        android:text="adfadaf"
+        android:textSize="@dimen/y35"
+        android:textColor="#2a2430"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/money_count"
+            android:layout_gravity="center_horizontal"
+            android:text=""
+            android:textSize="@dimen/y20"
+            android:textColor="#909090"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

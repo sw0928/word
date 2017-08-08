@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.BannerDao">
+	<select id="getAllBanners" parameterType="bannerBean" resultType="bannerBean">
+		select a.* from tst_banner as a
+		left join tst_goods as b 
+		on a.goods_id=b.goods_id and b.is_delete='0'
+		 and b.goods_state='1' and b.goods_type='2'
+		
+		left join tst_goods as c
+		on a.goods_uuid=c.goods_uuid and c.is_delete='0'
+		 and c.goods_state='1' and c.goods_type='1'
+		
+		where a.is_delete='0' 
+		and (FIND_IN_SET(banner_type,'common,chain') 
+		or (banner_type="goods" and b.goods_id is not null) 
+		or (banner_type="class" and c.goods_id is not null) )
+
+
+		<if test='banner_position==null or banner_position=="" '>
+			and a.banner_position='home'
+		</if>
+		<if test='banner_position!=null and banner_position!="" '>
+			and a.banner_position=#{banner_position}
+		</if>
+		
+		order by sort desc
+	</select>
+</mapper>

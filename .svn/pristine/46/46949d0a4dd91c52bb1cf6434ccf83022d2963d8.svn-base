@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/parentview"
+    android:background="@color/RGBTransparent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginBottom="@dimen/y120"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/sorrow_pop_bg"
+        android:layout_width="@dimen/x240"
+        android:layout_height="@dimen/x300"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/jingyin"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/x50"
+        android:drawableLeft="@drawable/jingyin_drawable_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="静音"
+        android:textColor="@color/meiyan_color"
+        android:textSize="@dimen/y40" />
+
+    <TextView
+        android:id="@+id/meiyan"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/x40"
+        android:drawableLeft="@drawable/meiyan_drawable_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="美颜"
+        android:textColor="@color/meiyan_color"
+        android:textSize="@dimen/y40" />
+
+    <TextView
+        android:id="@+id/fanzhuan"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/x40"
+        android:drawableLeft="@drawable/fanzhuan_drawable_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="翻转"
+        android:textColor="@color/meiyan_color"
+        android:textSize="@dimen/y40" />
+    </LinearLayout>
+</RelativeLayout>

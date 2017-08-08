@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.RecipeDaoC">
+	<insert id="insertRecipeFood" parameterType="recipeFoodBean">
+		insert into tst_recipe_food
+		(recipe_id,food_name,food_img,parent_id,create_time,food_count)
+		values
+		(#{recipe_id},#{food_name},#{food_img},#{parent_id},now(),#{food_count})
+	</insert>
+	<update id="updateRecipeFood" parameterType="recipeFoodBean">
+		update tst_recipe_food
+		set food_name=#{food_name},
+		food_img=#{food_img},
+		food_count=#{food_count}
+		where recipe_food_id=#{recipe_food_id}
+	</update>
+	<update id="deleteRecipeFood" parameterType="recipeFoodBean">
+		update tst_recipe_food
+		set is_delete='1'
+		where recipe_food_id=#{recipe_food_id}
+	</update>
+	
+	<select id="getRecipeFoods" parameterType="recipeFoodBean" resultType="recipeFoodBean">
+		select * from tst_recipe_food
+		where recipe_id=#{recipe_id}
+		and is_delete='0' and parent_id=#{parent_id}
+	</select>
+	
+	<insert id="insertRecipe" parameterType="recipeBean" useGeneratedKeys="true" keyProperty="recipe_id">
+		insert into tst_recipe
+		(recipe_name,recipe_url,sort,create_time,parent_id)
+		values
+		(#{recipe_name},#{recipe_url},#{sort},now(),#{parent_id})
+	</insert>
+	
+	<update id="updateRecipe" parameterType="recipeBean">
+		update tst_recipe
+		set recipe_name=#{recipe_name},
+		sort=#{sort}
+		where recipe_id=#{recipe_id}
+	</update>
+
+	<update id='deleteRecipe' parameterType="recipeBean">
+		update tst_recipe
+		set is_delete='1'
+		where recipe_id=#{recipe_id}
+	</update>
+	<select id="getRecipeDetail" parameterType="recipeBean" resultType="recipeBean">
+		select * from tst_recipe
+		where recipe_id=#{recipe_id}
+	</select>
+	
+	<update id="updateRecipeImg" parameterType="recipeImgBean">
+		update tst_recipe_img
+		set recipe_img=#{recipe_img}
+		where recipe_img_id=#{recipe_img_id}
+	</update>
+	
+	<update id="deleteRecipeImg" parameterType="recipeImgBean">
+		update tst_recipe_img
+		set is_delete='1'
+		where recipe_img_id=#{recipe_img_id}
+	</update>
+	
+	<insert id="insertRecipeImg" parameterType="recipeImgBean">
+		insert into tst_recipe_img
+		(recipe_id,recipe_img,create_time,sort)
+		values
+		(#{recipe_id},#{recipe_img},now(),#{sort})
+	</insert>
+	
+	<select id="getRecipes" parameterType="recipeBean" resultType="recipeBean">
+		select * from tst_recipe
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	<select id="getOneRecipeDetail" parameterType="recipeBean" resultType="recipeBean">
+		select * from tst_recipe
+		where is_delete='0' and recipe_id=#{recipe_id}
+	</select>
+	
+	<select id="getRecipeImgs" parameterType="recipeImgBean" resultType="recipeImgBean">
+		select * from tst_recipe_img
+		where recipe_id=#{recipe_id}
+		and is_delete='0'
+	</select>
+	
+
+	
+</mapper>

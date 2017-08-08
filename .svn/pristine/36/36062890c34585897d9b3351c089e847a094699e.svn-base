@@ -1,0 +1,156 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.bean.BarBean;
+import tts.moudle.api.widget.ListViewForScrollView;
+import tts.project.livek.R;
+import tts.project.livek.bean.AttentionBean;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.ui.adapter.AttentionListAdapter2;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.SpSingleInstance;
+
+
+/**
+ * Created by lenove on 2016/9/8.
+ */
+public class AttentionActivity extends BaseActivity {
+
+    public static final int DATA=0;
+    public static final int GET_DATA=4;
+    private UserBean userBean;
+    private ListViewForScrollView mListview;
+    private AttentionListAdapter2 adapter;
+    private List<AttentionBean> list;
+    private RecyclerView mlist;
+    private int pagercount;
+    private List<AttentionBean> list1;
+    private List<AttentionBean> list2;
+    public static final int LOAD_MORE_DATA=2;
+    public static final int REFRESH_DATA=3;
+    private TextView nocontnet;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int currentPage;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.attention_activity);
+        findAllView();
+        initData();
+    }
+
+    private void initData() {
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        startRequestData(DATA);
+        BarBean barBean = new BarBean();
+        barBean.setMsg("我的关注");
+        setTitle(barBean);
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+//            type	int	Y		1:我关注的 2：关注我的
+            case GET_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("type", "1");
+                getDataWithPost(GET_DATA, Host.hostUrl+"&c=User&a=follow_list",map);
+                break;
+            case DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("type", "1");
+                getDataWithPost(DATA, Host.hostUrl+"&c=User&a=follow_list",map);
+                break;
+            case LOAD_MORE_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("p", pagercount+"");
+                map.put("type", "1");
+                getDataWithPost(LOAD_MORE_DATA, Host.hostUrl+"&c=User&a=follow_list",map);
+                break;
+            case REFRESH_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("type", "1");
+                getDataWithPost(REFRESH_DATA, Host.hostUrl+"&c=User&a=follow_list",map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        swipeRefreshLayout.setRefreshing(false);
+        switch (index){
+            case DATA:
+                list = new Gson().fromJson(response,new TypeToken<List<AttentionBean>>(){}.getType());
+                if (list.size()==0){
+                    nocontnet.setVisibility(View.VISIBLE);
+                }else{
+                    nocontnet.setVisibility(View.GONE);
+                }
+                adapter = new AttentionListAdapter2(R.layout.item_attention_list, list);
+
+                mlist.setAdapter(adapter);
+                break;
+            case LOAD_MORE_DATA:
+                list1 = new Gson().fromJson(response,new TypeToken<List<AttentionBean>>(){}.getType());
+                adapter.notifyDataSetChanged();
+                break;
+            case REFRESH_DATA:
+                list2 = new Gson().fromJson(response,new TypeToken<List<AttentionBean>>(){}.getType());
+                adapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
+    private void findAllView() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.mSwipeRefreshLayout);
+        nocontnet = (TextView) findViewById(R.id.no_content);
+        mlist = (RecyclerView) findViewById(R.id.mlist);
+        LinearLayoutManager layout = new LinearLayoutManager(this);
+        layout.setOrientation(LinearLayoutManager.VERTICAL);
+        mlist.setLayoutManager(layout);
+        mlist.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                List<AttentionBean> data = baseQuickAdapter.getData();
+                Intent intent = new Intent(AttentionActivity.this, OthersSpaceActivity.class);
+                intent.putExtra(Constant.USER_ID,data.get(i).getUser_id2());
+                startActivity(intent);
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                currentPage = 1;
+                startRequestData(LOAD_MORE_DATA);
+            }
+        });
+    }
+}

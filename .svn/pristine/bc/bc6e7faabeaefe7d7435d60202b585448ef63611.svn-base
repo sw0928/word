@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.MerchantsDao">
+
+	<select id="getMerchantsDescImgs" parameterType="merchantsDescImgBean" resultType="merchantsDescImgBean">
+		select * from tst_merchants_desc_img
+		where is_delete='0' and merchants_id=#{merchants_id}
+	</select>
+	<update id="deleteMerchantsDescImg" parameterType="merchantsDescImgBean">
+		update tst_merchants_desc_img
+		set is_delete='1'
+		where merchants_img_id=#{merchants_img_id} 
+	</update>
+	
+	<update id="updateMerchantsDescImg" parameterType="merchantsDescImgBean">
+		update tst_merchants_desc_img
+		set merchants_img=#{merchants_img},
+		merchants_url=#{merchants_url}
+		where merchants_img_id=#{merchants_img_id} 
+	</update>
+	
+	<insert id="insertMerchantsDescImg" parameterType="merchantsDescImgBean" useGeneratedKeys="true" keyProperty="merchants_img_id">
+		insert into tst_merchants_desc_img
+		(merchants_id,merchants_img,create_time,merchants_url)
+		values
+		(#{merchants_id},#{merchants_img},now(),#{merchants_url})
+	</insert>
+
+	<update id='deleteMerchants' parameterType="merchantsBean">
+		update tst_merchants
+		set is_delete='1'
+		where merchants_id=#{merchants_id}
+	</update>
+
+	<select id="getBusinessFollower" parameterType="merchantsAccountBean" resultType="memberBean">
+		select * from tst_member
+		where is_delete='0' and business_id=#{merchants_id}
+		<if test=' merchants_account_id != null and merchants_account_id != "" and merchants_account_id != 0'>
+			and merchants_account_id=#{merchants_account_id}
+		</if>
+	</select>
+	
+	<select id="getBusinessExtensionDetail" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select a.*,b.merchants_relation_account_id,
+		(select count(*) from tst_member where merchants_account_id=#{merchants_account_id})  as follower_count
+		 from tst_merchants_account as a 
+		inner join tst_merchants_relation_account as b on a.merchants_account_id=b.merchants_account_id
+		where a.merchants_account_id=#{merchants_account_id}
+	</select>
+
+	<select id="getBusinessExtensions" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select c.*,b.merchants_relation_account_id 
+		,(select count(*) from tst_member where merchants_account_id=c.merchants_account_id)  as follower_count
+		from tst_merchants as a
+		inner join tst_merchants_relation_account as b on a.merchants_id=b.merchants_id and b.is_delete='0'
+		inner join tst_merchants_account as c on b.merchants_account_id=c.merchants_account_id and c.is_delete='0'
+		and c.is_extension='1'
+		where a.merchants_type='3' and a.merchants_id=#{merchants_id} and a.is_delete='0' 
+	</select>
+	
+	<update id="deleteMerchantsAccount" parameterType="merchantsAccountBean">
+		update tst_merchants_account 
+		set is_delete='1'
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+
+	<update id="deleteMerchantsRelationAccount" parameterType="merchantsAccountBean">
+		update tst_merchants_relation_account 
+		set is_delete='1'
+		where merchants_relation_account_id=#{merchants_relation_account_id}
+	</update>
+	
+	<update id="updateMerchantsAccountDetail" parameterType="merchantsAccountBean">
+		update tst_merchants_account
+		set password=password 
+		<if test=' qrcode_img != null and qrcode_img != "" '>
+			,qrcode_img=#{qrcode_img}
+		</if>
+		
+		<if test=' merchants_img != null and merchants_img != "" '>
+			,merchants_img=#{merchants_img}
+		</if>
+		
+		<if test=' merchants_name != null and merchants_name != "" '>
+			,merchants_name=#{merchants_name}
+		</if>
+		
+		<if test=' balance != null and balance != "" and balance != 0 '>
+			,balance=#{balance}
+		</if>
+		
+		<if test=' balance != null and balance != "" and balance == -1 '>
+			,balance=0
+		</if>
+		
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+	
+	<update id="updateMerchantsAccount" parameterType="merchantsAccountBean">
+		update tst_merchants_account
+		set password=#{password}
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+
+	<update id="setMerchantsAccountDefault" parameterType="merchantsAccountBean">
+		update tst_merchants_relation_account
+		set is_default=(case when merchants_relation_account_id=#{merchants_relation_account_id} then '1' else '0' end)
+		where merchants_id=#{merchants_id} and is_delete='0'
+	</update>
+	<select id="getOneMerchantsAccount" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select a.merchants_relation_account_id,a.merchants_id,a.is_default as is_relation_defalut,b.*
+		from tst_merchants_relation_account as a
+		inner join tst_merchants_account as b
+		on a.merchants_account_id=b.merchants_account_id and b.is_delete='0'
+		where a.merchants_relation_account_id=#{merchants_relation_account_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getOneMerchantsAccountByID" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select * from tst_merchants_account 
+		where merchants_account_id=#{merchants_account_id} and is_delete='0'
+	</select>
+	
+	<select id="getMerchantsAccounts" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select a.merchants_relation_account_id,a.merchants_id,a.is_default as is_relation_defalut,
+		b.* from tst_merchants_relation_account as a
+		inner join tst_merchants_account as b
+		on a.merchants_account_id=b.merchants_account_id and b.is_delete='0'
+		where a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+
+	<insert id="insertMerchantsAccount" parameterType="merchantsAccountBean" useGeneratedKeys="true" keyProperty="merchants_account_id">
+		insert into tst_merchants_account
+		(merchants_account,merchants_name,merchants_img,password,merchants_type,merchants_token,
+		create_time,role_id,is_extension)
+		values
+		(#{merchants_account},#{merchants_name},#{merchants_img},#{password},#{merchants_type},uuid(),
+		now(),#{role_id},#{is_extension})
+	</insert>
+	<insert id="insertMerchantsRelationAccount" parameterType="merchantsAccountBean">
+		insert into tst_merchants_relation_account
+		(merchants_id,merchants_account_id,create_time,is_default)
+		values
+		(#{merchants_id},#{merchants_account_id},now(),#{is_default})
+	</insert>
+	
+	<update id="auditingApplyMerchants" parameterType="merchantsBean">
+		update tst_merchants
+		set apply_state=#{apply_state},refuse_remark=#{refuse_remark}
+		where merchants_id=#{merchants_id}
+	</update>
+	
+	<update id="deleteLabelQualification" parameterType="qualificationBean">
+		update tst_merchants_label_qualification
+		set is_delete='1'
+		where label_qualification_id=#{label_qualification_id}
+	</update>
+	<insert id="insertLabelQualification" parameterType="qualificationBean">
+		insert into tst_merchants_label_qualification
+		(qualification_id,label_id,create_time)
+		values
+		(#{qualification_id},#{label_id},now())
+	</insert>
+	<select id="getOneMerchantsLabelQualification" parameterType="qualificationBean" resultType="qualificationBean">
+			select * from tst_merchants_label_qualification
+			where qualification_id=#{qualification_id} and label_id=#{label_id}
+			and is_delete='0'
+	</select>
+	
+	<select id="getMerchantsLabelQualifications" parameterType="qualificationBean" resultType="qualificationBean">
+			select a.label_qualification_id,b.* from tst_merchants_label_qualification as a
+		inner join tst_merchants_qualification as b 
+		on a.qualification_id=b.qualification_id and b.is_delete='0'
+		where a.label_id=#{label_id} and a.is_delete='0'
+	</select>
+
+	<insert id="insertMerchantsQualification" parameterType="qualificationBean">
+		insert into tst_merchants_qualification
+		(qualification_name,sort,create_time)
+		values
+		(#{qualification_name},#{sort},now())
+	</insert>
+	<update id="updateMerchantsQualification" parameterType="qualificationBean">
+		update tst_merchants_qualification
+		set qualification_name=#{qualification_name},
+		sort=#{sort}
+		where qualification_id=#{qualification_id}
+	</update>
+	<update id="deleteMerchantsQualification" parameterType="qualificationBean">
+		update tst_merchants_qualification
+		set is_delete='1'
+		where qualification_id=#{qualification_id}
+	</update>
+	
+	<select id="getAllMerchantsQualification" parameterType="qualificationBean" resultType="qualificationBean">
+		select * from tst_merchants_qualification
+		where is_delete='0'
+		order by sort asc
+	</select>
+	
+	<insert id="insertMerchantsLabel" parameterType="merchantsLabelBean">
+		insert into tst_merchants_label
+		(label_name,create_time,sort)
+		values
+		(#{label_name},now(),#{sort})
+	</insert>
+
+	<update id="updateMerchantsLabel" parameterType="merchantsLabelBean">
+		update tst_merchants_label
+		set label_name=#{label_name}
+		,sort=#{sort}
+		where label_id=#{label_id}
+	</update>
+	
+	<update id="deleteMerchantsLabel" parameterType="merchantsLabelBean">
+		update tst_merchants_label
+		set is_delete='1'
+		where label_id=#{label_id}
+	</update>
+	
+	<select id="getAllMerchantsLabel" parameterType="merchantsLabelBean" resultType="merchantsLabelBean"> 
+		select * from tst_merchants_label
+		where is_delete='0'
+		order by sort asc
+	</select>
+
+	
+	<select id="getMerchantsDefault" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.is_default,b.* from 
+		tst_merchants_relation_account as a
+		inner join tst_merchants as b 
+		on a.merchants_id=b.merchants_id and b.is_delete=0
+		where a.merchants_account_id=#{merchants_account_id}
+		and a.is_delete='0'
+		and a.is_default='1'
+		
+	</select>
+	<select id="getBusinessMembers" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where business_id=#{business_id} and is_delete='0'
+		
+		<if test=' start_time != null and start_time != "" '>
+			and create_time>#{start_time}
+		</if>
+		
+		<if test=' end_time != null and end_time != "" '>
+			and #{end_time}>create_time
+		</if>
+		
+		<if test=' nick_name != null and nick_name != "" '>
+			and (nick_name like concat('%',#{nick_name},'%') or phone = #{nick_name})
+		</if>
+	</select>
+
+	<update id="setMerchantsDefault" parameterType="merchantsBean">
+		update tst_merchants_relation_account
+		set is_default=(case when merchants_id=#{merchants_id} then '1' else '0' end)
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+	<select id="getMerchantsByAccount" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.is_default,b.* from tst_merchants_relation_account as a
+		inner join tst_merchants as b 
+		on a.merchants_id=b.merchants_id and b.is_delete=0
+		where a.merchants_account_id=#{merchants_account_id}
+		and a.is_delete='0'
+		order by a.is_default desc
+	</select>
+	<select id="getOneMerchantsDetail" parameterType="merchantsBean" resultType="merchantsBean">
+		select * from tst_merchants 
+		where merchants_id=#{merchants_id}
+	</select>
+	
+	<select id="getMerchantsImgs" parameterType="merchantsImgBean" resultType="merchantsImgBean">
+		select a.*,
+		(case when 
+		a.img_type='card_positive' 
+		then '身份证正面照'  
+		when a.img_type='card_opposite' 
+		then '身份证反面照' 
+		when a.img_type='business_license' 
+		then '营业执照'  else
+		b.qualification_name end) as qualification_name from tst_merchants_img as a
+		left join tst_merchants_qualification
+		as b on a.qualification_id=b.qualification_id
+		where a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+	<select id="getLabels" parameterType="String" resultType="merchantsLabelBean">
+		select * from tst_merchants_label
+		 where label_id in <foreach item="item" index="index" collection="ids" 
+		open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</select>
+	<select id="getAllMerchants" parameterType="merchantsBean" resultType="merchantsBean">
+			select * from tst_merchants 
+			where #{merchants_type} like concat('%',merchants_type,'%')
+			and is_delete ='0'
+			<if test=' apply_states != null and apply_states != "" '>
+				and #{apply_states} like concat('%',apply_state,'%')
+			</if>
+			
+			<if test=' merchants_states != null and merchants_states != "" '>
+				and #{merchants_states} like concat('%',merchants_state,'%')
+			</if>
+			
+			<if test=' is_dynamic != null and is_dynamic == "1" '>
+				and is_dynamic = '1'
+			</if>
+			
+			<if test=' is_hot != null and is_hot == "1" '>
+				and is_hot = "1"
+			</if>
+			
+			<if test=' merchants_name != null and merchants_name != "" '>
+				and merchants_name like concat('%',#{merchants_name},'%')
+			</if>
+			order by create_time desc
+	</select>
+	
+	<select id="getMerchantsQrCode" parameterType="merchantsBean" resultType="String">
+		select qrcode_img from tst_merchants
+		where merchants_type=#{merchants_type} 
+			and is_delete ='0' and apply_state='1'
+	</select>
+	
+	<select id="getAllMerchantsAccountNopage" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+			select a.*,c.merchants_id from tst_merchants_account as a
+			inner join tst_merchants_relation_account as b 
+			on a.merchants_account_id=b.merchants_account_id and b.is_delete='0'
+			inner join tst_merchants as c on b.merchants_id=c.merchants_id and c.is_delete='0'
+			where  a.is_delete ='0' and a.is_extension='1'
+			<if test=' merchants_type != null and merchants_type != "" '>
+			 	and #{merchants_type} like concat('%',a.merchants_type,'%') 
+			</if>
+	</select>
+	
+	<select id="getAllMerchantsNopage" parameterType="merchantsBean" resultType="merchantsBean">
+			select * from tst_merchants 
+			where  is_delete ='0'
+			<if test=' merchants_type != null and merchants_type != "" '>
+			 	and #{merchants_type} like concat('%',merchants_type,'%') 
+			</if>
+	</select>
+	
+	<insert id="insertMerchantDetail" parameterType="merchantsBean" keyProperty="merchants_id" useGeneratedKeys="true">
+		insert into tst_merchants
+		(merchants_name,merchants_address,merchants_province,contact_name,contact_mobile,
+		merchants_state,merchants_type,create_time,
+		express_free_price,merchants_img,apply_state,is_hot,is_dynamic,bidding_price,
+		job_start_time,job_end_time)
+		values
+		(#{merchants_name},#{merchants_address},#{merchants_province},#{contact_name},
+		#{contact_mobile},#{merchants_state},#{merchants_type},now(),
+		#{express_free_price},#{merchants_img},#{apply_state},#{is_hot},#{is_dynamic},#{bidding_price},
+		#{job_start_time},#{job_end_time})
+	</insert>
+	
+	<update id="updateMerchantDetail" parameterType="merchantsBean">
+		update tst_merchants set merchants_id=merchants_id
+		
+		<if test=' job_start_time != null and job_start_time != "" '>
+			,job_start_time=#{job_start_time}
+		</if>
+		
+		<if test=' job_end_time != null and job_end_time != "" '>
+			,job_end_time=#{job_end_time}
+		</if>
+		
+		<if test=' bidding_price != null and bidding_price != "" '>
+			,bidding_price=#{bidding_price}
+		</if>
+		
+		<if test=' is_hot != null and is_hot != "" '>
+			,is_hot=#{is_hot}
+		</if>
+		
+		<if test=' is_dynamic != null and is_dynamic != "" '>
+			,is_dynamic=#{is_dynamic}
+		</if>
+		
+		<if test=' balance != null and balance != "" and balance != 0 '>
+			,balance=#{balance}
+		</if>
+		
+		<if test=' used_balance != null and used_balance != "" and used_balance != 0 '>
+			,used_balance=#{used_balance}
+		</if>
+		
+		<if test=' merchants_name != null and merchants_name != "" '>
+			,merchants_name=#{merchants_name}
+		</if>
+		
+		<if test=' merchants_address != null and merchants_address != "" '>
+			,merchants_address=#{merchants_address}
+		</if>
+		
+		<if test=' merchants_province != null and merchants_province != "" '>
+			,merchants_province=#{merchants_province}
+		</if>
+		
+		<if test=' contact_name != null and contact_name != "" '>
+			,contact_name=#{contact_name}
+		</if>
+		
+		<if test=' contact_mobile != null and contact_mobile != "" '>
+			,contact_mobile=#{contact_mobile}
+		</if>
+		
+		<if test=' merchants_state != null and merchants_state != "" '>
+			,merchants_state=#{merchants_state}
+		</if>
+		
+		<if test=' express_free_price != null and express_free_price != "" '>
+			,express_free_price=#{express_free_price}
+		</if>
+		
+		<if test=' merchants_img != null and merchants_img != "" '>
+			,merchants_img=#{merchants_img}
+		</if>
+		<if test=' merchants_city != null and merchants_city != "" '>
+			,merchants_city=#{merchants_city}
+		</if>
+		<if test=' merchants_area != null and merchants_area != "" '>
+			,merchants_area=#{merchants_area}
+		</if>
+		<if test=' qrcode_img != null and qrcode_img != "" '>
+			,qrcode_img=#{qrcode_img}
+		</if>
+		<if test=' zip_code != null and zip_code != "" '>
+			,zip_code=#{zip_code}
+		</if>
+		where merchants_id=#{merchants_id}
+	</update>
+	
+	<update id="deleteMerchantDetail" parameterType="merchantsBean" >
+		update tst_merchants set is_delete='1'
+		where merchants_id=#{merchants_id}
+	</update>
+</mapper>

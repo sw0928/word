@@ -1,0 +1,42 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/18.
+ */
+
+public class WangHongBean {
+
+    /**
+     * nums : 0
+     * push_flow_address : rtmp://FKDC.tstmobile.com/vxiu1/php-sdk-test1479263127?e=1479266728&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:uxHw8fwuoU9ul75L6o3roxqd-Oc=
+     * room_id : 264992297769238964
+     */
+
+    private String nums;
+    private String push_flow_address;
+    private String room_id;
+
+    public String getNums() {
+        return nums;
+    }
+
+    public void setNums(String nums) {
+        this.nums = nums;
+    }
+
+    public String getPush_flow_address() {
+        return push_flow_address;
+    }
+
+    public void setPush_flow_address(String push_flow_address) {
+        this.push_flow_address = push_flow_address;
+    }
+
+    public String getRoom_id() {
+        return room_id;
+    }
+
+    public void setRoom_id(String room_id) {
+        this.room_id = room_id;
+    }
+}

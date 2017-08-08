@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" style="padding:0;margin:0;height:100%">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>知识详情</title>
+    <script  src="common.js"></script>
+    <script  src="JS/jquery-mobile/jquery.js"></script>
+    <script  src="JS/jquery-mobile/jquery.min.js"></script>
+    <script  src="JS/jquery-mobile/ajaxfileupload.js"></script>
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+</head>
+<body style="padding:0;margin:0;height:100%">
+<script src="build/common.js"></script>
+<script src="build/index.js"></script>
+</body>
+</html>

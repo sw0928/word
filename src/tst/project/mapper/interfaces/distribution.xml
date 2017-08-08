@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.DistributionDaoI">
+	
+	<select id="getDistributionMembersCount" parameterType="memberBean" resultType="Map">
+		select (case when sum(case when is_vip = '1' then 1 else 0 end) is null then 0 else sum(case when is_vip = '1' then 1 else 0 end) end) as vip_count,
+		(case when sum(case when is_vip != '1' then 1 else 0 end) is null then 0 else sum(case when is_vip != '1' then 1 else 0 end) end) as no_vip_count,
+		(case when (select sum(distribution_price) from tst_order_distribution 
+		where member_id=#{member_id} and FIND_IN_SET(distribution_state,"wait_end,end") and  FIND_IN_SET(distribution_relation,'distribution1,distribution2') ) is null
+		then 0 else
+		(select sum(distribution_price) from tst_order_distribution 
+		where member_id=#{member_id} and FIND_IN_SET(distribution_state,"wait_end,end") and FIND_IN_SET(distribution_relation,'distribution1,distribution2'))
+		end) as total_price,
+		(case when (select sum(cash_price) from tst_cash_apply
+		where merchants_id=#{member_id} and cash_type='member' and apply_state='end') is null then 0 else 
+		(select sum(cash_price) from tst_cash_apply
+		where merchants_id=#{member_id} and cash_type='member' and apply_state='end') end) take_balance,
+		(case when  sum( (case when (select sum(order_total_price) from tst_order 
+		where member_id=a.member_id and FIND_IN_SET(order_state,"wait_send,wait_receive,wait_assessment,end")) is null
+		then 0 else
+		(select sum(order_total_price) from tst_order 
+		where member_id=a.member_id and FIND_IN_SET(order_state,"wait_send,wait_receive,wait_assessment,end"))
+		end) ) is null then 0 else  sum( (case when (select sum(order_total_price) from tst_order 
+		where member_id=a.member_id and FIND_IN_SET(order_state,"wait_send,wait_receive,wait_assessment,end")) is null
+		then 0 else
+		(select sum(order_total_price) from tst_order 
+		where member_id=a.member_id and FIND_IN_SET(order_state,"wait_send,wait_receive,wait_assessment,end"))
+		end) ) end )as order_total_price
+		from tst_member as a
+		where a.fill_invitation_code=
+		(select invitation_code from tst_member where member_id=#{member_id}) and a.is_delete='0' 
+	</select>
+
+	<select id="getDistributionMembers" parameterType="memberBean" resultType="memberBean">
+		select a.* from tst_member as a
+		where a.fill_invitation_code=
+		(select invitation_code from tst_member where member_id=#{member_id}) and a.is_delete='0' 
+		<if test=' is_vip != null and is_vip != "" '>
+			and a.is_vip=#{is_vip}			
+		</if>
+	</select>
+	
+	<select id="getDistributionOrders" parameterType="distributionBean" resultType="orderBean">
+		select a.distribution_price,c.nick_name ,b.* from tst_order_distribution as a
+		inner join tst_order as b on a.order_id=b.order_id
+		inner join tst_member as c on b.member_id=c.member_id
+		where a.member_id=#{member_id} and FIND_IN_SET(a.distribution_state,#{distribution_state}) 
+		and a.distribution_relation=#{distribution_relation}
+	</select>
+	
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.BankDao">
+	<select id="getOneMemberBank" parameterType="bankBean" resultType="bankBean">
+		select * from tst_member_bank
+		where bank_id=#{bank_id} and is_delete='0'
+	</select>
+
+	<select id="getMemberBanks" parameterType="bankBean" resultType="bankBean">
+		select * from tst_member_bank
+		where is_delete='0' and member_id=#{member_id}
+		order by is_default desc
+	</select>
+	
+	<insert id="insertMemberBank" parameterType="bankBean">
+		insert into tst_member_bank
+		(member_id,bank_name,bank_user_name,bank_code,
+		bank_open_name,bank_mobile,create_time,is_default
+		<if test=' bank_pinyin != null and bank_pinyin != "" '>
+			,bank_pinyin
+		</if>)
+		values
+		(#{member_id},#{bank_name},#{bank_user_name},#{bank_code},
+		#{bank_open_name},#{bank_mobile},now(),#{is_default}
+		<if test=' bank_pinyin != null and bank_pinyin != "" '>
+			,#{bank_pinyin}
+		</if>)
+	</insert>
+	
+	<update id="updateMemberBank" parameterType="bankBean">
+		update tst_member_bank
+		set bank_name=#{bank_name},
+		bank_user_name=#{bank_user_name},bank_code=#{bank_code},
+		bank_open_name=#{bank_open_name},bank_mobile=#{bank_mobile}
+		<if test=' bank_pinyin != null and bank_pinyin != "" '>
+			,bank_pinyin=#{bank_pinyin}
+		</if>
+		where bank_id=#{bank_id} and member_id=#{member_id} and is_delete='0'
+	</update>
+	
+	<update id="updateMemberDefaultBank" parameterType="bankBean">
+		update tst_member_bank
+		set is_default=(case when bank_id=#{bank_id} then '1' else '0' end)
+		where member_id=#{member_id} and is_delete='0'
+	</update>
+	
+	<update id="deleteMemberBank" parameterType="bankBean">
+		update tst_member_bank
+		set is_delete='1'
+		where member_id=#{member_id} and is_delete='0' and bank_id=#{bank_id}
+	</update>
+	
+	<select id="getMemberDefaultBank" resultType="bankBean" parameterType="bankBean">
+		select * from tst_member_bank
+		where member_id=#{member_id} and is_default='1' and is_delete='0'
+	</select>
+	
+</mapper>

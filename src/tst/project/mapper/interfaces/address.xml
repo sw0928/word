@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.AddressDao">
+	
+	<insert id="insertCity" parameterType="cityBean" keyProperty="id" useGeneratedKeys="true">
+		insert into tst_city
+		(name,parent_id,create_time)
+		values
+		(#{name},#{parent_id},now())
+	</insert>
+	<select id="getOneSince" parameterType="sinceBean" resultType="sinceBean">
+		select * from tst_city_since
+		where since_id=#{since_id} and is_delete='0'
+	</select>
+
+	<select id="getCitySinces" parameterType="sinceBean" resultType="sinceBean">
+		select * from tst_city_since
+		where city_id=#{city_id} and is_delete='0'
+	</select>
+
+	<select id="getCitys" parameterType="cityBean" resultType="cityBean">
+		select * from tst_city
+		where parent_id=#{parent_id} and is_delete='0'
+	</select>
+	
+	<select id="getRegions" parameterType="regionBean" resultType="regionBean">
+		select * from ecs_region
+		where parent_id=#{parent_id}
+	</select>
+	
+	<insert id="insertAddress" parameterType="addressBean" keyProperty="address_id" useGeneratedKeys="true">
+		insert into tst_address(member_id,mobile,name,province,city,
+		country,detailed_address,create_time,is_default,zip_code,road,country_id)
+		VALUES(#{member_id},#{mobile},#{name},#{province},#{city},#{country}
+		,#{detailed_address},now(),#{is_default},#{zip_code},#{road},#{country_id})
+	</insert>
+
+	<update id="updateAddress" parameterType="addressBean">
+		update tst_address set mobile=#{mobile},name=#{name},province=#{province},
+		city=#{city},country=#{country},detailed_address=#{detailed_address},zip_code=#{zip_code}
+		,road=#{road},country_id=#{country_id}
+		where member_id=#{member_id} and address_id=#{address_id} and is_delete='0'
+	</update>
+	
+	<select id="getOwnerAddress" parameterType="addressBean" resultType="addressBean">
+		select * from tst_address where member_id=#{member_id} and is_delete='0'
+		order by is_default desc
+	</select>
+	
+	<update id="deleteAddress" parameterType="addressBean">
+		update tst_address set is_delete='1'
+		where member_id=#{member_id} and address_id=#{address_id};
+	</update>
+	
+	<update id="setDefaultAddress" parameterType="addressBean">
+		update tst_address set is_default=(case when address_id=#{address_id} then '1' else '0' end)
+		where member_id=#{member_id} and is_delete='0'
+	</update>
+	
+	<select id="getDefaultAddress" parameterType="addressBean" resultType="addressBean">
+		select * from tst_address where member_id=#{member_id} and is_default=1 and is_delete=0 
+	</select>
+	
+	<select id="getAddressById" parameterType="addressBean" resultType="addressBean">
+		select * from tst_address where address_id=#{address_id}  and is_delete=0 
+	</select>
+</mapper>

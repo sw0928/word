@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.PictureDao">
+
+	<insert id="votePicture" parameterType="pictureVoteBean" >
+		insert into tst_picture_vote
+		(picture_id,member_id,create_time)
+		values
+		(#{picture_id},#{member_id},now())
+	</insert>
+	
+	<select id="getVotePicture" parameterType="pictureVoteBean" resultType="pictureVoteBean">
+		select * from tst_picture_vote
+		where picture_id=#{picture_id} and member_id=#{member_id} and is_delete='0'
+	</select>
+
+	<update id="updatePictureVote" parameterType="pictureBean">
+		update tst_picture_show
+		set vote_count=vote_count+1
+		where picture_id=#{picture_id}
+	</update>
+	
+	<insert id="insertPicture" parameterType="pictureBean" useGeneratedKeys="true" keyProperty="picture_id">
+		insert into tst_picture_show
+		(picture_title,picture_desc,create_time,picture_state,member_id,vote_count)
+		values
+		(#{picture_title},#{picture_desc},now(),"wait_review",#{member_id},0)
+	</insert>
+	
+	<insert id="insertPictureImg" parameterType="pictureImgBean" >
+		insert into tst_picture_img
+		(picture_id,picture_img,create_time)
+		values
+		(#{picture_id},#{picture_img},now())
+	</insert>
+	
+	
+	<select id="getPictures" parameterType="pictureBean" resultType="pictureBean">
+		select a.*,b.nick_name from tst_picture_show as a
+		inner join tst_member as b on a.member_id = b.member_id and b.is_delete='0'
+		where a.is_delete='0' and a.picture_state='accept'
+		
+		order by a.create_time desc
+	</select>
+	
+	<select id="getLastWeekPictures" parameterType="pictureBean" resultType="pictureBean">
+		select a.*,b.nick_name from tst_picture_show as a
+		inner join tst_member as b on a.member_id = b.member_id and b.is_delete='0'
+		where a.is_delete='0' and a.picture_state='accept'
+		and a.create_time>#{start_time} and #{end_time} >a.create_time
+		order by vote_count desc
+	</select>
+	
+	<select id="getMemberPictures" parameterType="pictureBean" resultType="pictureBean">
+		select a.*,b.nick_name from tst_picture_show as a
+		inner join tst_member as b on a.member_id = b.member_id and b.is_delete='0'
+		where a.is_delete='0'  and a.member_id=#{member_id}
+		<if test='picture_state != null and picture_state != "" '>
+			and a.picture_state=#{picture_state}
+		</if>
+		
+		order by a.create_time desc
+	</select>
+	
+	<select id="getPictureImgs" parameterType="pictureImgBean" resultType="pictureImgBean">
+		select * from tst_picture_img
+		where is_delete='0' and picture_id=#{picture_id}
+	</select>
+</mapper>

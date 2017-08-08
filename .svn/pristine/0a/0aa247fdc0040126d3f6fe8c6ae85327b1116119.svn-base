@@ -1,0 +1,6 @@
+package tts.project.livek.ui.listener;
+
+import android.view.View;
+public interface OnItemClickRecyclerListener {
+    public void onItemClick(View view, int position);
+}

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/RGB34_176_222</color>
+    <color name="colorPrimaryDark">@color/RGB34_176_222</color>
+    <color name="colorAccent">#000000</color>
+    <color name="RGB255_255_255">#ffffff</color>
+    <color name="RGB255_102_102">#FD6666</color>
+    <color name="RGB248_248_248">#F8F8F8</color>
+    <color name="RGB34_176_222">#22B0DE</color>
+    <color name="black">#000000</color>
+    <color name="pink">#FF99CC</color>
+    <color name="white">#ffffff</color>
+    <color name="RGBTransparent">#00000000</color>
+    <color name="RGBtranslucent">#b0000000</color>
+    <color name="top">#232429</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+    <color name="common_top_bar_blue">#4ebcd3</color>
+    <color name="btn_login_normal">#00acff</color>
+    <color name="btn_login_pressed">#46678d</color>
+    <color name="btn_logout_normal">#d33f3f</color>
+    <color name="btn_logout_pressed">#DA5A4D</color>
+    <color name="btn_register_normal">#ffffff</color>
+    <color name="btn_register_pressed">#00acff</color>
+    <color name="common_bottom_bar_normal_bg">#2d2f31</color>
+    <color name="common_bottom_bar_selected_bg">#161718</color>
+    <color name="common_botton_bar_blue">#2ea7e0</color>
+    <color name="common_bg">#fcfcfc</color>
+    <color name="btn_pressed_green_solid">#B6DA53</color>
+    <color name="divider_list">#d4d4d4</color>
+    <color name="top_bar_normal_bg">#00acff</color>
+    <color name="error_item_color">#F6EBE6</color>
+    <color name="bottom_bar_normal_bg">#2D2F31</color>
+    <color name="bottom_text_color_normal">#ffffff</color>
+    <color name="btn_white_normal">#f7f8f8</color>
+    <color name="btn_white_pressed">#b5b5b6</color>
+    <color name="btn_green_noraml">#68C270</color>
+    <color name="btn_green_pressed">#6FCD78</color>
+    <color name="btn_gray_normal">#c0c0c0</color>
+    <color name="btn_gray_pressed_status">#b5b5b6</color>
+    <color name="btn_gray_pressed">#666667</color>
+    <color name="btn_blue_normal">#1e90ff</color>
+    <color name="btn_blue_pressed">#0066FF</color>
+    <color name="orange">#FFA500</color>
+    <color name="gray_pressed">#b5b5b6</color>
+    <color name="gray_normal">#666667</color>
+    <color name="grid_state_pressed">#1Affffff</color>
+    <color name="grid_state_focused">#80000000</color>
+    <color name="voip_interface_text_color">#bababa</color>
+    <color name="black_deep">#FF000000</color>
+    <color name="btn_answer_pressed">#4ebcd3</color>
+    <color name="btn_answer_normal">#2dafa3</color>
+
+
+    <color name="RGB238_15_130">#eb0f82</color>
+    <color name="RGB240_240_240">#f0f0f0</color>
+    <color name="RGB50_50_50">#323232</color>
+    <color name="RGB198_198_198">#c6c6c6</color>
+    <color name="RGB80_80_80">#505050</color>
+    <color name="RGB181_181_181">#b5b5b5</color>
+    <color name="RGB136_136_136">#888888</color>
+    <color name="RGB8_8_8">#080808</color>
+</resources>

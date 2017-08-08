@@ -1,0 +1,537 @@
+'use strict';
+var _jsxFileName="src/Slider.js";
+var _extends=Object.assign||function(target){for(var i=1;i<arguments.length;i++){var source=arguments[i];for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}return target;};
+
+var _react=require("react");
+var _react2=_interopRequireDefault(_react);
+
+import React, { Component } from 'react';
+import {
+    PixelRatio,Dimensions
+} from 'react-native';
+
+
+
+var _reactNative=require("react-native");function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _objectWithoutProperties(obj,keys){var target={};for(var i in obj){if(keys.indexOf(i)>=0)continue;if(!Object.prototype.hasOwnProperty.call(obj,i))continue;target[i]=obj[i];}return target;}
+
+
+var shallowCompare=require('react-addons-shallow-compare'),
+styleEqual=require('style-equal');
+
+var TRACK_SIZE=10;
+var THUMB_SIZE=20;
+
+function Rect(x,y,width,height){
+this.x=x;
+this.y=y;
+this.width=width;
+this.height=height;}
+
+
+Rect.prototype.containsPoint=function(x,y){
+return x>=this.x&&
+y>=this.y&&
+x<=this.x+this.width&&
+y<=this.y+this.height;};
+
+/**
+ * 动态计算高度实际的像素值
+ * values:单位px
+ */
+function getHeightReal(values):number{
+    var realVlues=values*((PixelRatio.getPixelSizeForLayoutSize(Dimensions.get('window').height)/1334).toFixed(2));
+    return realVlues/PixelRatio.get()
+}
+
+var DEFAULT_ANIMATION_CONFIGS={
+spring:{
+friction:7,
+tension:100},
+
+timing:{
+duration:150,
+easing:_reactNative.Easing.inOut(_reactNative.Easing.ease),
+delay:0}};
+
+// decay : { // This has a serious bug
+//   velocity     : 1,
+//   deceleration : 0.997
+// }
+
+
+var Slider=_react2.default.createClass({displayName:"Slider",
+propTypes:{
+/**
+     * Initial value of the slider. The value should be between minimumValue
+     * and maximumValue, which default to 0 and 1 respectively.
+     * Default value is 0.
+     *
+     * *This is not a controlled component*, e.g. if you don't update
+     * the value, the component won't be reset to its inital value.
+     */
+value:_react.PropTypes.number,
+
+/**
+     * If true the user won't be able to move the slider.
+     * Default value is false.
+     */
+disabled:_react.PropTypes.bool,
+
+/**
+     * Initial minimum value of the slider. Default value is 0.
+     */
+minimumValue:_react.PropTypes.number,
+
+/**
+     * Initial maximum value of the slider. Default value is 1.
+     */
+maximumValue:_react.PropTypes.number,
+
+/**
+     * Step value of the slider. The value should be between 0 and
+     * (maximumValue - minimumValue). Default value is 0.
+     */
+step:_react.PropTypes.number,
+
+/**
+     * The color used for the track to the left of the button. Overrides the
+     * default blue gradient image.
+     */
+minimumTrackTintColor:_react.PropTypes.string,
+
+/**
+     * The color used for the track to the right of the button. Overrides the
+     * default blue gradient image.
+     */
+maximumTrackTintColor:_react.PropTypes.string,
+
+/**
+     * The color used for the thumb.
+     */
+thumbTintColor:_react.PropTypes.string,
+
+/**
+     * The size of the touch area that allows moving the thumb.
+     * The touch area has the same center has the visible thumb.
+     * This allows to have a visually small thumb while still allowing the user
+     * to move it easily.
+     * The default is {width: 40, height: 40}.
+     */
+thumbTouchSize:_react.PropTypes.shape(
+{width:_react.PropTypes.number,height:_react.PropTypes.number}),
+
+
+/**
+     * Callback continuously called while the user is dragging the slider.
+     */
+onValueChange:_react.PropTypes.func,
+
+/**
+     * Callback called when the user starts changing the value (e.g. when
+     * the slider is pressed).
+     */
+onSlidingStart:_react.PropTypes.func,
+
+/**
+     * Callback called when the user finishes changing the value (e.g. when
+     * the slider is released).
+     */
+onSlidingComplete:_react.PropTypes.func,
+
+/**
+     * The style applied to the slider container.
+     */
+style:_reactNative.View.propTypes.style,
+
+/**
+     * The style applied to the track.
+     */
+trackStyle:_reactNative.View.propTypes.style,
+
+/**
+     * The style applied to the thumb.
+     */
+thumbStyle:_reactNative.View.propTypes.style,
+
+/**
+     * Set this to true to visually see the thumb touch rect in green.
+     */
+debugTouchArea:_react.PropTypes.bool,
+
+/**
+    * Set to true to animate values with default 'timing' animation type
+    */
+animateTransitions:_react.PropTypes.bool,
+
+/**
+    * Custom Animation type. 'spring' or 'timing'.
+    */
+animationType:_react.PropTypes.oneOf(['spring','timing']),
+
+/**
+    * Used to configure the animation parameters.  These are the same parameters in the Animated library.
+    */
+animationConfig:_react.PropTypes.object},
+
+getInitialState:function getInitialState(){
+    THUMB_SIZE=this.props.THUMB_SIZE?this.props.THUMB_SIZE:THUMB_SIZE;
+return {
+containerSize:{width:0,height:0},
+trackSize:{width:0,height:0},
+thumbSize:{width:0,height:0},
+allMeasured:false,
+value:new _reactNative.Animated.Value(this.props.value)};},
+
+
+getDefaultProps:function getDefaultProps(){
+return {
+value:0,
+minimumValue:0,
+maximumValue:1,
+step:0,
+minimumTrackTintColor:'#3f3f3f',
+maximumTrackTintColor:'#b3b3b3',
+thumbTintColor:'#343434',
+thumbTouchSize:{width:40,height:40},
+debugTouchArea:false,
+animationType:'timing'};},
+
+
+componentWillMount:function componentWillMount(){
+this._panResponder=_reactNative.PanResponder.create({
+onStartShouldSetPanResponder:this._handleStartShouldSetPanResponder,
+onMoveShouldSetPanResponder:this._handleMoveShouldSetPanResponder,
+onPanResponderGrant:this._handlePanResponderGrant,
+onPanResponderMove:this._handlePanResponderMove,
+onPanResponderRelease:this._handlePanResponderEnd,
+onPanResponderTerminationRequest:this._handlePanResponderRequestEnd,
+onPanResponderTerminate:this._handlePanResponderEnd});},
+
+
+componentWillReceiveProps:function componentWillReceiveProps(nextProps){
+var newValue=nextProps.value;
+
+if(this.props.value!==newValue){
+if(this.props.animateTransitions){
+this._setCurrentValueAnimated(newValue);}else 
+
+{
+this._setCurrentValue(newValue);}}},
+
+
+
+shouldComponentUpdate:function shouldComponentUpdate(nextProps,nextState){
+// We don't want to re-render in the following cases:
+// - when only the 'value' prop changes as it's already handled with the Animated.Value
+// - when the event handlers change (rendering doesn't depend on them)
+// - when the style props haven't actually change
+
+return shallowCompare(
+{props:this._getPropsForComponentUpdate(this.props),state:this.state},
+this._getPropsForComponentUpdate(nextProps),
+nextState)||
+!styleEqual(this.props.style,nextProps.style)||
+!styleEqual(this.props.trackStyle,nextProps.trackStyle)||
+!styleEqual(this.props.thumbStyle,nextProps.thumbStyle);},
+
+render:function render(){var _props=
+
+
+
+
+
+
+
+
+
+
+
+
+this.props;var minimumValue=_props.minimumValue;var maximumValue=_props.maximumValue;var minimumTrackTintColor=_props.minimumTrackTintColor;var maximumTrackTintColor=_props.maximumTrackTintColor;var thumbTintColor=_props.thumbTintColor;var styles=_props.styles;var style=_props.style;var trackStyle=_props.trackStyle;var thumbStyle=_props.thumbStyle;var debugTouchArea=_props.debugTouchArea;var other=_objectWithoutProperties(_props,["minimumValue","maximumValue","minimumTrackTintColor","maximumTrackTintColor","thumbTintColor","styles","style","trackStyle","thumbStyle","debugTouchArea"]);var _state=
+this.state;var value=_state.value;var containerSize=_state.containerSize;var trackSize=_state.trackSize;var thumbSize=_state.thumbSize;var allMeasured=_state.allMeasured;
+var mainStyles=styles||defaultStyles;
+var thumbLeft=value.interpolate({
+inputRange:[minimumValue,maximumValue],
+outputRange:[0,containerSize.width-thumbSize.width]});
+//extrapolate: 'clamp',
+
+var valueVisibleStyle={};
+if(!allMeasured){
+valueVisibleStyle.opacity=0;}
+
+
+var minimumTrackStyle=_extends({
+position:'absolute',
+width:_reactNative.Animated.add(thumbLeft,thumbSize.width/2),
+marginTop:-trackSize.height,
+backgroundColor:minimumTrackTintColor},
+valueVisibleStyle);
+
+
+var touchOverflowStyle=this._getTouchOverflowStyle();
+
+return (
+_react2.default.createElement(_reactNative.View,_extends({},other,{style:[mainStyles.container,style],onLayout:this._measureContainer,__source:{fileName:_jsxFileName,lineNumber:263}}),
+_react2.default.createElement(_reactNative.View,{
+style:[{backgroundColor:maximumTrackTintColor},mainStyles.track,trackStyle],
+onLayout:this._measureTrack,__source:{fileName:_jsxFileName,lineNumber:264}}),
+_react2.default.createElement(_reactNative.Animated.View,{style:[mainStyles.track,trackStyle,minimumTrackStyle],__source:{fileName:_jsxFileName,lineNumber:267}}),
+_react2.default.createElement(_reactNative.Animated.View,{
+onLayout:this._measureThumb,
+style:[
+{backgroundColor:thumbTintColor,marginTop:-(trackSize.height+thumbSize.height)/2},
+mainStyles.thumb,thumbStyle,_extends({left:thumbLeft},valueVisibleStyle)],__source:{fileName:_jsxFileName,lineNumber:268}}),
+
+
+_react2.default.createElement(_reactNative.View,_extends({
+style:[defaultStyles.touchArea,touchOverflowStyle]},
+this._panResponder.panHandlers,{__source:{fileName:_jsxFileName,lineNumber:275}}),
+debugTouchArea===true&&this._renderDebugThumbTouchRect(thumbLeft))));},
+
+
+
+
+
+_getPropsForComponentUpdate:function _getPropsForComponentUpdate(props){var 
+
+value=
+
+
+
+
+
+
+
+props.value;var onValueChange=props.onValueChange;var onSlidingStart=props.onSlidingStart;var onSlidingComplete=props.onSlidingComplete;var style=props.style;var trackStyle=props.trackStyle;var thumbStyle=props.thumbStyle;var otherProps=_objectWithoutProperties(props,["value","onValueChange","onSlidingStart","onSlidingComplete","style","trackStyle","thumbStyle"]);
+
+return otherProps;},
+
+
+_handleStartShouldSetPanResponder:function _handleStartShouldSetPanResponder(e){
+// Should we become active when the user presses down on the thumb?
+return this._thumbHitTest(e);},
+
+
+_handleMoveShouldSetPanResponder:function _handleMoveShouldSetPanResponder(){
+// Should we become active when the user moves a touch over the thumb?
+return false;},
+
+
+_handlePanResponderGrant:function _handlePanResponderGrant() /*e: Object, gestureState: Object*/{
+this._previousLeft=this._getThumbLeft(this._getCurrentValue());
+this._fireChangeEvent('onSlidingStart');},
+
+_handlePanResponderMove:function _handlePanResponderMove(e,gestureState){
+if(this.props.disabled){
+return;}
+
+
+this._setCurrentValue(this._getValue(gestureState));
+this._fireChangeEvent('onValueChange');},
+
+_handlePanResponderRequestEnd:function _handlePanResponderRequestEnd(e,gestureState){
+// Should we allow another component to take over this pan?
+return false;},
+
+_handlePanResponderEnd:function _handlePanResponderEnd(e,gestureState){
+if(this.props.disabled){
+return;}
+
+
+this._setCurrentValue(this._getValue(gestureState));
+this._fireChangeEvent('onSlidingComplete');},
+
+
+_measureContainer:function _measureContainer(x){
+this._handleMeasure('containerSize',x);},
+
+
+_measureTrack:function _measureTrack(x){
+this._handleMeasure('trackSize',x);},
+
+
+_measureThumb:function _measureThumb(x){
+this._handleMeasure('thumbSize',x);},
+
+
+_handleMeasure:function _handleMeasure(name,x){var _x$nativeEvent$layout=
+x.nativeEvent.layout;var width=_x$nativeEvent$layout.width;var height=_x$nativeEvent$layout.height;
+var size={width:width,height:height};
+
+var storeName="_"+name;
+var currentSize=this[storeName];
+if(currentSize&&width===currentSize.width&&height===currentSize.height){
+return;}
+
+this[storeName]=size;
+
+if(this._containerSize&&this._trackSize&&this._thumbSize){
+this.setState({
+containerSize:this._containerSize,
+trackSize:this._trackSize,
+thumbSize:this._thumbSize,
+allMeasured:true});}},
+
+
+
+
+_getRatio:function _getRatio(value){
+return (value-this.props.minimumValue)/(this.props.maximumValue-this.props.minimumValue);},
+
+
+_getThumbLeft:function _getThumbLeft(value){
+var ratio=this._getRatio(value);
+return ratio*(this.state.containerSize.width-this.state.thumbSize.width);},
+
+
+_getValue:function _getValue(gestureState){
+var length=this.state.containerSize.width-this.state.thumbSize.width;
+var thumbLeft=this._previousLeft+gestureState.dx;
+
+var ratio=thumbLeft/length;
+
+if(this.props.step){
+return Math.max(this.props.minimumValue,
+Math.min(this.props.maximumValue,
+this.props.minimumValue+Math.round(ratio*(this.props.maximumValue-this.props.minimumValue)/this.props.step)*this.props.step));}else 
+
+
+{
+return Math.max(this.props.minimumValue,
+Math.min(this.props.maximumValue,
+ratio*(this.props.maximumValue-this.props.minimumValue)+this.props.minimumValue));}},
+
+
+
+
+
+_getCurrentValue:function _getCurrentValue(){
+return this.state.value.__getValue();},
+
+
+_setCurrentValue:function _setCurrentValue(value){
+this.state.value.setValue(value);},
+
+
+_setCurrentValueAnimated:function _setCurrentValueAnimated(value){
+var animationType=this.props.animationType;
+var animationConfig=_extends(
+{},
+DEFAULT_ANIMATION_CONFIGS[animationType],
+this.props.animationConfig,
+{toValue:value});
+
+
+_reactNative.Animated[animationType](this.state.value,animationConfig).start();},
+
+
+_fireChangeEvent:function _fireChangeEvent(event){
+if(this.props[event]){
+this.props[event](this._getCurrentValue());}},
+
+
+
+_getTouchOverflowSize:function _getTouchOverflowSize(){
+var state=this.state;
+var props=this.props;
+
+var size={};
+if(state.allMeasured===true){
+size.width=Math.max(0,props.thumbTouchSize.width-state.thumbSize.width);
+size.height=Math.max(0,props.thumbTouchSize.height-state.containerSize.height);}
+
+
+return size;},
+
+
+_getTouchOverflowStyle:function _getTouchOverflowStyle(){var _getTouchOverflowSize2=
+this._getTouchOverflowSize();var width=_getTouchOverflowSize2.width;var height=_getTouchOverflowSize2.height;
+
+var touchOverflowStyle={};
+if(width!==undefined&&height!==undefined){
+var verticalMargin=-height/2;
+touchOverflowStyle.marginTop=verticalMargin;
+touchOverflowStyle.marginBottom=verticalMargin;
+
+var horizontalMargin=-width/2;
+touchOverflowStyle.marginLeft=horizontalMargin;
+touchOverflowStyle.marginRight=horizontalMargin;}
+
+
+if(this.props.debugTouchArea===true){
+touchOverflowStyle.backgroundColor='orange';
+touchOverflowStyle.opacity=0.5;}
+
+
+return touchOverflowStyle;},
+
+
+_thumbHitTest:function _thumbHitTest(e){
+var nativeEvent=e.nativeEvent;
+var thumbTouchRect=this._getThumbTouchRect();
+return thumbTouchRect.containsPoint(nativeEvent.locationX,nativeEvent.locationY);},
+
+
+_getThumbTouchRect:function _getThumbTouchRect(){
+var state=this.state;
+var props=this.props;
+var touchOverflowSize=this._getTouchOverflowSize();
+
+return new Rect(
+touchOverflowSize.width/2+this._getThumbLeft(this._getCurrentValue())+(state.thumbSize.width-props.thumbTouchSize.width)/2,
+touchOverflowSize.height/2+(state.containerSize.height-props.thumbTouchSize.height)/2,
+props.thumbTouchSize.width,
+props.thumbTouchSize.height);},
+
+
+
+_renderDebugThumbTouchRect:function _renderDebugThumbTouchRect(thumbLeft){
+var thumbTouchRect=this._getThumbTouchRect();
+var positionStyle={
+left:thumbLeft,
+top:thumbTouchRect.y,
+width:thumbTouchRect.width,
+height:thumbTouchRect.height};
+
+
+return (
+_react2.default.createElement(_reactNative.Animated.View,{
+style:[defaultStyles.debugThumbTouchArea,positionStyle],
+pointerEvents:"none",__source:{fileName:_jsxFileName,lineNumber:487}}));}});
+
+
+
+
+
+
+var defaultStyles=_reactNative.StyleSheet.create({
+container:{
+height:getHeightReal(20),
+justifyContent:'center'},
+
+track:{
+height:TRACK_SIZE,
+borderRadius:TRACK_SIZE/2},
+
+thumb:{
+position:'absolute',
+width:THUMB_SIZE,
+height:THUMB_SIZE,
+borderRadius:THUMB_SIZE/2},
+
+touchArea:{
+position:'absolute',
+backgroundColor:'transparent',
+top:0,
+left:0,
+right:0,
+bottom:0},
+
+debugThumbTouchArea:{
+position:'absolute',
+backgroundColor:'green',
+opacity:0.5}});
+
+
+
+module.exports=Slider;

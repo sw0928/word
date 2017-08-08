@@ -1,0 +1,93 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-native-keyboard-event",
+        "scope": null,
+        "escapedName": "react-native-keyboard-event",
+        "name": "react-native-keyboard-event",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/shenjiabo/Documents/rnspace/Indiana"
+    ]
+  ],
+  "_cnpm_publish_time": 1460974360390,
+  "_from": "react-native-keyboard-event@latest",
+  "_id": "react-native-keyboard-event@1.0.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-keyboard-event",
+  "_nodeVersion": "5.1.1",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-native-keyboard-event-1.0.0.tgz_1460974359228_0.11756420112214983"
+  },
+  "_npmUser": {
+    "name": "yywl",
+    "email": "angusfu1126@qq.com"
+  },
+  "_npmVersion": "3.5.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-keyboard-event",
+    "scope": null,
+    "escapedName": "react-native-keyboard-event",
+    "name": "react-native-keyboard-event",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/react-native-keyboard-event/download/react-native-keyboard-event-1.0.0.tgz",
+  "_shasum": "087076f0c0552f4ed0f0f7c52c9db182b1676ef0",
+  "_shrinkwrap": null,
+  "_spec": "react-native-keyboard-event",
+  "_where": "/Users/shenjiabo/Documents/rnspace/Indiana",
+  "author": {
+    "name": "angusfu1126@qq.com"
+  },
+  "bugs": {
+    "url": "https://github.com/AngusFu/react-native-keyboard-event/issues"
+  },
+  "dependencies": {},
+  "description": "react-native keyboard event for android & iOS",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "087076f0c0552f4ed0f0f7c52c9db182b1676ef0",
+    "size": 2005,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/react-native-keyboard-event/download/react-native-keyboard-event-1.0.0.tgz"
+  },
+  "gitHead": "b6686aabc13493c14a9b0af2c3ca29852c896c12",
+  "homepage": "https://github.com/AngusFu/react-native-keyboard-event#readme",
+  "keywords": [
+    "react-native",
+    "keyboard",
+    "event"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "yywl",
+      "email": "angusfu1126@qq.com"
+    }
+  ],
+  "name": "react-native-keyboard-event",
+  "optionalDependencies": {},
+  "publish_time": 1460974360390,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AngusFu/react-native-keyboard-event.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}

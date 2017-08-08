@@ -1,0 +1,541 @@
+package tts.project.livek.bean;
+
+import java.util.List;
+
+/**
+ * Created by lenove on 2016/12/21.
+ */
+
+public class ChargeListBean {
+
+
+    /**
+     * user_id : 3
+     * token : 585bbf2bab334
+     * phone : 13761853396
+     * pwd : dc483e80a7a0bd9ef71d8cf973673924
+     * img : /Uploads/image/touxiang/585b9f4a349f1.jpg
+     * sex : 2
+     * type : 2
+     * username : fhnn
+     * autograph : 安我呢
+     * id : 84058043
+     * intime : 1482395907
+     * uptime : 1482419598
+     * is_del : 1
+     * del_time : 0
+     * alias : kehrqtcb7czf
+     * hx_username : kehrqtcb7czf
+     * hx_password : 123456
+     * grade : 0
+     * province :
+     * city :
+     * area :
+     * address :
+     * zan : 21
+     * money : 1000
+     * openid :
+     * qq_openid :
+     * weibo :
+     * state : 1
+     * online_time : 0
+     * title : 一起看直播
+     * room_id : 278548553335308812
+     * watch_nums : 30
+     * nums : 20
+     * push_flow_address : rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482419438?e=1482423040&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:NDdebMsr_Ze919CWZfSM1R5B7_0=
+     * play_address : rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482419438
+     * play_img :
+     * u_money : -5666
+     * alipay : 13366
+     * url : http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==
+     * consume : 0
+     * start_time : 1482419440
+     * end_time : 1482418722
+     * stream_key : php-sdk-test1482419438
+     * job :
+     * birth_day : 2016-09-22
+     */
+
+    private UserBean user;
+    /**
+     * price_list_id : 1
+     * price : 1
+     * diamond : 10
+     * zeng : 0
+     */
+
+    private List<ListBean> list;
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
+
+    public List<ListBean> getList() {
+        return list;
+    }
+
+    public void setList(List<ListBean> list) {
+        this.list = list;
+    }
+
+    public static class UserBean {
+        private String user_id;
+        private String token;
+        private String phone;
+        private String pwd;
+        private String img;
+        private String sex;
+        private String type;
+        private String username;
+        private String autograph;
+        private String id;
+        private String intime;
+        private String uptime;
+        private String is_del;
+        private String del_time;
+        private String alias;
+        private String hx_username;
+        private String hx_password;
+        private String grade;
+        private String province;
+        private String city;
+        private String area;
+        private String address;
+        private String zan;
+        private String money;
+        private String openid;
+        private String qq_openid;
+        private String weibo;
+        private String state;
+        private String online_time;
+        private String title;
+        private String room_id;
+        private String watch_nums;
+        private String nums;
+        private String push_flow_address;
+        private String play_address;
+        private String play_img;
+        private String u_money;
+        private String alipay;
+        private String url;
+        private String consume;
+        private String start_time;
+        private String end_time;
+        private String stream_key;
+        private String job;
+        private String birth_day;
+
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getPwd() {
+            return pwd;
+        }
+
+        public void setPwd(String pwd) {
+            this.pwd = pwd;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getAutograph() {
+            return autograph;
+        }
+
+        public void setAutograph(String autograph) {
+            this.autograph = autograph;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getIntime() {
+            return intime;
+        }
+
+        public void setIntime(String intime) {
+            this.intime = intime;
+        }
+
+        public String getUptime() {
+            return uptime;
+        }
+
+        public void setUptime(String uptime) {
+            this.uptime = uptime;
+        }
+
+        public String getIs_del() {
+            return is_del;
+        }
+
+        public void setIs_del(String is_del) {
+            this.is_del = is_del;
+        }
+
+        public String getDel_time() {
+            return del_time;
+        }
+
+        public void setDel_time(String del_time) {
+            this.del_time = del_time;
+        }
+
+        public String getAlias() {
+            return alias;
+        }
+
+        public void setAlias(String alias) {
+            this.alias = alias;
+        }
+
+        public String getHx_username() {
+            return hx_username;
+        }
+
+        public void setHx_username(String hx_username) {
+            this.hx_username = hx_username;
+        }
+
+        public String getHx_password() {
+            return hx_password;
+        }
+
+        public void setHx_password(String hx_password) {
+            this.hx_password = hx_password;
+        }
+
+        public String getGrade() {
+            return grade;
+        }
+
+        public void setGrade(String grade) {
+            this.grade = grade;
+        }
+
+        public String getProvince() {
+            return province;
+        }
+
+        public void setProvince(String province) {
+            this.province = province;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getArea() {
+            return area;
+        }
+
+        public void setArea(String area) {
+            this.area = area;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getZan() {
+            return zan;
+        }
+
+        public void setZan(String zan) {
+            this.zan = zan;
+        }
+
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getOpenid() {
+            return openid;
+        }
+
+        public void setOpenid(String openid) {
+            this.openid = openid;
+        }
+
+        public String getQq_openid() {
+            return qq_openid;
+        }
+
+        public void setQq_openid(String qq_openid) {
+            this.qq_openid = qq_openid;
+        }
+
+        public String getWeibo() {
+            return weibo;
+        }
+
+        public void setWeibo(String weibo) {
+            this.weibo = weibo;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public String getOnline_time() {
+            return online_time;
+        }
+
+        public void setOnline_time(String online_time) {
+            this.online_time = online_time;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRoom_id() {
+            return room_id;
+        }
+
+        public void setRoom_id(String room_id) {
+            this.room_id = room_id;
+        }
+
+        public String getWatch_nums() {
+            return watch_nums;
+        }
+
+        public void setWatch_nums(String watch_nums) {
+            this.watch_nums = watch_nums;
+        }
+
+        public String getNums() {
+            return nums;
+        }
+
+        public void setNums(String nums) {
+            this.nums = nums;
+        }
+
+        public String getPush_flow_address() {
+            return push_flow_address;
+        }
+
+        public void setPush_flow_address(String push_flow_address) {
+            this.push_flow_address = push_flow_address;
+        }
+
+        public String getPlay_address() {
+            return play_address;
+        }
+
+        public void setPlay_address(String play_address) {
+            this.play_address = play_address;
+        }
+
+        public String getPlay_img() {
+            return play_img;
+        }
+
+        public void setPlay_img(String play_img) {
+            this.play_img = play_img;
+        }
+
+        public String getU_money() {
+            return u_money;
+        }
+
+        public void setU_money(String u_money) {
+            this.u_money = u_money;
+        }
+
+        public String getAlipay() {
+            return alipay;
+        }
+
+        public void setAlipay(String alipay) {
+            this.alipay = alipay;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getConsume() {
+            return consume;
+        }
+
+        public void setConsume(String consume) {
+            this.consume = consume;
+        }
+
+        public String getStart_time() {
+            return start_time;
+        }
+
+        public void setStart_time(String start_time) {
+            this.start_time = start_time;
+        }
+
+        public String getEnd_time() {
+            return end_time;
+        }
+
+        public void setEnd_time(String end_time) {
+            this.end_time = end_time;
+        }
+
+        public String getStream_key() {
+            return stream_key;
+        }
+
+        public void setStream_key(String stream_key) {
+            this.stream_key = stream_key;
+        }
+
+        public String getJob() {
+            return job;
+        }
+
+        public void setJob(String job) {
+            this.job = job;
+        }
+
+        public String getBirth_day() {
+            return birth_day;
+        }
+
+        public void setBirth_day(String birth_day) {
+            this.birth_day = birth_day;
+        }
+    }
+
+    public static class ListBean {
+        private String price_list_id;
+        private String price;
+        private int diamond;
+        private String zeng;
+        private boolean isChecked;
+
+        public boolean isChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
+
+        public String getPrice_list_id() {
+            return price_list_id;
+        }
+
+        public void setPrice_list_id(String price_list_id) {
+            this.price_list_id = price_list_id;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
+        }
+
+        public int getDiamond() {
+            return diamond;
+        }
+
+        public void setDiamond(int diamond) {
+            this.diamond = diamond;
+        }
+
+        public String getZeng() {
+            return zeng;
+        }
+
+        public void setZeng(String zeng) {
+            this.zeng = zeng;
+        }
+    }
+}

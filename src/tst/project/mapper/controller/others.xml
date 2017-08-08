@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.OthersDaoC">
+	<select id="getWxMenus" parameterType="wxMenuBean" resultType="wxMenuBean">
+		select * from tst_system_weixin_menu
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	<insert id="insertWXMenu" parameterType="wxMenuBean" >
+		insert into tst_system_weixin_menu
+		(menu_name,menu_url,create_time,menu_type,parent_id,sort)
+		values
+		(#{menu_name},#{menu_url},now(),#{menu_type},#{parent_id},#{sort})
+	</insert>
+	
+	<update id="updateWXMenu" parameterType="wxMenuBean">
+		update tst_system_weixin_menu
+		set menu_name=#{menu_name},
+		menu_url=#{menu_url},sort=#{sort}
+		where wx_menu_id=#{wx_menu_id}
+	</update>
+	
+	<update id="deleteWXMenu" parameterType="wxMenuBean">
+		update tst_system_weixin_menu
+		set is_delete='1'
+		where wx_menu_id=#{wx_menu_id}
+	</update>
+
+	<insert id="insertHelpDetail" parameterType="htmlBean" >
+		insert into tst_system_html
+		(html_name,html_url,html_type,html_code,create_time,sort,parent_id)
+		values
+		(#{html_name},#{html_url},#{html_type},'1',now(),#{sort},#{parent_id})
+	</insert>
+
+	<update id="updateHelpDetail" parameterType="htmlBean">
+		update tst_system_html
+		set html_name=#{html_name},
+		sort=#{sort}
+		where html_id=#{html_id}
+	</update>
+	
+	<update id="deleteHelpDetail" parameterType="htmlBean">
+		update tst_system_html
+		set is_delete='1'
+		where html_id=#{html_id}
+	</update>
+	
+	<select id="getHelpClasss" parameterType="htmlBean" resultType="htmlBean">
+		select * from tst_system_html
+		where parent_id=#{parent_id} and is_delete='0'
+	</select>
+
+	<select id="getPingSetting" parameterType="pingSettingBean" resultType="pingSettingBean">
+		select * from tst_system_ping
+		where ping_type=#{ping_type}
+	</select>
+	
+	<select id="getHtmlStyle" parameterType="htmlStyleBean" resultType="htmlStyleBean">
+		select * from tst_system_html_style 
+		where is_delete='0' and style_type=#{style_type}
+	</select>
+
+	<select id="getWXSeting" parameterType="wxSetingBean" resultType="wxSetingBean">
+		select * from tst_system_weixin
+		where weixin_type=#{weixin_type}
+	</select>	
+	
+	<select id="getHost" parameterType="hostBean" resultType="hostBean">
+		select * from tst_host_url
+		where host_type=#{host_type}
+	</select>
+	<update id="deleteAdvice" parameterType="adviceBean">
+		update tst_advice
+		set is_delete='1'
+		where advice_id=#{advice_id}
+	</update>
+	<select id="getAdviceImgs" parameterType="adviceImgBean" resultType="adviceImgBean">
+		select * from tst_advice_img 
+		where advice_id=#{advice_id} and is_delete='0'
+	</select>
+	<select id="getAdviceDetail" parameterType="adviceBean" resultType="adviceBean">
+		select a.*,b.nick_name from tst_advice as a
+		inner join tst_member as b on a.member_id= b.member_id
+		where a.advice_id=#{advice_id}
+	</select>
+	
+	<select id='getAdvices' parameterType="adviceBean" resultType="adviceBean"> 
+		select a.*,b.nick_name from tst_advice as a
+		inner join tst_member as b on a.member_id= b.member_id
+		where a.is_delete='0'
+		<if test=' advice_type != null and advice_type != "" '>
+			and #{advice_type} like concat('%',a.advice_type,'%')
+		</if>
+		
+		<if test=' advice_id != null and advice_id != "" '>
+			and a.advice_id=#{advice_id}
+		</if>
+		
+		order by a.create_time desc
+	</select>
+	
+	<select id='getPercents' parameterType="percentBean" resultType="percentBean">
+		select * from tst_percent
+		where is_delete='0'
+	</select>
+	
+	<select id='getPercent' parameterType="percentBean" resultType="percentBean">
+		select * from tst_percent
+		where percent_type=#{percent_type}
+		and is_delete='0'
+	</select>
+
+	<update id="updatePercent" parameterType="percentBean">
+		update tst_percent
+		set percent_value=#{percent_value}
+		where percent_id=#{percent_id}
+	</update>
+	
+	<update id="updatePercentByType" parameterType="percentBean">
+		update tst_percent
+		set percent_value=#{percent_value}
+		where percent_type=#{percent_type} and is_delete='0'
+	</update>
+</mapper>

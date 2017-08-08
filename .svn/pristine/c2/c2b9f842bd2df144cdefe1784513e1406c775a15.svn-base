@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y120"
+    >
+
+    <tts.moudle.api.widget.CircleImageView
+        android:id="@+id/item_attention_icon"
+        android:layout_width="@dimen/x102"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginBottom="@dimen/y20"
+        android:layout_height="@dimen/x102"
+        android:layout_marginLeft="@dimen/x20"/>
+    <TextView
+        android:id="@+id/item_attention_nickname"
+        style="@style/textview_rgb_323232_style"
+        android:layout_marginLeft="@dimen/x140"
+        android:textSize="@dimen/y32"
+        android:layout_marginTop="@dimen/y32"
+        android:text="摸鱼酱"
+        />
+    <ImageView
+        android:id="@+id/item_attention_sex"
+        android:layout_marginTop="@dimen/y33"
+        android:layout_toRightOf="@+id/item_attention_nickname"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_width="@dimen/x34"
+        android:layout_height="@dimen/y34" />
+    <TextView
+        android:layout_marginTop="@dimen/y33"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_toRightOf="@+id/item_attention_nickname"
+        android:id="@+id/item_attention_guanzhu_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y24" />
+    <TextView
+        android:id="@+id/item_attention_money"
+        style="@style/textview_rgb_323232_style"
+        android:textColor="#999999"
+        android:layout_marginLeft="@dimen/x140"
+        android:textSize="@dimen/y28"
+        android:layout_marginTop="@dimen/y82"
+        android:singleLine="true"
+        android:layout_marginRight="@dimen/x140"
+        />
+
+    <ImageView
+        android:id="@+id/item_attention_member"
+        android:layout_marginTop="@dimen/y98"
+        android:layout_marginLeft="@dimen/x92"
+        android:layout_width="@dimen/x14"
+        android:layout_height="@dimen/y14" />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/item_attention_guanzhu"
+        android:paddingBottom="@dimen/y12"
+        android:paddingLeft="@dimen/x24"
+        android:paddingTop="@dimen/y12"
+        android:paddingRight="@dimen/x24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x610"
+        android:textSize="@dimen/y28"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/y44"
+        android:text="关注"
+
+        />
+    <ImageView
+        android:id="@+id/item_attention_into"
+        android:layout_marginTop="@dimen/y56"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/x16"
+        android:layout_height="@dimen/y28"
+        android:src="@drawable/tiaozhuan"/>
+</RelativeLayout>

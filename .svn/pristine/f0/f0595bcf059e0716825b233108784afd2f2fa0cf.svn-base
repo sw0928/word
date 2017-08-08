@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_my_dimends"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+   >
+    <include layout="@layout/toolbar_item"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y20"
+        ></LinearLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90">
+        <TextView
+            android:id="@+id/dangqianzhuanshi"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_centerVertical="true"
+            style="@style/textview_rgb_323232_style"
+            android:text="当前钻石"
+            />
+        <TextView
+            android:id="@+id/count"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/textview_rgb_323232_style"
+            android:text="0"
+            android:drawablePadding="@dimen/x10"
+            android:drawableLeft="@drawable/zhuanshi"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y20"
+        ></LinearLayout>
+
+
+    <ListView
+        android:divider="@null"
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_1"-->
+        <!--android:background="@color/white"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y90">-->
+        <!--<TextView-->
+            <!--android:id="@+id/min_money"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/renmingbi_bg"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:textColor="@color/yellow"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="¥ 10.0"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/min_count"-->
+            <!--android:layout_marginLeft="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="0"-->
+            <!--android:drawablePadding="@dimen/x10"-->
+            <!--android:drawableLeft="@drawable/zhuanshi"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y20"-->
+        <!--&gt;</LinearLayout>-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_2"-->
+
+        <!--android:background="@color/white"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y90">-->
+        <!--<TextView-->
+            <!--android:id="@+id/midddle_money"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/renmingbi_bg"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:textColor="@color/yellow"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="¥ 20.0"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/middle_count"-->
+            <!--android:layout_marginLeft="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="0"-->
+            <!--android:drawablePadding="@dimen/x10"-->
+            <!--android:drawableLeft="@drawable/zhuanshi"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y20"-->
+        <!--&gt;</LinearLayout>-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_3"-->
+
+        <!--android:background="@color/white"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/y90">-->
+        <!--<TextView-->
+            <!--android:id="@+id/max_money"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/renmingbi_bg"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:textColor="@color/yellow"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="¥ 30.0"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/max_count"-->
+            <!--android:layout_marginLeft="@dimen/x20"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--style="@style/textview_rgb_323232_style"-->
+            <!--android:text="30"-->
+            <!--android:drawablePadding="@dimen/x10"-->
+            <!--android:drawableLeft="@drawable/zhuanshi"-->
+            <!--/>-->
+    <!--</RelativeLayout>-->
+</LinearLayout>

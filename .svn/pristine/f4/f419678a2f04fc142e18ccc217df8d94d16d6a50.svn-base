@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.InformationDao">
+	<select id="getInformationImgs" parameterType="informationImgBean" resultType="informationImgBean">
+		select * from tst_information_img
+		where is_delete='0' and information_id=#{information_id}
+	</select>
+	
+	<update id="updateInformationDetail" parameterType="informationBean">
+		update tst_information
+		set see_num=see_num+1
+		where information_id=#{information_id}
+	</update>
+	
+	<select id="getInformationDetail" parameterType="informationBean" resultType="informationBean">
+		select * from tst_information
+		where information_id=#{information_id} and is_delete='0'
+	</select>
+	
+	<select id="getInformations" parameterType="informationBean" resultType="informationBean">
+		select * from tst_information
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	<select id="getRecomendInformations" parameterType="informationBean" resultType="informationBean">
+		select * from tst_information  as a 
+		inner join tst_information as b on a.parent_id=b.information_id and b.is_delete='0'
+		where a.is_delete='0' and a.is_recommend='1' and a.information_type='2'
+		order by a.sort asc
+	</select>
+
+</mapper>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.SystemDao">
+
+	<update id="deleteRoleList" parameterType="listBean">
+		update tst_system_role_list
+		set is_delete='1'
+		where role_id=#{role_id}
+	</update>
+	<insert id="saveRoleList" parameterType="java.util.List">
+		insert into tst_system_role_list
+		(list_id,create_time,role_id)
+     	values
+     	<foreach collection="list" item="item" index="index" separator="," >
+	    (#{item.id},now(),#{item.role_id})
+    	</foreach>
+	</insert>
+
+
+	<insert id="insertSystemDetailShow" parameterType="detailBean">
+		insert into tst_system_detail_show
+		(name,detail_type,is_visible)
+		values
+		(#{name},#{detail_type},#{is_visible})
+	</insert>
+	
+	<update id="updateSystemDetailShow" parameterType="detailBean">
+		update tst_system_detail_show
+		set name=#{name},detail_type=#{detail_type},is_visible=#{is_visible}
+		where detail_id=#{detail_id}
+	</update>
+	
+	<update id="deleteSystemDetailShow" parameterType="detailBean">
+		update tst_system_detail_show
+		set is_delete='1'
+		where detail_id=#{detail_id}
+	</update>
+	<insert id='insertSystemListShow' parameterType="listBean">
+		insert into tst_system_list_show
+		(name,flex,list_key,sort,type,list_type,state)
+		values
+		(#{name},#{flex},#{list_key},#{sort},#{type},#{list_type},#{state})
+	</insert>
+	
+	<update id="updateSystemListShow" parameterType="listBean">
+		update tst_system_list_show
+		set name=#{name},flex=#{flex},
+		sort=#{sort},type=#{type},list_type=#{list_type},state=#{state},
+		list_key=#{list_key}
+		where id=#{id}
+	</update>
+	
+	<update id="deleteSystemListShow" parameterType="listBean">
+		update tst_system_list_show
+		set is_delete='1'
+		where id=#{id}
+	</update>
+
+	<insert id="insertSystemListType" parameterType="listTypeBean">
+		insert into tst_system_list_type
+		(type_name,type_value,type_type)
+		values
+		(#{type_name},#{type_value},#{type_type})
+	</insert>
+
+	<update id="updateSystemListType" parameterType="listTypeBean">
+		update tst_system_list_type
+		set type_name=#{type_name},type_value=#{type_value}
+		where type_id=#{type_id}
+	</update>
+	
+	<update id="deleteSystemListType" parameterType="listTypeBean">
+		update tst_system_list_type
+		set is_delete='1'
+		where type_id=#{type_id}
+	</update>
+	
+	<select id="getOneSystemListType" parameterType="listTypeBean" resultType="listTypeBean">
+		select * from tst_system_list_type
+		where type_value=#{type_value} and is_delete='0'
+	</select>
+	
+	<select id="getSystemListTypes" parameterType="listTypeBean" resultType="listTypeBean">
+		select * from tst_system_list_type
+		where is_delete='0' and type_type=#{type_type}
+	</select>
+	
+	
+	
+	<select id="getSystemListTypesNoPage" parameterType="listTypeBean" resultType="listTypeBean">
+		select * from tst_system_list_type
+		where is_delete='0' and type_type=#{type_type}
+	</select>
+	
+	<select id="getSystemDetailShows" parameterType="detailBean" resultType="String">
+		select concat('"',name,'"',':"',is_visible,'"') as a from tst_system_detail_show
+		where detail_type=#{detail_type} and is_delete='0'
+	</select>
+	
+	<select id="getSystemDetailShowsPage" parameterType="detailBean" resultType="detailBean">
+		select a.*,b.type_name from tst_system_detail_show as a
+		left join tst_system_list_type as b on a.detail_type=b.type_value and b.is_delete='0'
+		where a.is_delete='0' 
+		<if test=' detail_type != null and detail_type != "" '>
+			and a.detail_type=#{detail_type}
+		</if>
+	</select>
+	
+	<select id="getSystemListShowsPage" parameterType="listBean" resultType="listBean">
+		select a.*,b.type_name from tst_system_list_show as a
+		left join tst_system_list_type as b on a.list_type=b.type_value and b.is_delete='0'
+		where  a.is_delete=0	
+		<if test=' list_type != null and list_type != "" '>
+			and a.list_type=#{list_type}
+		</if>
+		order by a.sort asc
+	</select>
+	
+	<select id="getSystemListShowsNoPage" parameterType="listBean" resultType="listBean">
+		select  (case when c.role_list_id is null then "0" else "1" end) list_state,
+		a.*,b.type_name from tst_system_list_show as a
+		left join tst_system_list_type as b on a.list_type=b.type_value and b.is_delete='0'
+		left join tst_system_role_list as c
+		on a.id=c.list_id and c.role_id=#{role_id} and c.is_delete='0'
+		where  a.is_delete=0	
+		<if test=' list_type != null and list_type != "" '>
+			and a.list_type=#{list_type}
+		</if>
+		order by a.sort asc
+	</select>
+
+	<select id="getSystemListShowsV2" parameterType="listBean" resultType="listBean">
+		select a.*,b.type_name from tst_system_list_show as a
+		left join tst_system_list_type as b on a.list_type=b.type_value and b.is_delete='0'
+		inner join tst_system_role_list as c
+		on a.id=c.list_id and c.role_id=#{role_id} and c.is_delete='0'
+		where  a.is_delete=0	
+		<if test=' list_type != null and list_type != "" '>
+			and a.list_type=#{list_type}
+		</if>
+		order by a.sort asc
+	</select>
+	
+	<select id="getSystemListShows" parameterType="listBean" resultType="listBean">
+		select * from tst_system_list_show
+		where  is_delete=0	and state='1'
+		<if test=' list_type != null and list_type != "" '>
+			and list_type=#{list_type}
+		</if>
+		order by sort asc
+	</select>
+
+	<!-- 模块部分 -->
+	<select id="getAllMoudle" resultType="moudleBean" parameterType="moudleBean">
+		select DISTINCT a.*,
+		(select case when count(*)>0 then "0" else "1" end 
+		from tst_system_moudle
+		 where parent_id=a.moudle_id  and is_delete='0') as is_end 
+		from tst_system_moudle as a
+		inner join tst_system_role_moudle as b 
+		on b.moudle_parent_uuid like CONCAT("%",a.moudle_uuid,"%") 
+		and b.role_id=#{role_id} and b.is_delete='0'
+		where a.parent_id=#{parent_id} and a.is_delete='0'  
+		order by sort asc
+	</select>
+	
+	<select id="getAllMoudleByParentId" resultType="moudleBean" parameterType="moudleBean">
+		select * from tst_system_moudle 
+		where parent_id=#{parent_id} and is_delete='0'  
+		order by sort asc
+	</select>
+	
+	<insert id="insertMoudle" parameterType='moudleBean'>
+		insert into tst_system_moudle 
+		(moudle_name,moudle_url,parent_id,sort,moudle_remark,
+		moudle_uuid,moudle_parent_uuid,create_time)
+		values
+		(#{moudle_name},#{moudle_url},#{parent_id},#{sort},#{moudle_remark},
+		#{moudle_uuid},
+		CONCAT(case when (select a.moudle_parent_uuid from (
+select moudle_parent_uuid  
+from tst_system_moudle where moudle_id=#{parent_id}
+) a) is null then "" else 
+(select a.moudle_parent_uuid from (
+select moudle_parent_uuid  
+from tst_system_moudle where moudle_id=#{parent_id}
+) a) end,"#",#{moudle_uuid}),now())
+	</insert>
+	
+	<update id='updateMoudle' parameterType='moudleBean'>
+		update tst_system_moudle  set moudle_name=#{moudle_name}
+		,moudle_url=#{moudle_url},moudle_remark=#{moudle_remark},sort=#{sort}
+		where moudle_id=#{moudle_id}
+	</update>
+	
+	<update id="deleteMoudle" parameterType='moudleBean'>
+		update tst_system_moudle  set is_delete='1'
+		where moudle_parent_uuid
+		like concat('%',#{moudle_uuid},'%')
+	</update>
+	
+	
+	<!-- 角色部分 -->
+	<select id="getAllRole" parameterType="roleBean" resultType="roleBean">
+		select * from tst_system_role where is_delete='0'
+	</select>
+	
+	<insert id="insertRole" parameterType="roleBean">
+		insert into tst_system_role 
+		(role_name,create_time,is_delete)
+		VALUES
+		(#{role_name},now(),"0")
+	</insert>
+	
+	<update id='updateRole' parameterType="roleBean">
+		update tst_system_role set role_name=#{role_name} where role_id=#{role_id}
+	</update>
+	
+	<update id='deleteRole' parameterType="roleBean">
+		update tst_system_role set is_delete='1' where role_id=#{role_id}
+	</update>
+	
+	<!-- 权限管理 -->
+	<select id='getAuthorityByRole' parameterType="moudleBean" resultType="moudleBean">
+		select a.*,(case when b.role_moudle_id is null then '0' else '1' end) is_authority,#{role_id} as role_id 
+		from tst_system_moudle as a
+		left join tst_system_role_moudle as b
+		on a.moudle_id=b.moudle_id and b.role_id=#{role_id} and b.is_delete='0'		
+		where a.is_delete='0' and parent_id=#{parent_id}
+		order by a.sort asc
+	</select>
+	
+	<update id="updateRoleAuthority" parameterType="moudleBean">
+		update tst_system_role_moudle set is_delete='1'
+		where role_id=#{role_id} and moudle_parent_uuid like CONCAT("%",#{moudle_uuid},"%")
+	</update>
+	
+	<insert id="insertRoleAuthority" parameterType="moudleBean">
+		insert into tst_system_role_moudle
+		 (role_id,moudle_id,create_time,moudle_parent_uuid)values(#{role_id},#{moudle_id},now(),#{moudle_parent_uuid})
+	</insert>
+	
+	<select id="getMerchantsAccountSystem" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select * from tst_merchants_account 
+		where merchants_type=#{merchants_type} and is_delete ='0'
+	</select>
+	
+	<select id="getMerchantsAccount" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select * from tst_merchants_account 
+		where merchants_account=#{merchants_account} 
+		and is_delete ='0'
+	</select>
+	<select id="getMerchantsAccountById" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select * from tst_merchants_account 
+		where merchants_account_id=#{merchants_account_id} 
+		and is_delete ='0'
+	</select>
+	<insert id="insertMerchantsAccount" parameterType="merchantsAccountBean" 
+		useGeneratedKeys="true" keyProperty="merchants_account_id">
+		insert into tst_merchants_account 
+		(merchants_name,merchants_account,password,role_id,
+			merchants_type,merchants_token,create_time,
+			hx_account,hx_pass,hx_nick_name)
+		values
+		(#{merchants_name},#{merchants_account},#{password},#{role_id},
+		#{merchants_type},UUID(),now(),
+		#{hx_account},#{hx_pass},#{hx_nick_name})
+	</insert>
+	
+	<update id="updateMerchantsAccount" parameterType="merchantsAccountBean">
+		update tst_merchants_account 
+		set merchants_account_id=merchants_account_id
+		,city=#{city}
+		<if test=" search_end_time != null and search_end_time != '' ">
+			,search_end_time=#{search_end_time}
+		</if>
+		<if test=" search_start_time != null and search_start_time != '' ">
+			,search_start_time=#{search_start_time}
+		</if>
+		
+		<if test=" role_id != null and role_id != '' ">
+			,role_id=#{role_id}
+		</if>
+		<if test=" merchants_name != null and merchants_name != '' ">
+			,merchants_name=#{merchants_name}
+		</if>
+		<if test=" password != null and password != '' ">
+			,password=#{password}
+		</if>
+		<if test=" merchants_img != null and merchants_img != '' ">
+			,merchants_img=#{merchants_img}
+		</if>
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+	
+	<update id="deleteMerchantsAccount" parameterType="merchantsAccountBean">
+		update tst_merchants_account set is_delete='1'
+		 where merchants_account_id=#{merchants_account_id}
+	</update>
+	
+	<select id="merchantsLogin" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select a.*,b.merchants_id,c.qrcode_img as merchants_qrcode_img,c.balance as merchants_balance
+		from tst_merchants_account as a
+		left join tst_merchants_relation_account as b 
+		on a.merchants_account_id=b.merchants_account_id 
+		<if test=' is_default != "0" '>
+			and b.is_default=(case when a.is_extension='1' then "0" else "1" end)
+		</if>
+		left join tst_merchants as c on b.merchants_id=c.merchants_id
+		where a.merchants_account=#{merchants_account} and a.password=#{password}
+		and a.is_delete='0'
+		<if test=' merchants_type != null and merchants_type != "" '>
+			and a.merchants_type=#{merchants_type}
+		</if>
+		<if test=' is_extension != null and is_extension == "1" '>
+			and a.is_extension='1'
+		</if>
+	</select>
+	
+	<update id='updateToken' parameterType="merchantsAccountBean" >
+		update tst_merchants_account set merchants_token=#{merchants_token} where merchants_account_id=#{merchants_account_id}
+	</update>
+	<select id="verToken" parameterType="merchantsAccountBean" resultType="merchantsAccountBean">
+		select * from tst_merchants_account
+		where merchants_account_id=#{merchants_account_id1} and merchants_token=#{merchants_token}
+	</select>
+</mapper>

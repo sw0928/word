@@ -1,0 +1,282 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/3.
+ */
+
+public class UserBean {
+
+    /**
+     * user_id : 1
+     * token : 5824270643a24
+     * phone : 15801075991
+     * pwd : e10adc3949ba59abbe56e057f20f883e
+     * img : http://fkdc.tstmobile.com/public/admin/touxiang.png
+     * sex : 1
+     * type : 1
+     * username : null
+     * autograph : null
+     * id : 66173244
+     * intime : 1478764294
+     * uptime : null
+     * is_del : 1
+     * del_time : null
+     * alias : p5ahrw1ewsdk
+     * hx_username : p5ahrw1ewsdk
+     * hx_password : 123456
+     * grade : 0
+     * province : null
+     * city : null
+     * area : null
+     * address : null
+     * zan : 0
+     * money : 0
+     * openid : null
+     * qq_openid : null
+     * weibo : null
+     */
+
+    private String user_id;
+    private String token;
+    private String phone;
+    private String pwd;
+    private String img;
+    private String sex;
+    private String type;
+    private Object username;
+    private Object autograph;
+    private String id;
+    private String intime;
+    private Object uptime;
+    private String is_del;
+    private Object del_time;
+    private String alias;
+    private String hx_username;
+    private String hx_password;
+    private String grade;
+    private Object province;
+    private Object city;
+    private Object area;
+    private Object address;
+    private String zan;
+    private String money;
+    private Object openid;
+    private Object qq_openid;
+    private Object weibo;
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Object getUsername() {
+        return username;
+    }
+
+    public void setUsername(Object username) {
+        this.username = username;
+    }
+
+    public Object getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(Object autograph) {
+        this.autograph = autograph;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIntime() {
+        return intime;
+    }
+
+    public void setIntime(String intime) {
+        this.intime = intime;
+    }
+
+    public Object getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(Object uptime) {
+        this.uptime = uptime;
+    }
+
+    public String getIs_del() {
+        return is_del;
+    }
+
+    public void setIs_del(String is_del) {
+        this.is_del = is_del;
+    }
+
+    public Object getDel_time() {
+        return del_time;
+    }
+
+    public void setDel_time(Object del_time) {
+        this.del_time = del_time;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getHx_username() {
+        return hx_username;
+    }
+
+    public void setHx_username(String hx_username) {
+        this.hx_username = hx_username;
+    }
+
+    public String getHx_password() {
+        return hx_password;
+    }
+
+    public void setHx_password(String hx_password) {
+        this.hx_password = hx_password;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public Object getProvince() {
+        return province;
+    }
+
+    public void setProvince(Object province) {
+        this.province = province;
+    }
+
+    public Object getCity() {
+        return city;
+    }
+
+    public void setCity(Object city) {
+        this.city = city;
+    }
+
+    public Object getArea() {
+        return area;
+    }
+
+    public void setArea(Object area) {
+        this.area = area;
+    }
+
+    public Object getAddress() {
+        return address;
+    }
+
+    public void setAddress(Object address) {
+        this.address = address;
+    }
+
+    public String getZan() {
+        return zan;
+    }
+
+    public void setZan(String zan) {
+        this.zan = zan;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public Object getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(Object openid) {
+        this.openid = openid;
+    }
+
+    public Object getQq_openid() {
+        return qq_openid;
+    }
+
+    public void setQq_openid(Object qq_openid) {
+        this.qq_openid = qq_openid;
+    }
+
+    public Object getWeibo() {
+        return weibo;
+    }
+
+    public void setWeibo(Object weibo) {
+        this.weibo = weibo;
+    }
+}

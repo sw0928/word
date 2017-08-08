@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="tst.project.dao.controller.ShoppingCarDaoC">
+	<insert id="insertShoppingCar" parameterType="shoppingCarBean" useGeneratedKeys="true" keyProperty="car_id"> 
+		insert into tst_goods_shopping_car(member_id,goods_id,goods_num,merchants_id,create_time,car_type,goods_parameters
+		,car_totla_price)
+		values(#{member_id},#{goods_id},#{goods_num},#{merchants_id},now(),#{car_type},#{goods_parameters}
+		,#{car_totla_price})
+	</insert>
+	
+	<select id="getShoppingCarByGoodsIdAndMemberId" parameterType="shoppingCarBean" resultType="shoppingCarBean">
+		select * from tst_goods_shopping_car where goods_id=#{goods_id} and member_id=#{member_id} and is_delete='0'
+		and car_type=#{car_type}
+		and goods_parameters=#{goods_parameters}
+	</select>
+	
+	<select id="getShoppingCarB2C" parameterType="shoppingCarBean" resultType="shoppingCarBean">
+		select DISTINCT a.merchants_id 
+			from tst_goods_shopping_car as a
+			inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+			where a.member_id=#{member_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getShoppingCars"  parameterType="shoppingCarBean" resultType="shoppingCarMerchantsBean">
+			select DISTINCT a.merchants_id 
+			from tst_goods_shopping_car as a
+			inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+			where a.member_id=#{member_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getShoppingCarsByMerchants"  parameterType="shoppingCarBean" resultType="shoppingCarBean">
+		select a.* from tst_goods_shopping_car as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		where a.member_id=#{member_id}  and a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+	
+	
+	<update id="deleteShoppingCar" parameterType="shoppingCarBean">
+		update tst_goods_shopping_car set is_delete='1'
+		where car_id=#{car_id} and member_id=#{member_id}
+	</update>
+	
+	<update id="updateShoppingCarNum" parameterType="shoppingCarBean">
+		update tst_goods_shopping_car set goods_num=#{goods_num}
+		where car_id=#{car_id} and member_id=#{member_id}
+	</update>
+</mapper>

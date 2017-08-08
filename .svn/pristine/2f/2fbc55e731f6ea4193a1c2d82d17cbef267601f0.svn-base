@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y120"
+    android:id="@+id/item_fans_root"
+    android:background="@color/white">
+
+
+    <tts.moudle.api.widget.CircleImageView
+        android:id="@+id/item_fans_icon"
+        android:layout_width="@dimen/x102"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginBottom="@dimen/y20"
+        android:layout_height="@dimen/x102"
+        android:layout_marginLeft="@dimen/x20"/>
+    <TextView
+        android:id="@+id/item_fans_nickname"
+        style="@style/textview_rgb_323232_style"
+        android:layout_marginLeft="@dimen/x140"
+        android:textSize="@dimen/y32"
+        android:layout_marginTop="@dimen/y32"
+        />
+
+    <TextView
+        android:layout_marginTop="@dimen/y33"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_toRightOf="@+id/item_fans_nickname"
+        android:id="@+id/item_fans_guanzhu_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y24" />
+    <TextView
+        android:singleLine="true"
+        android:id="@+id/item_fans_money"
+        style="@style/textview_rgb_323232_style"
+        android:textColor="#999999"
+        android:layout_marginRight="@dimen/x140"
+        android:layout_marginLeft="@dimen/x140"
+        android:textSize="@dimen/y28"
+        android:layout_marginTop="@dimen/y82"
+        />
+
+    <ImageView
+        android:id="@+id/item_fans_member"
+        android:layout_marginTop="@dimen/y98"
+        android:layout_marginLeft="@dimen/x92"
+        android:layout_width="@dimen/x14"
+        android:layout_height="@dimen/y14" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/item_fans_guanzhu"
+        android:background="@drawable/state_bg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x580"
+        android:textSize="@dimen/y28"
+        android:textColor="@color/RGB_909090"
+        android:layout_marginTop="@dimen/y44"
+        android:text="关注"
+
+        />
+    <ImageView
+        android:id="@+id/item_fans_into"
+        android:layout_width="@dimen/x16"
+        android:layout_height="@dimen/y28"
+        android:src="@drawable/tiaozhuan"
+        android:layout_marginTop="@dimen/y56"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>

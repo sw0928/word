@@ -1,0 +1,33 @@
+package tts.project.livek.ui.adapter;
+
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.HomeBean;
+
+
+/**
+ * Created by wql on 2016/10/10.
+ */
+
+public class RecordListAdapter extends BaseQuickAdapter<HomeBean.WangHongListBean.RecordBean, BaseViewHolder> {
+    public RecordListAdapter(int layoutResId, List<HomeBean.WangHongListBean.RecordBean> data) {
+        super(layoutResId, data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder baseViewHolder, HomeBean.WangHongListBean.RecordBean goodsBean) {
+        ImageView item_icon= baseViewHolder.getView(R.id.item_icon);
+        baseViewHolder.addOnClickListener(R.id.item_icon);
+        Glide.with(mContext).load(goodsBean.getPlay_img()).diskCacheStrategy(DiskCacheStrategy.ALL).into(item_icon);
+        baseViewHolder.setText(R.id.watch_count, goodsBean.getPay_number());
+        baseViewHolder.addOnClickListener(R.id.item_icon);
+    }
+}

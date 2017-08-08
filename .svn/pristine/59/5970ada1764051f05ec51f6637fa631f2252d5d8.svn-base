@@ -1,0 +1,404 @@
+package tts.project.livek.bean;
+
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by lenove on 2016/12/25.
+ */
+
+public class HomeBean {
+
+    /**
+     * list : [{"user_id":"7","token":"585f848b3f593","phone":"18656329862","img":"http://yomi.tstmobile.com//public/admin/touxiang.png","sex":"2","username":"iihhhh","autograph":"","id":"38196125","hx_username":"pv6rsavch1os","hx_password":"123456","title":"欢迎来我的直播间","room_id":"279541895808418316","nums":"90","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482650719?e=1482654320&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:uoHEZIx5z978XZrj1XxqXdghO5I=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482650719","play_img":"http://yomi.tstmobile.com//public/admin/touxiang.png","zan":"92","money":"1702983","u_money":"9400","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Nw==","start_time":"2016.12.25","state":"1","is_follow":2,"my_follow":"3","follow_my":"0"},{"user_id":"12","token":"585f63e207b83","phone":"18626082866","img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585f6924c4e2b.jpg","sex":"1","username":"那年冬天台风来了","autograph":"","id":"85913609","hx_username":"is7jn2j7rgch","hx_password":"123456","title":"小电影","room_id":"279531253638627868","nums":"0","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482648241?e=1482651843&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:sj0BEXADtBUysSJYs_HWwbKEuUc=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482648241","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585f6924c4e2b.jpg","zan":"5","money":"1100","u_money":"0","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=MTI=","start_time":"1482648243","state":"2","is_follow":2,"record":[{"live_id":"50","title":"我的直播记录2016-12-25 144538","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482648241/0_1482648338.m3u8","intime":"2016","user_id":"12","pay_number":"0","room_id":"279531253638627868","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585f6924c4e2b.jpg"}]},{"user_id":"11","token":"585f6548299bf","phone":"15026592839","img":"http://yomi.tstmobile.com//public/admin/touxiang.png","sex":"1","username":"入职","autograph":"","id":"69308267","hx_username":"eibnld9vgaz4","hx_password":"123456","title":"偷窥","room_id":"279549165929759248","nums":"0","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482652412?e=1482656013&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:e-JyBNiTDvaJjYjGSUiPWu1JInE=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482652412","play_img":"http://yomi.tstmobile.com//public/admin/touxiang.png","zan":"0","money":"1100","u_money":"0","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=MTE=","start_time":"1482652413","state":"2","is_follow":2,"record":[{"live_id":"57","title":"我的直播记录2016-12-25 154917","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482652062/0_1482652157.m3u8","intime":"2016","user_id":"11","pay_number":"0","room_id":"279547664071131660","play_img":"http://pili-live-snapshot.tstmobile.com/vxiu1/php-sdk-test1482652062.jpg"},{"live_id":"58","title":"我的直播记录2016-12-25 155203","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482652239/0_1482652323.m3u8","intime":"2016","user_id":"11","pay_number":"0","room_id":"279548423814775308","play_img":"http://pili-live-snapshot.tstmobile.com/vxiu1/php-sdk-test1482652239.jpg"},{"live_id":"59","title":"我的直播记录2016-12-25 155423","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482652412/0_1482652463.m3u8","intime":"2016","user_id":"11","pay_number":"0","room_id":"279549165929759248","play_img":"http://pili-live-snapshot.tstmobile.com/vxiu1/php-sdk-test1482652412.jpg"}]},{"user_id":"6","token":"585f47f13a017","phone":"18502146505","img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585f4a6877108.jpg","sex":"2","username":"王鲲","autograph":"人遭枪击必流血","id":"02827236","hx_username":"6b22acawz7hi","hx_password":"123456","title":"圣诞节快乐","room_id":"279478085407998480","nums":"36","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482635862?e=1482639463&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:mvzlo-Sepj6-SIaLszJUgVG_u7U=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482635862","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585f4a6877108.jpg","zan":"107","money":"810","u_money":"20250","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Ng==","start_time":"1482635863","state":"2","is_follow":1,"record":[{"live_id":"48","title":"我的直播记录2016-12-25 112012","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482635862/0_1482636012.m3u8","intime":"2016","user_id":"6","pay_number":"0","room_id":"279478085407998480","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585e9804f3ee9.jpg"}]},{"user_id":"3","token":"585e96eec64ed","phone":"13761853396","img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","title":"一起看直播","room_id":"279298509079839260","nums":"179","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482594051?e=1482597652&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:or0mJ6MI9HZGlWR2w8BBeDiSFLs=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482594051","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","zan":"60","money":"331713","u_money":"658172","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","start_time":"1482594052","state":"2","is_follow":3,"record":[{"live_id":"11","title":"我的直播记录2016-12-23 223746","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482502040/0_1482503865.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"278903322344161820","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"18","title":"我的直播记录2016-12-24 012059","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482512990/0_1482513659.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"278950355352420888","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"19","title":"我的直播记录2016-12-24 023420","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482516503/0_1482518057.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"278965442360377872","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"20","title":"我的直播记录2016-12-24 031227","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482520166/0_1482520347.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"278981174926246412","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"21","title":"我的直播记录2016-12-24 113829","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482550189/0_1482550709.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279110121424945688","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"22","title":"我的直播记录2016-12-24 123500","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482553889/0_1482554100.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279126012661334556","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"23","title":"我的直播记录2016-12-24 131024","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482555624/0_1482556223.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279133465620775448","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"24","title":"我的直播记录2016-12-24 131916","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482556580/0_1482556755.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279137573337563664","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"25","title":"我的直播记录2016-12-24 131918","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482556580/0_1482556758.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279137573337563664","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"26","title":"我的直播记录2016-12-24 142734","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482560763/0_1482560853.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279155536392356372","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"27","title":"我的直播记录2016-12-24 145125","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482560917/0_1482562285.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279156200971436572","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"28","title":"我的直播记录2016-12-24 153805","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482564516/0_1482565085.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279171655211680276","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"29","title":"我的直播记录2016-12-24 160656","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482566667/0_1482566815.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279180896991445516","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"30","title":"我的直播记录2016-12-24 160745","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482566824/0_1482566865.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279181568730202652","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"31","title":"我的直播记录2016-12-24 160838","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482566882/0_1482566918.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279181819205648916","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"32","title":"我的直播记录2016-12-24 161720","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482567125/0_1482567440.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279182860588417556","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"33","title":"我的直播记录2016-12-24 163528","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482568475/0_1482568527.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279188662086795788","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"34","title":"我的直播记录2016-12-24 165208","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482569442/0_1482569528.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279192813063635472","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"35","title":"我的直播记录2016-12-24 175446","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482573219/0_1482573286.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279209037705249308","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"36","title":"我的直播记录2016-12-24 195605","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482579324/0_1482580565.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279235255003513368","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"40","title":"我的直播记录2016-12-24 215257","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482587412/0_1482587577.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279269996041863700","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"42","title":"我的直播记录2016-12-24 231359","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482592364/0_1482592439.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279291264547947032","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"43","title":"我的直播记录2016-12-24 231720","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482592613/0_1482592640.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279292333818642972","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"},{"live_id":"44","title":"我的直播记录2016-12-24 233644","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482593743/0_1482593802.m3u8","intime":"2016","user_id":"3","pay_number":"0","room_id":"279297185621738008","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg"}]},{"user_id":"2","token":"585e9ae1586d8","phone":"15801075991","img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585e77c53ee6e.jpg","sex":"1","username":"你在","autograph":"你在","id":"5491313","hx_username":"h7n3q4bi2tt5","hx_password":"123456","title":"欢迎来我的直播间","room_id":"279305666705752596","nums":"23","push_flow_address":"rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482595718?e=1482599319&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:U3-C14uBfSGqgsuhDUdmronu_xs=","play_address":"rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482595718","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585e77c53ee6e.jpg","zan":"43","money":"460","u_money":"6400","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mg==","start_time":"1482595719","state":"2","is_follow":2,"record":[{"live_id":"45","title":"我的直播记录2016-12-24 235807","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482595054/0_1482595086.m3u8","intime":"2016","user_id":"2","pay_number":"0","room_id":"279302816835568140","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585e77c53ee6e.jpg"},{"live_id":"47","title":"我的直播记录2016-12-25 000851","url":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482595718/0_1482595731.m3u8","intime":"2016","user_id":"2","pay_number":"0","room_id":"279305666705752596","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585e77c53ee6e.jpg"}]}]
+     * page : 2
+     */
+
+    private int page;
+    /**
+     * user_id : 7
+     * token : 585f848b3f593
+     * phone : 18656329862
+     * img : http://yomi.tstmobile.com//public/admin/touxiang.png
+     * sex : 2
+     * username : iihhhh
+     * autograph :
+     * id : 38196125
+     * hx_username : pv6rsavch1os
+     * hx_password : 123456
+     * title : 欢迎来我的直播间
+     * room_id : 279541895808418316
+     * nums : 90
+     * push_flow_address : rtmp://yomirtmp.tstmobile.com/vxiu1/php-sdk-test1482650719?e=1482654320&token=pR_CsEkFcTn1Kgf8ZNIh2zUB_w8bzaeLYEgjBItT:uoHEZIx5z978XZrj1XxqXdghO5I=
+     * play_address : rtmp://yomiplay.tstmobile.com/vxiu1/php-sdk-test1482650719
+     * play_img : http://yomi.tstmobile.com//public/admin/touxiang.png
+     * zan : 92
+     * money : 1702983
+     * u_money : 9400
+     * url : http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Nw==
+     * start_time : 2016.12.25
+     * state : 1
+     * is_follow : 2
+     * my_follow : 3
+     * follow_my : 0
+     */
+
+    private List<WangHongListBean> list;
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public List<WangHongListBean> getList() {
+        return list;
+    }
+
+    public void setList(List<WangHongListBean> list) {
+        this.list = list;
+    }
+
+    public static class WangHongListBean implements Serializable,MultiItemEntity {
+        public static final  int LIVE=1;
+        public static final  int RECORD=2;
+        private int itemType;
+        private String user_id;
+        private String token;
+        private String phone;
+        private String img;
+        private String sex;
+        private String username;
+        private String autograph;
+        private String id;
+        private String hx_username;
+        private String hx_password;
+        private String title;
+        private String room_id;
+        private String nums;
+        private String push_flow_address;
+        private String play_address;
+        private String play_img;
+        private String zan;
+        private String money;
+        private String u_money;
+        private String url;
+        private String start_time;
+        private String state;
+        private int is_follow;
+        private String my_follow;
+        private String follow_my;
+        private List<RecordBean> record;
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getAutograph() {
+            return autograph;
+        }
+
+        public void setAutograph(String autograph) {
+            this.autograph = autograph;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getHx_username() {
+            return hx_username;
+        }
+
+        public void setHx_username(String hx_username) {
+            this.hx_username = hx_username;
+        }
+
+        public String getHx_password() {
+            return hx_password;
+        }
+
+        public void setHx_password(String hx_password) {
+            this.hx_password = hx_password;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getRoom_id() {
+            return room_id;
+        }
+
+        public void setRoom_id(String room_id) {
+            this.room_id = room_id;
+        }
+
+        public String getNums() {
+            return nums;
+        }
+
+        public void setNums(String nums) {
+            this.nums = nums;
+        }
+
+        public String getPush_flow_address() {
+            return push_flow_address;
+        }
+
+        public void setPush_flow_address(String push_flow_address) {
+            this.push_flow_address = push_flow_address;
+        }
+
+        public String getPlay_address() {
+            return play_address;
+        }
+
+        public void setPlay_address(String play_address) {
+            this.play_address = play_address;
+        }
+
+        public String getPlay_img() {
+            return play_img;
+        }
+
+        public void setPlay_img(String play_img) {
+            this.play_img = play_img;
+        }
+
+        public String getZan() {
+            return zan;
+        }
+
+        public void setZan(String zan) {
+            this.zan = zan;
+        }
+
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getU_money() {
+            return u_money;
+        }
+
+        public void setU_money(String u_money) {
+            this.u_money = u_money;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getStart_time() {
+            return start_time;
+        }
+
+        public void setStart_time(String start_time) {
+            this.start_time = start_time;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            if (state.equals("1")){
+                itemType=LIVE;
+            }else if (state.equals("2")){
+                itemType=RECORD;
+            }else{
+                itemType=LIVE;
+            }
+
+            this.state = state;
+        }
+
+        public List<RecordBean> getRecord() {
+            return record;
+        }
+
+        public void setRecord(List<RecordBean> record) {
+            this.record = record;
+        }
+
+        public int getIs_follow() {
+            return is_follow;
+        }
+
+        public void setIs_follow(int is_follow) {
+            this.is_follow = is_follow;
+        }
+
+        public String getMy_follow() {
+            return my_follow;
+        }
+
+        public void setMy_follow(String my_follow) {
+            this.my_follow = my_follow;
+        }
+
+        public String getFollow_my() {
+            return follow_my;
+        }
+
+        public void setFollow_my(String follow_my) {
+            this.follow_my = follow_my;
+        }
+
+        @Override
+        public int getItemType() {
+            return "1".equals(this.state)?1:2;
+        }
+
+        public static class RecordBean{
+
+            /**
+             * live_id : 50
+             * title : 我的直播记录2016-12-25 144538
+             * url : http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482648241/0_1482648338.m3u8
+             * intime : 2016
+             * user_id : 12
+             * pay_number : 0
+             * room_id : 279531253638627868
+             * play_img : http://yomi.tstmobile.com//Uploads/image/touxiang/585f6924c4e2b.jpg
+             */
+
+            private String live_id;
+            private String title;
+            private String url;
+            private String intime;
+            private String user_id;
+            private String pay_number;
+            private String room_id;
+            private String play_img;
+
+            public String getLive_id() {
+                return live_id;
+            }
+
+            public void setLive_id(String live_id) {
+                this.live_id = live_id;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+
+            public String getIntime() {
+                return intime;
+            }
+
+            public void setIntime(String intime) {
+                this.intime = intime;
+            }
+
+            public String getUser_id() {
+                return user_id;
+            }
+
+            public void setUser_id(String user_id) {
+                this.user_id = user_id;
+            }
+
+            public String getPay_number() {
+                return (pay_number==null)?(0+"人看过"):(pay_number+"人看过");
+            }
+
+            public void setPay_number(String pay_number) {
+                this.pay_number = pay_number;
+            }
+
+            public String getRoom_id() {
+                return room_id;
+            }
+
+            public void setRoom_id(String room_id) {
+                this.room_id = room_id;
+            }
+
+            public String getPlay_img() {
+                return play_img;
+            }
+
+            public void setPlay_img(String play_img) {
+                this.play_img = play_img;
+            }
+        }
+    }
+}

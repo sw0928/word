@@ -1,0 +1,33 @@
+package tts.project.livek.utils;
+
+/**
+ * Created by lenove on 2016/12/3.
+ */
+
+public class Constant {
+    public static final String STREAM_JSON_STR="stream_json_str";
+    public static final String USER_BEAN = "user_bean";
+    public static final String USERCENTERBEAN ="usercenterbean" ;
+    public static final String IS_AUTOGRAPH = "is_autograph";
+    public static final String AUTOGRAPH = "autograph";
+    public static final String NICKNAME = "nickname";
+    public static final String ISADD = "isadd";
+    public static final String U_COUNT = "u_count";
+    public static final String DIMEND_COUNT = "dimend_count";
+    public static final String WangHongBean="wanghongbean";
+    public static final String VIDEO_PLAY = "video_play";
+    public static final String StartLiveBean ="startlivebean";
+    public static final String IS_GUANZHU = "is_guanzhu";
+    public static final String GIFT = "gift";
+    public static final String IMG = "IMG";
+    public static final String GIFT_NAME ="GIFT_NAME" ;
+    public static final String USER_NAME = "USER_NAME";
+    public static final String USER_IMG = "USER_IMG";
+    public static final String WANG_HONG_ID = "wang_hong_id";
+    public static final String RECORD_BEAN = "record_bean";
+    public static final String USER_ID = "user_id";
+    public static final String MONEY =  "money";
+    public static final String PLAY_ADDRESS = "PLAY_ADDRESS";
+    public static String Gift_IMG="Gift_IMG";
+    public static  String GifT_FROM="GifT_FROM";
+}

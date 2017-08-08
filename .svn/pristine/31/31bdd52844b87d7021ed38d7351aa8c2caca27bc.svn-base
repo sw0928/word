@@ -1,0 +1,49 @@
+package tts.project.livek.bean;
+
+import java.io.Serializable;
+
+public class AnchorBean implements Serializable {
+    /**
+     * 当前用户的环信昵称
+     */
+    String anchorId;
+    //用户头像地址url
+    int cover;
+    /**
+     *    //当前用户的环信昵称
+     */
+    String name;
+    String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getAnchorId() {
+        return anchorId;
+    }
+
+    public void setAnchorId(String anchorId) {
+        this.anchorId = anchorId;
+    }
+
+    public int getCover() {
+        return cover;
+    }
+
+    public void setCover(int cover) {
+        this.cover = cover;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

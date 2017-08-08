@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x750"
+        android:layout_height="@dimen/y140">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/imgUpRefreshArrow"
+                android:layout_width="@dimen/x18"
+                android:layout_height="@dimen/y39"
+                android:layout_centerVertical="true"
+                android:src="@drawable/indicator_arrow" />
+
+            <ProgressBar
+                android:id="@+id/pbUpRefreshRound"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="@dimen/x39"
+                android:layout_height="@dimen/y39"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:id="@+id/layout_Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_toRightOf="@+id/pbUpRefreshRound"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtFooterTip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上拉加载更多..."
+                    android:textColor="#808080"
+                    android:textSize="@dimen/y30"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtRecordRefresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y20"
+                    android:text="无更新记录"
+                    android:textColor="#BFBFBF"
+                    android:textSize="@dimen/y26" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

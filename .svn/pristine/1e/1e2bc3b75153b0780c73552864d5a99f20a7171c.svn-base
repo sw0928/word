@@ -1,0 +1,125 @@
+package tts.project.livek.bean;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by lenove on 2016/12/19.
+ */
+
+public class HeadImageBean {
+
+    /**
+     * count_viewer : 3
+     * count_u : 1090
+     * list : [{"username":"小格格","user_id":"5"},{"username":"印象东方1","user_id":"2"},{"username":"Joe你空","user_id":"3"}]
+     */
+
+    private String count_viewer;
+    private String count_u;
+    /**
+     * username : 小格格
+     * user_id : 5
+     */
+
+    private List<ListBean> list;
+
+    public String getCount_viewer() {
+        return count_viewer;
+    }
+
+    public void setCount_viewer(String count_viewer) {
+        this.count_viewer = count_viewer;
+    }
+
+    public String getCount_u() {
+        return count_u;
+    }
+
+    public void setCount_u(String count_u) {
+        this.count_u = count_u;
+    }
+
+    public List<ListBean> getList() {
+        return list;
+    }
+
+    public void setList(List<ListBean> list) {
+        this.list = list;
+    }
+
+    public static class ListBean implements Serializable {
+        private String username;
+        private String user_id;
+        private String img;
+        private String is_follow;
+
+        public String getIs_follow() {
+            return is_follow;
+        }
+
+        public void setIs_follow(String is_follow) {
+            this.is_follow = is_follow;
+        }
+
+        public String getID() {
+            return ID;
+        }
+
+        public void setID(String ID) {
+            this.ID = ID;
+        }
+
+        private String hx_username;
+        private String follow_my;
+        private String my_follow;
+        private String ID;
+        public String getFollow_my() {
+            return follow_my;
+        }
+
+        public void setFollow_my(String follow_my) {
+            this.follow_my = follow_my;
+        }
+
+        public String getMy_follow() {
+            return my_follow;
+        }
+
+        public void setMy_follow(String my_follow) {
+            this.my_follow = my_follow;
+        }
+
+        public String getHx_username() {
+            return hx_username;
+        }
+
+        public void setHx_username(String hx_username) {
+            this.hx_username = hx_username;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+    }
+}

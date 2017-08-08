@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>付款成功</title>
+    <script  src="JS/jquery-mobile/jquery.js"></script>
+    <script  src="JS/jquery-mobile/jquery.min.js"></script>
+    <script  src="common.js"></script>
+    <script  src="pay_end.js"></script>
+</head>
+<body style="padding:0;margin:0;height:100%;">
+
+</body>
+</html>

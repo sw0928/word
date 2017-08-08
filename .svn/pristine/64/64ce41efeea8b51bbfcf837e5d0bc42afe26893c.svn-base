@@ -1,0 +1,25 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.ui.holder.BaseViewHolder;
+import tts.project.livek.ui.holder.SearchItemHolder;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class SearchAdapter extends BaseRecyclerViewAdapter<String> {
+
+
+    public SearchAdapter(Context mContext, List<String> mDatas) {
+        super(mContext, mDatas);
+    }
+
+    @Override
+    public BaseViewHolder getItemHolder(Context mContext, OnItemClickRecyclerListener listener, ViewGroup parent) {
+        return new SearchItemHolder(mContext, listener, LayoutInflater.from(mContext).inflate(R.layout.holder_item_search, parent, false));
+    }
+}

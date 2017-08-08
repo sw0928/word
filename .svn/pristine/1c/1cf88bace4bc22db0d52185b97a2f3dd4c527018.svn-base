@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.SWDao">
+	
+	<select id="getShoppingCarWithShare" parameterType="shoppingCarMemberBean" resultType="Map">
+		select DISTINCT a.merchants_id,a.order_id 
+		from tst_goods_shopping_share_car as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		where a.member_car_id=#{member_car_id}  and a.is_delete='0'
+	</select>
+
+	<update id="updateShareShoppingCarNum" parameterType="shoppingCarShareBean">
+		update tst_goods_shopping_share_car
+		set goods_num=goods_num+#{goods_num},update_time=now()
+		where share_car_id=#{share_car_id} and goods_num+#{goods_num}>0
+	</update>
+	
+	<update id="updateShareShoppingCarNumV2" parameterType="shoppingCarShareBean">
+		update tst_goods_shopping_share_car
+		set goods_num=#{goods_num},update_time=now()
+		where share_car_id=#{share_car_id} 
+	</update>
+	
+	<update id="deleteShareShoppingCar" parameterType="shoppingCarShareBean">
+		update tst_goods_shopping_share_car
+		set is_delete='1',update_time=now()
+		where share_car_id=#{share_car_id}
+	</update>
+	
+	<select id="getShareOutShoppingCar" parameterType="shoppingCarMemberBean" resultType="shoppingCarMemberBean">
+		select DISTINCT a.* from tst_goods_shopping_member_car as a
+		inner join tst_goods_shopping_share_car  as b 
+		on a.member_car_id=b.member_car_id and b.is_delete='0'
+		where a.user_id=#{member_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getShareMerchantsShoppingCar"  parameterType="shoppingCarShareBean" resultType="Map">
+		select DISTINCT a.merchants_id,a.order_id,c.order_state
+		from tst_goods_shopping_share_car as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		left join tst_order as c on a.order_id=c.order_id
+		where a.member_car_id=#{member_car_id}  and a.is_delete='0'
+	</select>
+	
+	<select id="getShareIngShoppingCar" parameterType="shoppingCarMemberBean" resultType="shoppingCarMemberBean">
+		select DISTINCT a.* from tst_goods_shopping_member_car as a
+		inner join tst_goods_shopping_share_car  as b 
+		on a.member_car_id=b.member_car_id and b.is_delete='0'
+		where a.member_id=#{member_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getShareMemberShoppingCar" parameterType="shoppingCarShareBean" resultType="shoppingCarShareBean">
+		select * from tst_goods_shopping_share_car
+		where member_car_id=#{member_car_id} and is_delete='0'
+		and merchants_id=#{merchants_id}
+	</select>
+	
+	<insert id="insertMemberShoppingCar" parameterType="shoppingCarShareBean" >
+		insert into tst_goods_shopping_share_car
+		(member_car_id,car_id,create_time,goods_num,goods_id,goods_parameters,merchants_id,update_time)
+		values
+		(#{member_car_id},#{car_id},now(),#{goods_num},#{goods_id},#{goods_parameters},#{merchants_id},now())
+	</insert>
+
+	<insert id="shareShoppingCar" parameterType="shoppingCarMemberBean" useGeneratedKeys="true" keyProperty="member_car_id">
+		insert into tst_goods_shopping_member_car
+		(user_id,order_state,member_id,create_time)
+		values
+		(#{user_id},'0',#{member_id},now())
+	</insert>
+
+	<select id="getLastTrust" parameterType="trustBean" resultType="trustBean">
+		select * from tst_merchants_trust
+		where member_id=#{member_id} and is_delete='0'
+		order by create_time desc
+		limit 0,1
+	</select>
+	
+	<select id="getOneTrust" parameterType="trustBean" resultType="trustBean">
+		select * from tst_merchants_trust
+		where member_id=#{member_id} and is_delete='0' and trust_id=#{trust_id}
+	</select>
+	
+	<select id="getTrust" parameterType="trustBean" resultType="trustBean">
+		select * from tst_merchants_trust
+		where member_id=#{member_id} and is_delete='0'
+		order by create_time desc
+	</select>
+	
+	<select id="getTrustItem" parameterType="trustItemBean" resultType="trustItemBean">
+		select * from tst_merchants_trust_item
+		where is_delete='0' and trust_id=#{trust_id}
+		order by create_time desc
+	</select>
+	
+	<insert id="applyTrust" parameterType="trustBean" keyProperty="trust_id" useGeneratedKeys="true">
+		insert into tst_merchants_trust
+		(member_id,
+		apply_name,apply_sex,apply_position,apply_fixed_mobile,apply_mobile,
+		apply_email,create_time,apply_company)
+		values
+		(#{member_id},
+		#{apply_name},#{apply_sex},#{apply_position},#{apply_fixed_mobile},#{apply_mobile},
+		#{apply_email},now(),#{apply_company})
+	</insert>
+	
+	<insert id="applyTrustItem" parameterType="trustItemBean">
+		insert into tst_merchants_trust_item
+		(trust_id,item_name,item_responsible_name,company_name,item_code,
+		item_start_time,item_end_time,item_price,trust_price,trust_remark,create_time)
+		values
+		(#{trust_id},#{item_name},#{item_responsible_name},#{company_name},#{item_code},
+		#{item_start_time},#{item_end_time},#{item_price},#{trust_price},#{trust_remark},now())
+	</insert>
+	
+	<select id="getClassBanners" parameterType="classBannerBean" resultType="classBannerBean">
+		select * from tst_class_banner
+		where class_id=#{class_id} and is_delete='0'
+	</select>
+	
+	<select id="getBusinessBuyClass3" parameterType="goodsBean" resultType="Map">
+		select DISTINCT b.goods_id,b.goods_uuid,b.goods_name from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id = b.goods_id and b.is_delete='0'
+		and b.goods_state='1' 
+		<if test=' parent_id != null and parent_id != "" '>
+			and b.parent_id=#{parent_id}
+		</if>
+		where a.goods_type='2' and a.is_delete='0' and a.goods_state='1'  and a.is_business_buy='1'	
+	</select>
+	
+	<select id="getBusinessBuyClass2" parameterType="goodsBean" resultType="Map">
+		select DISTINCT c.goods_id,c.goods_uuid,c.goods_name from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id = b.goods_id and b.is_delete='0' and b.goods_state='1'
+		inner join tst_goods as c 
+		on b.parent_id=c.goods_id and c.is_delete='0' 
+		and c.goods_state='1' and c.parent_id=#{parent_id}
+		where a.goods_type='2' and a.is_delete='0' 
+		and a.goods_state='1'  and a.is_business_buy='1'
+	</select>
+	
+	<select id="getBusinessBuyClass1" parameterType="goodsBean" resultType="Map">
+		select DISTINCT d.goods_id,d.goods_uuid,d.goods_name from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id = b.goods_id and b.is_delete='0' and b.goods_state='1'
+		inner join tst_goods as c 
+		on b.parent_id=c.goods_id and c.is_delete='0' 
+		and c.goods_state='1' 
+		inner join tst_goods as d
+		on c.parent_id=d.goods_id and d.is_delete='0' 
+		and d.goods_state='1'  and d.parent_id=#{parent_id}
+		where a.goods_type='2' and a.is_delete='0' 
+		and a.goods_state='1'  and a.is_business_buy='1'		
+	</select>
+
+	<insert id="insertOrderSWMember" parameterType="orderSWBean">
+		insert into tst_order_sw_member
+		(member_id,order_id,grab_state,create_time)
+		values
+		(#{member_id},#{order_id},'wait_grab',now())
+	</insert>
+	
+	<select id="getMemberMerchants" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where FIND_IN_SET(member_role,"merchants,business") and is_delete='0'
+	</select>
+	
+	<select id="getOrderSwById" parameterType="orderSWBean" resultType="orderSWBean">
+		select * from tst_order_sw
+		where order_id = #{order_id}
+	</select>
+	
+	<update id="grabOrderSW" parameterType="orderSWBean">
+		update tst_order_sw_member
+		set grab_state='end'
+		where member_order_id=#{member_order_id}
+	</update>
+	
+	<update id="updateOrderSwState" parameterType="orderSWBean">
+		update tst_order_sw
+		set order_state='end'
+		where order_id=#{order_id}
+	</update>
+	
+	<select id="getMemberGrabOrderSWs" parameterType="orderSWBean" resultType="orderSWBean">
+		select b.*,a.member_order_id,a.grab_state from tst_order_sw_member as a
+		inner join tst_order_sw as b on a.order_id=b.order_id and b.order_state=#{grab_state}
+		where a.member_id=#{member_id} and a.grab_state=#{grab_state}
+		order by a.create_time desc
+	</select>
+	
+	<update id="deleteOrderSW" parameterType="orderSWBean">
+		update tst_order_sw
+		set is_delete='1'
+		where order_id=#{order_id}
+	</update>
+	
+	<update id="cancelOrderSW" parameterType="orderSWBean">
+		update tst_order_sw
+		set order_state='cancel'
+		where order_id=#{order_id}
+	</update>
+	
+	<select id="getOrderSW"  parameterType="orderSWBean" resultType="orderSWBean">
+		select * from tst_order_sw
+		where order_id=#{order_id}
+	</select>
+
+	<select id="getMemberOrderSWs" parameterType="orderSWBean" resultType="orderSWBean">
+		select a.*,
+		c.member_account as grab_member_account,c.nick_name as grab_nick_name,
+		c.hx_account as grab_hx_account,c.hx_nick_name as grab_hx_nick_name from tst_order_sw as a
+		left join tst_order_sw_member as b 
+		on a.order_id=b.order_id and b.grab_state='end'
+		left join tst_member as c on b.member_id=c.member_id
+		where a.is_delete='0' and a.member_id=#{member_id} and a.order_state=#{order_state}
+		order by a.create_time desc
+	</select>
+	
+	<insert id="insertOrderSW" parameterType="orderSWBean" useGeneratedKeys="true" keyProperty="order_id">
+		insert into tst_order_sw
+		(member_name,member_mobile,goods_name,goods_num,
+			order_price,order_state,create_time,member_id,address)
+		values
+		(#{member_name},#{member_mobile},#{goods_name},#{goods_num},
+		#{order_price},'wait_grab',now(),#{member_id},#{address})
+	</insert>
+
+
+	<select id="getClassRecommendGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type=#{goods_type} and goods_state='1' and is_delete='0'
+		and is_class_recommend='1' 
+		and goods_parent_uuid like concat('%',#{goods_uuid},'%')
+	</select>
+	
+	<select id="getRecommendGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type=#{goods_type} and goods_state='1' and is_delete='0'
+		and is_recommend='1' 
+		and goods_parent_uuid like concat('%',#{goods_uuid},'%')
+	</select>
+	
+	<select id="getGoodsClass" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type=#{goods_type} and goods_state='1' and is_delete='0'
+		and is_recommend='1' and parent_id=#{parent_id}
+	</select>
+
+	<select id="getGoodsBrands" parameterType="goodsBean" resultType="brandBean">
+		select DISTINCT b.* from tst_goods as a
+		inner join tst_brand as b on a.brand_id=b.brand_id and b.is_delete='0'
+		where a.goods_type='2' and a.goods_state='1' 
+		and a.is_delete='0' and a.goods_parent_uuid like concat("%",#{goods_uuid},"%")
+	</select>
+
+	<select id="getGroupGoodss" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where is_delete='0' and goods_state='1' and is_group_buy='1' and goods_type='2'
+	</select>
+
+	<select id="getAlbums" parameterType="albumBean" resultType="albumBean">
+		select * from tst_activity_album
+		where is_delete='0'
+		order by sort asc
+	</select>
+
+	<select id="getMerchantsRecommendGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_state='1' and is_delete='0' and merchants_id=#{merchants_id} and is_merchants_recommend='1'
+		and goods_type='2'
+	</select>
+
+	<select id="getHotHeadlinesMerchants" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.*,c.collection_id,(case when c.collection_id is null then "0" else "1" end)
+		as is_collection ,
+		(select count(*) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as goods_total_num,
+		(select sum(year_sales) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as year_sales
+		from tst_merchants as a
+		left join tst_collection as c on a.merchants_id=c.relation_id and c.collection_type='merchants' 
+		and c.is_delete='0' and c.member_id=#{member_id} where a.is_hot='1' and a.is_delete='0'
+	</select>
+	
+	<select id="getOneMemberDynamicHeadlines" parameterType="merchantsBean" resultType="merchantsBean">
+		select * from tst_member_merchants
+		where member_id=#{member_id} and merchants_id=#{merchants_id}
+	</select>
+	
+	<insert id="memberCloseDynamicHeadlines" parameterType="merchantsBean">
+		insert into tst_member_merchants
+		(member_id,merchants_id,create_time)
+		values
+		(#{member_id},#{merchants_id},now())
+	</insert>
+	
+	<select id="getDynamicHeadlinesMerchants" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.*,c.collection_id,(case when c.collection_id is null then "0" else "1" end)
+		as is_collection ,
+		
+		(select count(*) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as goods_total_num,
+		(select sum(year_sales) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as year_sales 
+		
+		from tst_merchants as a
+		left join tst_collection as c on a.merchants_id=c.relation_id and c.collection_type='merchants' 
+		and c.is_delete='0' and c.member_id=#{member_id}
+		
+		<if test=' member_id != null and member_id != "" '>
+			left join tst_member_merchants as b on a.merchants_id=b.merchants_id and b.member_id=#{member_id} and b.is_delete='0'	
+		</if>
+		where a.is_dynamic='1' and a.is_delete='0'
+		<if test=' member_id != null and member_id != "" '>
+			and b.member_merchants_id is null
+		</if>
+	</select>
+	<select id="getExactGoodGoodss" parameterType="goodsBean" resultType="goodsBean">
+		
+	select * from (	
+		select *
+		from (	
+				
+		select a.* from tst_goods as a 
+		
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where a.goods_state='1' and a.is_delete='0' and a.is_goods_exact='1'
+		and a.goods_type='2'
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+		<if test=" sort=='' or sort==null or sort=='default' ">
+			order by a.sort_time desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'assessment' ">
+			order by a.assessment_count desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'sales' ">
+			order by a.year_sales desc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_now_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_now_price desc
+			</if>
+		</if>	
+		<if test="sort!='' and sort!=null and sort=='pc_price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_pc_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_pc_price desc
+			</if>
+		</if>	
+	</select>
+	
+	<select id="getAlbumGoodGoodss" parameterType="goodsBean" resultType="goodsBean">
+			
+	select * from (	
+		select *
+		from (				
+		select a.* from tst_goods as a
+		inner join tst_activity_album_goods as h
+		on a.goods_id=h.goods_id and h.album_id=#{album_id} and h.is_delete='0'
+		
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		
+		where a.is_delete='0' and a.goods_state='1' and goods_type='2'
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+		<if test=" sort=='' or sort==null or sort=='default' ">
+			order by a.sort_time desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'assessment' ">
+			order by a.assessment_count desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'sales' ">
+			order by a.year_sales desc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_now_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_now_price desc
+			</if>
+		</if>	
+		<if test="sort!='' and sort!=null and sort=='pc_price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_pc_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_pc_price desc
+			</if>
+		</if>	
+	</select>
+	
+	<select id="getHomeGoods" parameterType="goodsBean" resultType="goodsBean">
+		select a.*,b.brand_name from tst_goods as a
+		inner join tst_brand as b on a.brand_id=b.brand_id 
+		where a.goods_state='1' and a.is_delete='0' and a.is_recommend='1' and a.goods_type='2'
+		<if test=' parent_id != null and parent_id != "" '>
+			and a.parent_id=#{parent_id} and goods_id != #{goods_id}
+		</if>
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		</if>
+		order by bidding_price desc
+	</select>
+
+	<select id="getHomeLabels" parameterType="homeLabelBean" resultType="homeLabelBean">
+		select * from tst_home_label
+		where label_position=#{label_position} and is_delete='0'
+		order by sort asc
+	</select>
+
+	<select id="getNewsClass" parameterType="newsBean" resultType="newsBean">
+		select * from tst_activity_news 
+		where is_delete='0'
+	</select>
+	
+	<select id="getNewsGoods" parameterType="newsBean" resultType="goodsBean">
+		select b.* from tst_activity_news_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'		
+		where news_id=#{news_id}
+	</select>
+	
+	<select id="getNewsRecommendGoods" parameterType="newsBean" resultType="goodsBean">
+		select b.* from tst_activity_news_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		where a.is_recommend='1' and a.is_delete='0'
+	</select>
+	
+	<select id="getNewsExactGoods" parameterType="newsBean" resultType="goodsBean">
+		select b.* from tst_activity_news_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		where b.is_exact='1' and a.is_delete='0'
+	</select>
+</mapper>

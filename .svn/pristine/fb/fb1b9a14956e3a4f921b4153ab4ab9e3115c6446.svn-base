@@ -1,0 +1,108 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/21.
+ */
+
+public class MessageBean {
+    public static final int IDLE = 0;
+    public static final int SHOWING = 0;
+    public static final int OVER = 0;
+    private  long time;
+
+
+    private String giftimg;
+    private String giftstr;
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public String getGiftimg() {
+        return giftimg;
+    }
+
+    public void setGiftimg(String giftimg) {
+        this.giftimg = giftimg;
+    }
+
+    public String getGiftstr() {
+        return giftstr;
+    }
+
+    public void setGiftstr(String giftstr) {
+        this.giftstr = giftstr;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getGiftprice() {
+        return giftprice;
+    }
+
+    public void setGiftprice(String giftprice) {
+        this.giftprice = giftprice;
+    }
+
+    public String getGift_id() {
+        return gift_id;
+    }
+
+    public void setGift_id(String gift_id) {
+        this.gift_id = gift_id;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getUserimg() {
+        return userimg;
+    }
+
+    public void setUserimg(String userimg) {
+        this.userimg = userimg;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    private String username;
+    private String giftprice;
+    private String gift_id;
+    private String userid;
+    private String userimg;
+    private int state;
+    private int count;
+
+
+
+
+}

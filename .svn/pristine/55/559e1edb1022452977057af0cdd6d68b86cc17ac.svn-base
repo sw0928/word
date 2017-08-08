@@ -1,0 +1,122 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.hyphenate.easeui.widget.EaseImageView;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.HomeBean;
+import tts.project.livek.ui.activity.PlayerRecordLiveActivity;
+import tts.project.livek.utils.Constant;
+
+public class FollowAdapter extends BaseMultiItemQuickAdapter<HomeBean.WangHongListBean, BaseViewHolder> {
+    public FollowAdapter(List data) {
+        super(data);
+        addItemType(HomeBean.WangHongListBean.LIVE, R.layout.holder_item_follow);
+        addItemType(HomeBean.WangHongListBean.RECORD, R.layout.holder_item_record);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder baseViewHolder, final HomeBean.WangHongListBean wangHongListBean) {
+        if (baseViewHolder.getItemViewType() == HomeBean.WangHongListBean.LIVE) {
+            TextView audienceNum = baseViewHolder.getView(R.id.audience_num);
+            TextView author = baseViewHolder.getView(R.id.author);
+            ImageView imageView = baseViewHolder.getView(R.id.photo);
+            EaseImageView avatar = baseViewHolder.getView(R.id.avatar);
+            author.setText(wangHongListBean.getUsername());
+            audienceNum.setText(wangHongListBean.getNums() + "人正在观看");
+            Glide.with(mContext)
+                    .load(wangHongListBean.getImg())
+                    .placeholder(R.color.placeholder)
+                    .into(avatar);
+            Glide.with(mContext)
+                    .load(wangHongListBean.getImg())
+                    .placeholder(R.color.placeholder)
+                    .into(imageView);
+        } else  if (baseViewHolder.getItemViewType() == HomeBean.WangHongListBean.RECORD) {
+            baseViewHolder.addOnClickListener(R.id.recycleview);
+            final RecyclerView recyclerView= baseViewHolder.getView(R.id.recycleview);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            // 关注
+            final RecordListAdapter adapter = new RecordListAdapter(R.layout.item_record, wangHongListBean.getRecord());
+            recyclerView.addOnItemTouchListener(new OnItemChildClickListener() {
+               @Override
+               public void onSimpleItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                   Intent intent = new Intent(mContext, PlayerRecordLiveActivity.class);
+                   intent.putExtra(Constant.PLAY_ADDRESS,wangHongListBean.getRecord().get(i).getUrl());
+                   mContext.startActivity(intent);
+
+               }
+           });
+            recyclerView.setAdapter(adapter);
+            final TextView audienceNum = baseViewHolder.getView(R.id.audience_num);
+            baseViewHolder.addOnClickListener(R.id.audience_num);
+            audienceNum.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    audienceNum.setVisibility(View.GONE);
+                }
+            });
+            if (wangHongListBean.getIs_follow()==1){
+                // 已关注
+                audienceNum.setVisibility(View.GONE);
+            }else  if (wangHongListBean.getIs_follow()==2){
+                // 未关注
+                audienceNum.setVisibility(View.VISIBLE);
+            }else if (wangHongListBean.getIs_follow()==3){
+                // 自己
+                audienceNum.setVisibility(View.GONE);
+            }
+            // 头像
+            EaseImageView avatar = baseViewHolder.getView(R.id.avatar);
+            Glide.with(mContext)
+                    .load(wangHongListBean.getImg())
+                    .placeholder(R.color.placeholder)
+                    .into(avatar);
+            TextView author = baseViewHolder.getView(R.id.author);
+            author.setText(wangHongListBean.getUsername());
+
+        }
+    }
+
+//    public FollowAdapter(int layoutResId, List<HomeBean.WangHongListBean> data) {
+//        super(layoutResId, data);
+//
+//    }
+//    @BindView(R.id.avatar)
+//    EaseImageView avatar;
+//    @BindView(R.id.photo)
+//    ImageView imageView;
+//    @Override
+//    protected void convert(BaseViewHolder baseViewHolder, HomeBean.WangHongListBean wangHongListBean) {
+//        TextView audienceNum= baseViewHolder.getView(R.id.audience_num);
+//        TextView author= baseViewHolder.getView(R.id.author);
+//        ImageView imageView= baseViewHolder.getView(R.id.photo);
+//        EaseImageView avatar= baseViewHolder.getView(R.id.avatar);
+//        author.setText(wangHongListBean.getUsername());
+//        audienceNum.setText(wangHongListBean.getNums() + "人");
+//        Glide.with(mContext)
+//                .load(wangHongListBean.getImg())
+//                .placeholder(R.color.placeholder)
+//                .into(avatar);
+//        Glide.with(mContext)
+//                .load(wangHongListBean.getPlay_img())
+//                .placeholder(R.color.placeholder)
+//                .into(imageView);
+//    }
+
+}

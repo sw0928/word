@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+    <include layout="@layout/toolbar_item"/>
+    <LinearLayout
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginTop="@dimen/y70"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y74"
+        android:orientation="horizontal">
+        <EditText
+            android:phoneNumber="true"
+            android:id="@+id/findpwdback_phone_number"
+            android:background="@drawable/btn_et_bg"
+            android:layout_width="@dimen/x442"
+            android:layout_height="@dimen/y74"
+            android:hint="请输入手机号"
+            android:paddingLeft="@dimen/x22"
+            android:textColorHint="#cccccc"
+            android:textSize="@dimen/y28"
+            />
+        <TextView
+            android:id="@+id/findpwdback_get_verificationcode"
+            android:background="@drawable/btn_login_bg"
+            android:layout_marginRight="@dimen/x30"
+            android:layout_width="@dimen/x232"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_height="@dimen/y74"
+            android:textSize="@dimen/y28"
+            android:text="获取验证码"
+            android:textColor="#666666"
+            />
+    </LinearLayout>
+
+    <EditText
+        android:phoneNumber="true"
+        android:id="@+id/findpwdback_put_verification_code"
+        android:paddingLeft="@dimen/x22"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_et_bg"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_width="@dimen/x692"
+        android:layout_height="@dimen/y74"
+        android:hint=" 请输入收到的验证码"
+        android:textColorHint="#cccccc"
+        android:textSize="@dimen/y28"
+        />
+    <EditText
+        android:id="@+id/findpwdback_put_newpwd"
+        android:paddingLeft="@dimen/x22"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_et_bg"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_width="@dimen/x692"
+        android:layout_height="@dimen/y74"
+        android:hint=" 请输入新密码"
+        android:textColorHint="#cccccc"
+        android:textSize="@dimen/y28"
+        />
+    <TextView
+        android:id="@+id/tishi"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginLeft="@dimen/x52"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/y28"
+        android:text="完成后可直接通过手机号和新密码登录"
+        android:textColor="#169BD5"
+        />
+    <TextView
+        android:id="@+id/findpwdback_login"
+        android:background="@drawable/btn_login_bg"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginTop="@dimen/y60"
+        android:layout_width="@dimen/x672"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_height="@dimen/y82"
+        android:textSize="@dimen/y32"
+        android:text="登录"
+        android:textColor="#666666"
+        />
+
+</LinearLayout>

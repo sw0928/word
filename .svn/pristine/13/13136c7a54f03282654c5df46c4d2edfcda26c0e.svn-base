@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <RelativeLayout
+        android:id="@+id/action_head"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:id="@+id/shoplist_textview_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/y36"
+            android:text="网红认证"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"/>
+        <ImageView
+            android:id="@+id/autograph_activity_back"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x24"
+            android:layout_width="@dimen/x26"
+            android:layout_height="@dimen/y44"
+            android:src="@drawable/back"/>
+        <TextView
+            android:paddingTop="@dimen/y10"
+            android:paddingBottom="@dimen/y10"
+            android:paddingLeft="@dimen/x34"
+            android:paddingRight="@dimen/x34"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_alignParentRight="true"
+            android:id="@+id/wanghongrenzheng_activity_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/y28"
+            android:text="提交"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:background="@color/activity_background"
+        android:layout_marginLeft="@dimen/x50"
+        android:layout_marginRight="@dimen/x50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y122"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="姓 名:"
+            android:textColor="#95989a"
+            android:textSize="@dimen/y30"
+            android:id="@+id/textView2" />
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <EditText
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            android:id="@+id/wanghongrenzheng_activity_name"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="请输入您的姓名"
+            android:textColorHint="#ccc"
+            android:textColor="@color/RGB_333333"
+            android:textSize="@dimen/y28"
+            android:layout_centerVertical="true"
+           />
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/into"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"></LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y122"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x20"
+                android:text="手机号："
+                android:textColor="#95989a"
+                android:textSize="@dimen/y30" />
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <EditText
+                android:gravity="right"
+                android:layout_alignParentRight="true"
+                android:phoneNumber="true"
+                android:id="@+id/wanghongrenzheng_activity_phone_num"
+                android:background="@null"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="请输入您的手机号"
+                android:textColorHint="#ccc"
+                android:textColor="@color/RGB_333333"
+                android:textSize="@dimen/y30" />
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/x40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/into"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"></LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y122"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="身份证："
+            android:textColor="#95989a"
+            android:textSize="@dimen/y30" />
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <EditText
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            android:id="@+id/wanghongrenzheng_activity_card"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:hint="请输入您的身份证号码"
+            android:textColorHint="#ccc"
+            android:textColor="@color/RGB_333333"
+            android:textSize="@dimen/y30" />
+
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/into"/>
+        </LinearLayout>
+    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y2"></LinearLayout>
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y122"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x20"
+                android:text="才 艺："
+                android:textColor="#95989a"
+                android:textSize="@dimen/y30" />
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:gravity="right"
+                android:layout_alignParentRight="true"
+                android:id="@+id/wanghongrenzheng_activity_art"
+                android:background="@null"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x172"
+                android:textColor="@color/RGB_333333"
+                android:textColorHint="#ccc"
+                android:hint="如演员，歌手，舞蹈，模特等"
+                android:textSize="@dimen/y30" />
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/x40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/into"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"></LinearLayout>
+
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y122"
+            android:background="@color/white">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x20"
+                android:text="认 证："
+                android:textColor="#95989a"
+                android:textSize="@dimen/y30" />
+            <LinearLayout
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:gravity="right"
+                    android:id="@+id/wanghongrenzheng_activity_renzheng"
+                    android:background="@null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="如微博认证，才艺证书等"
+                    android:textColor="@color/RGB_333333"
+                    android:textColorHint="#ccc"
+                    android:textSize="@dimen/y30" />
+
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/x40"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/into"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/activity_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y10"></LinearLayout>
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y578"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="请添加手持身份证正反面各一张（画面清晰）："
+            android:textColor="#2a2430"
+            android:textSize="@dimen/y32"
+            android:id="@+id/textView3" />
+        <LinearLayout
+            android:background="@color/activity_background"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_marginRight="@dimen/x50"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y2"></LinearLayout>
+        <LinearLayout
+            android:layout_marginRight="@dimen/x50"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/add_pic"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:id="@+id/idcard_icon_positive"
+                android:layout_width="@dimen/y220"
+                android:layout_height="@dimen/y220" />
+
+            <ImageView
+                android:src="@drawable/add_pic"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitXY"
+                android:id="@+id/idcard_icon_reverse"
+                android:layout_width="@dimen/y220"
+                android:layout_height="@dimen/y220" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

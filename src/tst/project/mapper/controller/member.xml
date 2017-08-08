@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.MemberDaoC">
+	<select id="getMemberByMobile" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where member_account=#{member_account} and is_delete='0'
+	</select>
+
+	<select id="getMemberByStore" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where stored_code=#{stored_code} and is_delete='0'
+	</select>
+	
+	<update id="deleteMemberStored" parameterType="memberBean" >
+		update tst_member
+		set stored_code=""
+		where member_id=#{member_id}
+	</update>
+	
+	<select id="getAllMembersCount" parameterType="memberBean" resultType="Map">
+		select sum(case when is_vip='1' then 1 else 0 end) as member_count from 
+		tst_member
+	</select>
+
+	<select id="getDistributionMembers" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where 1=1 and fill_invitation_code=#{invitation_code}
+		<if test=' member_id != null and member_id != "0" '>
+			and user_id=#{member_id}
+		</if>
+		<if test=' member_account != null and member_account != "" '>
+			and mobile_phone=#{member_account}
+		</if>
+	</select>
+	
+	<update id="updateMemberDetailZSSG" parameterType="memberBean">
+		update ecs_users set user_name=user_name
+				,user_money=#{user_money}
+		where user_id=#{member_id}
+	</update>
+	
+	<update id="updateMemberDetail" parameterType="memberBean" >
+		update tst_member set member_id=member_id
+		
+		<if test=' trust_balance != null and trust_balance != "" '>
+			,trust_balance=#{trust_balance}
+		</if>
+		
+		<if test=' balance != null and balance != "" '>
+			,balance=#{balance}
+		</if>
+		
+		
+		<if test=' fill_invitation_code != null and fill_invitation_code != "" '>
+			,fill_invitation_code=#{fill_invitation_code}
+		</if>
+		
+		<if test=' member_level != null and member_level != "" '>
+			,member_level=#{member_level}
+		</if>
+		
+		
+		<if test=' merchants_no != null and merchants_no != "" '>
+			,merchants_no=#{merchants_no}
+		</if>
+		
+		<if test=' vip_level != null and vip_level != "" '>
+			,vip_level=#{vip_level}
+		</if>
+		
+		<if test=' stored_code != null and stored_code != "" '>
+			,stored_code=#{stored_code}
+		</if>
+		<if test=' member_code != null and member_code != "" '>
+			,member_code=#{member_code}
+		</if>
+		
+		<if test=' nick_name != null and nick_name != "" '>
+			,nick_name=#{nick_name}
+		</if>
+		<if test=' phone != null and phone != "" '>
+			,phone=#{phone}
+		</if>
+		<if test=' integral != null and integral != "" '>
+			,integral=#{integral}
+		</if>
+		<if test=' position != null and position != "" '>
+			,position=#{position}
+		</if>
+		<if test=' hobby != null and hobby != "" '>
+			,hobby=#{hobby}
+		</if>
+		<if test=' create_time != null and create_time != "" '>
+			,create_time=#{create_time}
+		</if>
+		<if test=' head_path != null and head_path != "" '>
+			,head_path=#{head_path}
+		</if>
+		<if test=' backgroup_img != null and backgroup_img != "" '>
+			,backgroup_img=#{backgroup_img}
+		</if>
+		<if test=' age != null and age != "" '>
+			,age=#{age}
+		</if>
+		<if test=' sex != null and sex != "" '>
+			,sex=#{sex}
+		</if>
+		<if test=' balance != null and balance != "" '>
+			,balance=#{balance}
+		</if>
+		<if test=' business_id != null and business_id != "" '>
+			,business_id=#{business_id}
+		</if>
+		<if test=' merchants_account_id != null and merchants_account_id != "" '>
+			,merchants_account_id=#{merchants_account_id}
+		</if>
+		where member_id=#{member_id}
+	</update>
+	
+	<select id="getAllMembers" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where 1=1
+		<if test=' member_id != null and member_id != "0" '>
+			and member_id=#{member_id}
+		</if>
+		<if test=' member_account != null and member_account != "" '>
+			and member_account=#{member_account}
+		</if>
+		order by create_time desc
+	</select>	
+	
+	<select id="exportMemberExcel" parameterType="memberBean" resultType="Map">
+		select b.member_account as fill_member_code1
+		,c.member_account as fill_member_code2,a.* from tst_member as a
+		left join tst_member as b 
+		on a.fill_invitation_code=b.invitation_code and b.is_delete='0'
+		left join tst_member as c
+		on b.fill_invitation_code=c.invitation_code and c.is_delete='0'
+		where 1=1
+		<if test=' member_id != null and member_id != "0" '>
+			and a.member_id=#{member_id}
+		</if>
+		<if test=' member_account != null and member_account != "" '>
+			and a.member_account=#{member_account}
+		</if>
+		order by a.create_time desc
+	</select>	
+	
+	<select id="getAllMembersZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where 1=1
+		<if test=' member_id != null and member_id != "0" '>
+			and user_id=#{member_id}
+		</if>
+		<if test=' member_account != null and member_account != "" '>
+			and mobile_phone=#{member_account}
+		</if>
+		<if test=' nick_name != null and nick_name != "" '>
+			and (nick_name like concat('%',#{nick_name},'%') or user_name like concat('%',#{nick_name},'%'))
+		</if>
+	</select>
+	
+	<select id="getOneMemberDetail" parameterType="memberBean" resultType="memberBean">
+		select b.member_account as fill_member_account,a.* from tst_member as a
+		left join tst_member as b 
+		on a.fill_invitation_code=b.invitation_code
+		where a.member_id=#{member_id}
+	</select>
+	
+	<select id="getOneMemberDetailZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where user_id=#{member_id}
+	</select>
+</mapper>

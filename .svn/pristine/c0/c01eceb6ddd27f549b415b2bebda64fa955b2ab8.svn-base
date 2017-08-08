@@ -1,0 +1,89 @@
+/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/build/intermediates/ndk/debug/obj/local/armeabi-v7a/objs/rnupdate//Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/randtable.o: \
+ /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/randtable.c \
+ /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bzlib_private.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdlib.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs_elf.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/android/api-level.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/string.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/malloc.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/xlocale.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/alloca.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/strings.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdint.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/machine/wchar_limits.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/int-ll64.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/bitsperlong.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/bitsperlong.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/posix_types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/stddef.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/compiler.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/posix_types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/posix_types.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/sysmacros.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/memory.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdio.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/ctype.h \
+ /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bzlib.h
+
+/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bzlib_private.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdlib.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/cdefs_elf.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/android/api-level.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/string.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/malloc.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/xlocale.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/alloca.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/strings.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdint.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/machine/wchar_limits.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/int-ll64.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/bitsperlong.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/bitsperlong.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/posix_types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/stddef.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/linux/compiler.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm/posix_types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/asm-generic/posix_types.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/sys/sysmacros.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/memory.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/stdio.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-arm/usr/include/ctype.h:
+
+/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bzlib.h:

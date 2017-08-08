@@ -1,0 +1,23 @@
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := rnupdate
+LOCAL_LDFLAGS := -Wl,--build-id
+LOCAL_LDLIBS := \
+	-llog \
+
+LOCAL_SRC_FILES := \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/blocksort.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bspatch.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bzlib.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/compress.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/crctable.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/decompress.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/DownloadTask.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/huffman.c \
+	/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/randtable.c \
+
+LOCAL_C_INCLUDES += /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni
+LOCAL_C_INCLUDES += /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/release/jni
+
+include $(BUILD_SHARED_LIBRARY)

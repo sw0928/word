@@ -1,0 +1,128 @@
+package tts.project.livek.ui.activity;
+
+import android.support.v4.util.ArrayMap;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.bean.BarBean;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+
+public class WithDrawActivity extends BaseActivity {
+
+    public static final int DATA=0;
+    public static final int GET_COUNT=1;
+    private UserBean userBean;
+    private EditText u_count;
+    private EditText alipay_cont;
+    private String count;
+    private TextView renmingbi_count;
+    private String trim;
+    private String trim1;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_with_draw);
+        setTitle(new BarBean().setMsg("提现"));
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        renmingbi_count = (TextView) findViewById(R.id.renming_count);
+        TextView count_left= (TextView) findViewById(R.id.count_left);
+        String stringExtra = getIntent().getStringExtra(Constant.U_COUNT);
+        count_left.setText("当前剩余U币 :"+stringExtra);
+        TextView login_activity_login= (TextView) findViewById(R.id.login_activity_login);
+        u_count = (EditText) findViewById(R.id.u_count);
+        alipay_cont = (EditText) findViewById(R.id.alipay_cont);
+        u_count.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                count = editable.toString();
+                startRequestData(GET_COUNT);
+            }
+        });
+        login_activity_login.setOnClickListener(new View.OnClickListener() {
+
+
+
+            @Override
+            public void onClick(View view) {
+                trim = alipay_cont.getText().toString().trim();
+                if (TextUtils.isEmpty(trim)){
+                    ToastUtils.show(WithDrawActivity.this,"支付宝账号不能为空");
+                    return;
+                }
+                trim1 = u_count.getText().toString().trim();
+                if (TextUtils.isEmpty(trim1)) {
+                    ToastUtils.show(WithDrawActivity.this, "还未提现的秀币数量");
+                    return;
+                }
+                startRequestData(DATA);
+            }
+        });
+    }
+
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+            case DATA:
+//                alipay	string	Y		支付宝账号
+//                diamond	string	Y		钻石
+//                amount	int	Y		提现金额
+                map.put("uid",userBean.getUser_id());
+                map.put("token",userBean.getToken());
+
+                map.put("alipay",trim);
+                map.put("diamond",trim1);
+                map.put("amount",renmingbi_count.getText().toString());
+                getDataWithPost(DATA, Host.hostUrl+"&c=User&a=withdraw",map);
+                break;
+            case GET_COUNT:
+//                diamond	int	Y		钻石
+                map.put("uid",userBean.getUser_id());
+                map.put("token",userBean.getToken());
+                map.put("diamond",count);
+                getDataWithPost(GET_COUNT, Host.hostUrl+"&c=User&a=calculate",map);
+                break;
+        }
+    }
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case DATA:
+                ToastUtils.show(this,"提现成功");
+                finish();
+                Logger.e(response);
+                break;
+            case GET_COUNT:
+                renmingbi_count.setText("可获得人民币 ：  "+response+"元");
+                break;
+        }
+    }
+
+}

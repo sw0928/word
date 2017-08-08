@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/live_bejing"
+    android:animateLayoutChanges="true">
+
+    <!--推流布局-->
+    <com.qiniu.pili.droid.streaming.widget.AspectFrameLayout
+        android:id="@+id/cameraPreview_afl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <android.opengl.GLSurfaceView
+            android:id="@+id/cameraPreview_surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+    </com.qiniu.pili.droid.streaming.widget.AspectFrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/global_title_bar_height_top"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="right|center_vertical">
+
+        <ImageButton
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_arrow_close"/>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_panl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+    <!--创建直播界面-->
+    <RelativeLayout
+        android:id="@+id/start_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/global_title_bar_height_top">
+
+        <LinearLayout
+            android:id="@+id/edit_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/choose_img"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@drawable/add_fengmina"/>
+
+            <EditText
+
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="给你的直播写个标题吧"
+                android:textColor="#fff"
+                android:textColorHint="#fff"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_container"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:text="开始直播"/>
+
+    </RelativeLayout>
+
+    <!--封面-->
+
+    <!--结束推流面板-->
+    <include
+        android:id="@+id/finish_frame"
+        layout="@layout/layout_live_finish"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/global_title_bar_height_top"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="right|center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/ic_arrow_close_transparent"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cover_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        android:layout_below="@+id/countdown_txtv"
+        android:layout_alignParentStart="true" />
+
+
+    <!--开始界面倒计时-->
+    <TextView
+        android:id="@+id/countdown_txtv"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="3"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/y350"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        />
+</RelativeLayout>

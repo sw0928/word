@@ -1,0 +1,54 @@
+package tts.project.livek.ui.adapter;
+
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
+
+import tts.moudle.api.widget.CircleImageView;
+import tts.project.livek.R;
+import tts.project.livek.bean.AttentionBean;
+
+
+/**
+ * Created by wql on 2016/10/10.
+ */
+
+public class MyFansListAdapter extends BaseQuickAdapter<AttentionBean, BaseViewHolder> {
+    public MyFansListAdapter(int layoutResId, List<AttentionBean> data) {
+        super(layoutResId, data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder baseViewHolder, AttentionBean goodsBean) {
+        CircleImageView imageView=baseViewHolder.getView(R.id.item_fans_icon);
+        Glide.with(mContext).load(goodsBean.getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        baseViewHolder.setText(R.id.item_fans_nickname, goodsBean.getUsername());
+//        baseViewHolder.setText(R.id.item_attention_guanzhu_level, goodsBean.getGrade());
+        baseViewHolder.setText(R.id.item_fans_money,goodsBean.getAutograph().toString());
+        RelativeLayout root=baseViewHolder.getView(R.id.item_fans_root);
+
+        TextView guanzhu=baseViewHolder.getView(R.id.item_fans_guanzhu);
+        if (goodsBean.getIs_follow()==1){
+//            1 已关注/
+            guanzhu.setText("已关注");
+        }else{
+            guanzhu.setText("关注");
+        }
+        baseViewHolder.addOnClickListener(R.id.item_fans_guanzhu);
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+    }
+}

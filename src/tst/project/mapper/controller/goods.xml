@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.GoodsDao">
+
+	<update id="deleteHomeActivity" parameterType="homeActivityBean">
+		update tst_home_activity
+		set is_delete='1'
+		where activity_id=#{activity_id}
+	</update>
+	
+	<update id="updateHomeActivityState" parameterType="homeActivityBean">
+		update tst_home_activity
+		set activity_state=#{activity_state}
+		where home_type=#{home_type}
+	</update>
+		
+	<insert id="insertHomeActivity" parameterType="homeActivityBean">
+		insert into tst_home_activity
+		(activity_name,sort,activity_img,relation_id,activity_type,home_type,activity_state)
+		values
+		(#{activity_name},#{sort},#{activity_img},#{relation_id},#{activity_type},#{home_type},#{activity_state})
+	</insert>
+	
+	<update id="updateHomeActivity" parameterType="homeActivityBean">
+		update tst_home_activity
+		set activity_name=#{activity_name},
+		sort=#{sort} ,activity_img=#{activity_img}
+		,relation_id=#{relation_id},activity_type=#{activity_type}
+		where activity_id=#{activity_id}
+	</update>
+	
+	<select id="getHomeActivitys" parameterType="homeActivityBean" resultType="homeActivityBean">
+		select * from tst_home_activity
+		where home_type=#{home_type} and is_delete='0'
+		order by sort asc
+	</select>
+	
+	<select id="exportGoodsExcel" parameterType="goodsBean" resultType="goodsBean">
+		select a.*,
+		b.goods_name as parent_name,b.goods_parent_uuid as parent_uuid
+		,c.merchants_name
+		from tst_goods as a
+		left join tst_goods as b on a.parent_id=b.goods_id
+		inner join tst_merchants as c on a.merchants_id=c.merchants_id	
+		where  a.goods_type='2' and a.is_delete='0'
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		<if test=' brand_id != null and brand_id != ""  '>
+			and a.brand_id = #{brand_id}		
+		</if>
+		<if test=' goods_sku != null and goods_sku != ""  '>
+			and a.goods_sku like concat('%',#{goods_sku},'%') 		
+		</if>
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and a.goods_name like concat('%',#{goods_name},'%') 		
+		</if>
+			
+		<if test=' merchants_id != null and merchants_id != "" and merchants_id != "-1" '>
+			and a.merchants_id=#{merchants_id} 		
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time > #{start_time}
+		</if>	
+		
+		<if test=' end_time != null and end_time != "" '>
+			and #{end_time} > a.create_time
+		</if>
+		order by a.sort_time desc
+	</select>
+	
+	
+	<update id="updateGoodsStateByMerchants" parameterType="goodsBean">
+		update tst_goods set goods_state='0'
+		where merchants_id =#{merchants_id}
+	</update>
+
+	<insert id="insertStorehouse" parameterType="storehouseBean" >
+		insert into tst_goods_storehouse
+		(storehouse_name,create_time,storehouse_province,storehouse_city,storehouse_area,longitude,latitude,contact_name,contact_mobile,is_lastDeliveryAddress)
+		values
+		(#{storehouse_name},now(),#{storehouse_province},#{storehouse_city},#{storehouse_area},#{longitude},#{latitude},#{contact_name},#{contact_mobile},#{is_lastDeliveryAddress})
+	</insert>
+
+	<update id="updateStorehouse" parameterType="storehouseBean">
+		update tst_goods_storehouse
+		set storehouse_id=#{storehouse_id}
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			, storehouse_name=#{storehouse_name}
+		</if>
+		<if test=' storehouse_province != null and storehouse_province != "" '>
+			, storehouse_province=#{storehouse_province}
+		</if>
+		<if test=' storehouse_city != null and storehouse_city != "" '>
+			, storehouse_city=#{storehouse_city}
+		</if>
+		<if test=' storehouse_area != null and storehouse_area != "" '>
+			, storehouse_area=#{storehouse_area}
+		</if>
+		<if test=' longitude != null and longitude != "" '>
+			, longitude=#{longitude}
+		</if>
+		<if test=' latitude != null and latitude != "" '>
+			, latitude=#{latitude}
+		</if>
+		<if test=' contact_name != null and contact_name != "" '>
+			, contact_name=#{contact_name}
+		</if>
+		<if test=' contact_mobile != null and contact_mobile != "" '>
+			, contact_mobile=#{contact_mobile}
+		</if>
+		<if test=' is_lastDeliveryAddress != null and is_lastDeliveryAddress != "" '>
+			, is_lastDeliveryAddress=#{is_lastDeliveryAddress}
+		</if>
+		where storehouse_id=#{storehouse_id}
+	</update>
+
+
+	<update id="deleteStorehouse" parameterType="storehouseBean">
+		update tst_goods_storehouse
+		set is_delete='1'
+		where storehouse_id=#{storehouse_id}
+	</update>
+	
+	<select id="getGoodsStorehouses" parameterType="storehouseBean" resultType="storehouseBean">
+		select * from tst_goods_storehouse
+		where is_delete='0' and is_lastDeliveryAddress = '0'
+	</select>
+	<select id="getGoodsStorehousesNoPage" parameterType="storehouseBean" resultType="storehouseBean">
+		select * from tst_goods_storehouse
+		where is_delete='0' and is_lastDeliveryAddress = '0' 
+	</select>
+		
+	<select id="getGoodsStorehouses2" parameterType="storehouseBean" resultType="storehouseBean">
+		select * from tst_goods_storehouse
+		where is_delete='0' and is_lastDeliveryAddress = '1'
+	</select>
+	<select id="getGoodsStorehouses2NoPage" parameterType="storehouseBean" resultType="storehouseBean">
+		select * from tst_goods_storehouse
+		where is_delete='0' and is_lastDeliveryAddress = '1'
+	</select>
+	<select id="getGoodsParameterBeansByArray" parameterType="String" resultType="goodsParameterBean">
+		select * from tst_goods_parameter where parameter_id in <foreach item="item" index="index" collection="ids" 
+	open="(" separator="," close=")">
+	#{item}
+	</foreach>
+	</select>
+	
+	<insert id="insertGoodsGroupBuy" parameterType="groupBuyGoodsBean" >
+		insert into tst_group_buy_goods
+		(goods_id,group_buy_price,group_buy_need_time,group_buy_need_people,group_buy_name,sort)
+		values
+		(#{goods_id},#{group_buy_price},#{group_buy_need_time},#{group_buy_need_people},#{group_buy_name},#{sort})
+	</insert>
+	<update id="updateGoodsGroupBuy" parameterType="groupBuyGoodsBean">
+		update tst_group_buy_goods set 
+		group_buy_price=#{group_buy_price},group_buy_need_time=#{group_buy_need_time},
+		group_buy_need_people=#{group_buy_need_people},group_buy_name=#{group_buy_name},
+		sort=#{sort}
+		where goods_group_buy_id=#{goods_group_buy_id}
+	</update>
+	
+	<update id="deleteGoodsGroupBuy" parameterType="groupBuyGoodsBean">
+		update tst_group_buy_goods set 
+		is_delete='1'
+		where goods_group_buy_id=#{goods_group_buy_id}
+	</update>
+	<select id="getGoodsGroupBuys" parameterType="groupBuyGoodsBean" resultType="groupBuyGoodsBean">
+		select * from tst_group_buy_goods
+		where goods_id=#{goods_id} and is_delete='0'
+		order by sort asc
+	</select>
+	
+	<insert id="insertStandard" parameterType="standardBean">
+		insert into tst_goods_standard
+		(goods_id,standard_name,standard_desc,create_time,sort,parent_id)
+		values
+		(#{goods_id},#{standard_name},#{standard_desc},now(),#{sort},#{parent_id})
+	</insert>
+	
+	<update id='updateStandard' parameterType="standardBean">
+		update tst_goods_standard
+		set standard_name=#{standard_name},
+		standard_desc=#{standard_desc},
+		sort=#{sort}
+		where standard_id=#{standard_id}
+	</update>
+	
+	<update id="deleteStandard" parameterType="standardBean">
+		update tst_goods_standard
+		set is_delete=#{is_delete}
+		where standard_id=#{standard_id}
+	</update>
+	
+	<update id="deleteStandards" parameterType="standardBean">
+		update tst_goods_standard
+		set is_delete='1'
+		where goods_id=#{goods_id}
+	</update>
+	
+	<select id="getGoodsStandard" parameterType='standardBean' resultType="standardBean">
+		select * from (
+		select * from tst_goods_standard
+				where goods_id=#{goods_id} and is_delete='0'	
+		union 
+		select a.* from tst_goods_standard as a 
+		left join tst_goods_standard as b on a.standard_id=b.parent_id 
+		and b.is_delete='0' and b.goods_id=#{goods_id}
+		where a.standard_type=#{standard_type} and a.is_delete='0' and a.standard_type is not null 
+and a.standard_type != ''
+		and (b.parent_id is null or b.parent_id='')
+		) as a
+		order by a.sort asc
+	</select>
+	
+	<select id="getGoodsClassLabels" parameterType="goodsLabelBean" resultType="goodsLabelBean">
+		select distinct goods_id from tst_goods_label
+		where parent_id='-1' and is_delete='0'
+	</select>
+	<select id="getAllGoodsClassLabels" parameterType="goodsLabelBean" resultType="goodsLabelBean">
+		<!-- select *,"1" as is_select from tst_goods_label
+		where parent_id=#{parent_id} and goods_id=#{goods_id} and is_delete='0' -->
+		select a.*,
+		(case when b.goods_label_id is null then "0" else "1" end) as is_select 
+		from tst_goods_label as a
+		left join tst_goods_relation_label 
+		as b on a.label_id=b.label_id and b.is_delete='0'
+		and b.goods_id=#{goods_id}
+		where a.parent_id=#{parent_id}
+		and a.goods_id=#{goods_class_id} and a.is_delete='0'
+		order by a.sort asc
+	</select>
+	
+	<insert id="insertGoodsClassLabel" parameterType="goodsLabelBean">
+		insert into tst_goods_label
+		(goods_id,label_name,create_time,sort,select_way,parent_id)
+		values
+		(#{goods_id},#{label_name},now(),#{sort},#{select_way},#{parent_id})
+	</insert>
+	
+	<update id="updateGoodsClassLabel" parameterType="goodsLabelBean">
+		update tst_goods_label
+		set label_name=#{label_name},select_way=#{select_way}
+		where label_id=#{label_id}
+	</update>
+	
+	<update id="deleteGoodsClassLabel" parameterType="goodsLabelBean">
+		update tst_goods_label
+		set is_delete='1'
+		where label_id=#{label_id}
+	</update>
+	
+	<select id="getAllGoodsClassNoPage" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+			where goods_type='1' and is_delete='0' and goods_state='1'
+	</select>
+	
+	<select id="getGoodsClassByParentId" parameterType="goodsBean" resultType="goodsBean">
+			select * ,
+			(select case when count(*)>0 then "0" else "1" end from tst_goods where parent_id=a.goods_id AND
+			 goods_type=#{goods_type} and is_delete='0') as is_end
+			from tst_goods as a
+			where a.goods_type=#{goods_type}
+			and a.is_delete ='0' and a.parent_id=#{parent_id}
+			order by a.sort asc
+	</select>
+	
+	<select id="getTemp" parameterType="goodsBean" resultType="goodsBean">
+		select c.goods_id,c.goods_parent_uuid from tst_goods as a
+		inner join tst_goods as b on a.goods_id=b.parent_id and b.is_delete='0' and b.goods_type='1'
+		inner join tst_goods as c on b.goods_id=c.parent_id and c.is_delete='0' and c.goods_type='1'
+		where a.goods_type='1' and a.is_delete='0'
+	</select>
+	
+	<insert id='insertGoodsClass' parameterType="goodsBean" useGeneratedKeys="true" keyProperty="goods_id">
+		insert into tst_goods 
+		(goods_name,goods_type,goods_img,sort,parent_id,create_time,goods_uuid,goods_parent_uuid,
+		goods_title,goods_desc,goods_state,is_recommend)
+		values
+		(#{goods_name},#{goods_type},#{goods_img},#{sort},#{parent_id},now(),#{goods_uuid},
+		CONCAT(case when (select a.goods_parent_uuid from (
+		select goods_parent_uuid  
+		from tst_goods where goods_id=#{parent_id}
+		) a) is null then "" else 
+		(select a.goods_parent_uuid from (
+		select goods_parent_uuid  
+		from tst_goods where goods_id=#{parent_id}
+		) a) end,"#",#{goods_uuid}),
+		#{goods_title},#{goods_desc},#{goods_state},#{is_recommend})
+	</insert>
+	
+	<update id="updateGoodsClass" parameterType="goodsBean">
+		update tst_goods set 
+		goods_name=#{goods_name},sort=#{sort},goods_img=#{goods_img},
+		goods_title=#{goods_title},goods_desc=#{goods_desc},goods_state=#{goods_state},
+		is_recommend=#{is_recommend}
+		where goods_id=#{goods_id}
+	</update>
+	
+	<update id="deleteGoodsClass" parameterType="goodsBean">
+		update tst_goods set is_delete='1' 
+		where goods_uuid = #{goods_uuid}
+	</update>
+	
+	
+	<select id="getAllBrands" parameterType="brandBean" resultType="brandBean">
+		select * from  tst_brand where is_delete='0'
+		order by sort asc
+	</select>
+	
+	<insert id='insertBrand' parameterType="brandBean">
+		insert into tst_brand 
+		(brand_name,brand_img,create_time,sort,brand_url,brand_desc)
+		values
+		(#{brand_name},#{brand_img},now(),#{sort},#{brand_url},#{brand_desc})	
+	</insert>
+	
+	<update id='updateBrand' parameterType="brandBean">
+		update tst_brand set brand_name=#{brand_name},brand_img=#{brand_img},sort=#{sort}
+		,brand_desc=#{brand_desc}
+		where brand_id=#{brand_id} 
+	</update>
+	
+	<update id="deleteBrand" parameterType="brandBean">
+		update tst_brand set is_delete='1' where brand_id=#{brand_id} 
+	</update>
+	
+	<update id="updateAllGoodsPrice" parameterType="goodsBean">
+		update tst_goods as a
+		left join tst_goods as b on a.parent_id=b.goods_id
+		inner join tst_merchants as c on a.merchants_id=c.merchants_id			
+		set a.goods_now_price=a.goods_now_price*#{goods_now_price}	
+		where  a.goods_type='2' and a.is_delete='0'
+		
+		<if test=' is_recommend != null and is_recommend != "" and is_recommend == "1" '>
+			and a.is_recommend='1'
+		</if>	
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != ""  '>
+			and a.goods_sku like concat('%',#{goods_sku},'%') 		
+		</if>
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and a.goods_name like concat('%',#{goods_name},'%') 		
+		</if>
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%') 		
+		</if>
+		<if test=' merchants_id != null and merchants_id != "" and merchants_id != "-1" '>
+			and a.merchants_id=#{merchants_id} 		
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time > #{start_time}
+		</if>	
+		
+		<if test=' end_time != null and end_time != "" '>
+			and #{end_time} > a.create_time
+		</if>
+	</update>
+	
+	<update id="deleteAllGoods" parameterType="goodsBean">
+		update tst_goods as a
+		left join tst_goods as b on a.parent_id=b.goods_id
+		inner join tst_merchants as c on a.merchants_id=c.merchants_id	
+		
+		set a.is_delete='1'
+		where  a.goods_type='2' and a.is_delete='0'
+		
+		<if test=' is_recommend != null and is_recommend != "" and is_recommend == "1" '>
+			and a.is_recommend='1'
+		</if>	
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != ""  '>
+			and a.goods_sku like concat('%',#{goods_sku},'%') 		
+		</if>
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and a.goods_name like concat('%',#{goods_name},'%') 		
+		</if>
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%') 		
+		</if>
+		<if test=' merchants_id != null and merchants_id != "" and merchants_id != "-1" '>
+			and a.merchants_id=#{merchants_id} 		
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time > #{start_time}
+		</if>	
+		
+		<if test=' end_time != null and end_time != "" '>
+			and #{end_time} > a.create_time
+		</if>
+	</update>
+	
+	<select id="getAllGoodsDetail" parameterType="goodsBean" resultType="goodsBean">
+		select a.*,
+		b.goods_name as parent_name,b.goods_parent_uuid as parent_uuid
+		,c.merchants_name
+		from tst_goods as a
+		left join tst_goods as b on a.parent_id=b.goods_id
+		inner join tst_merchants as c on a.merchants_id=c.merchants_id	
+		where  a.goods_type='2' and a.is_delete='0'
+		
+		<if test=' is_recommend != null and is_recommend != "" and is_recommend == "1" '>
+			and a.is_recommend='1'
+		</if>	
+		
+		<if test=' brand_id != null and brand_id != "" and brand_id != "0" '>
+			and a.brand_id=#{brand_id} 		
+		</if>
+		
+		<if test=' goods_id != null and goods_id != "" and goods_id != "0" '>
+			and a.goods_id=#{goods_id} 		
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != ""  '>
+			and a.goods_sku like concat('%',#{goods_sku},'%') 		
+		</if>
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and a.goods_name like concat('%',#{goods_name},'%') 		
+		</if>
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%') 		
+		</if>
+			
+		<if test=' merchants_id != null and merchants_id != "" and merchants_id != "-1" '>
+			and a.merchants_id=#{merchants_id} 		
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time > #{start_time}
+		</if>	
+		
+		<if test=' end_time != null and end_time != "" '>
+			and #{end_time} > a.create_time
+		</if>
+		<if test=" sort_type == null || sort_type == '' ">
+			order by a.sort_time desc
+		</if>
+		
+		<if test=" sort_type == 'sales' ">
+			order by a.year_sales desc
+		</if>
+		
+	</select>
+	
+	<select id='getAllGoodsDetailNoPage' parameterType="goodsBean" resultType="goodsBean">
+		select a.*
+		from tst_goods as a
+		where a.goods_type='2' and a.is_delete='0'
+		order by a.sort asc
+	</select>
+	
+	<select id="getOneGoodsDetail" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='2' and goods_id=#{goods_id} and is_delete='0'
+	</select>
+	
+	<select id="getOneGoodsDetailBySku" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='2' and goods_sku=#{goods_sku} and is_delete='0' limit 0,1
+	</select>
+	
+	<insert id='insertGoodsDetail' parameterType="goodsBean" useGeneratedKeys="true" keyProperty="goods_id">
+		insert into tst_goods 
+		(goods_name,goods_type,sort_time,parent_id,create_time,goods_uuid,goods_parent_uuid
+		,is_express,express_price,goods_address,day_sales,month_sales,year_sales,merchants_id,brand_id,goods_stock
+		,goods_state,goods_url,goods_now_price,goods_origin_price,is_hot,is_selling
+		,ssp_gift,ssp_fresh,ssp_baby,ssp_lady,ssp_feature,ssp_import,ssp_promotion
+		,ssp_gift_id,ssp_fresh_id,ssp_baby_id,ssp_lady_id,ssp_feature_id,ssp_import_id,ssp_promotion_id
+		,is_recommend,is_cross_border,cross_border_tax
+		,goods_sku,goods_skus,goods_storehouse,goods_excise_tax,is_new,goods_img,
+		is_give_integral,give_integral_value,is_deduct_integral,deduct_integral_value,
+		is_pre_sale,is_pre_sale_id,send_goods_time,
+		is_share,share_integral,is_class_recommend,class_recommend_img,goods_pc_price,goods_no
+			<if test=' is_merchants_recommend != null and is_merchants_recommend != "" '>
+				,is_merchants_recommend
+			</if>
+			<if test=' is_exact != null and is_exact != "" '>
+				,is_exact
+			</if>
+			<if test=' is_goods_exact != null and is_goods_exact != "" '>
+				,is_goods_exact
+			</if>
+			<if test=' is_sales_ranking != null and is_sales_ranking != "" '>
+				,is_sales_ranking
+			</if>
+			<if test=' is_directly != null and is_directly != "" '>
+				,is_directly
+			</if>
+		,sort_price,bidding_price)
+		values
+		(#{goods_name},#{goods_type},#{sort_time},#{parent_id},now(),#{goods_uuid},
+		CONCAT(case when (select a.goods_parent_uuid from (
+		select goods_parent_uuid  
+		from tst_goods where goods_id=#{parent_id}
+		) a) is null then "" else 
+		(select a.goods_parent_uuid from (
+		select goods_parent_uuid  
+		from tst_goods where goods_id=#{parent_id}
+		) a) end,"#",#{goods_uuid}),
+		#{is_express},#{express_price},#{goods_address},#{day_sales},#{month_sales},#{year_sales},#{merchants_id},#{brand_id},#{goods_stock}
+		,#{goods_state},#{goods_url},#{goods_now_price},#{goods_origin_price}
+		,#{is_hot},#{is_selling}
+		,#{ssp_gift},#{ssp_fresh},#{ssp_baby},#{ssp_lady},#{ssp_feature},#{ssp_import},#{ssp_promotion}
+		,#{ssp_gift_id},#{ssp_fresh_id},#{ssp_baby_id},#{ssp_lady_id},#{ssp_feature_id},#{ssp_import_id},#{ssp_promotion_id}
+		,#{is_recommend},#{is_cross_border},#{cross_border_tax},
+		#{goods_sku},#{goods_skus},#{goods_storehouse},#{goods_excise_tax},#{is_new},#{goods_img},
+		#{is_give_integral},#{give_integral_value},#{is_deduct_integral},#{deduct_integral_value},
+		#{is_pre_sale},#{is_pre_sale_id},#{send_goods_time},
+		#{is_share},#{share_integral},#{is_class_recommend},#{class_recommend_img},#{goods_pc_price},uuid()
+			<if test=' is_merchants_recommend != null and is_merchants_recommend != "" '>
+				,#{is_merchants_recommend}
+			</if>
+			<if test=' is_exact != null and is_exact != "" '>
+				,#{is_exact}
+			</if>
+			<if test=' is_goods_exact != null and is_goods_exact != "" '>
+				,#{is_goods_exact}
+			</if>
+			<if test=' is_sales_ranking != null and is_sales_ranking != "" '>
+				,#{is_sales_ranking}
+			</if>
+			<if test=' is_directly != null and is_directly != "" '>
+				,#{is_directly}
+			</if>
+		,#{sort_price},#{bidding_price})
+	</insert>
+	
+	<update id="updateGoodsDetail" parameterType="goodsBean" >
+		update tst_goods set is_delete=is_delete
+		
+		<if test=' sort_price != null and sort_price != "" '>
+			,sort_price=#{sort_price}
+		</if>
+		<if test=' bidding_price != null and bidding_price != "" '>
+			,bidding_price=#{bidding_price}
+		</if>
+		<if test=' qrcode_img != null and qrcode_img != "" '>
+			,qrcode_img=#{qrcode_img}
+		</if>
+		
+		<if test=' goods_pc_price != null and goods_pc_price != "" '>
+			,goods_pc_price=#{goods_pc_price}
+		</if>
+		
+		<if test=' is_class_recommend != null and is_class_recommend != "" '>
+			,is_class_recommend=#{is_class_recommend}
+		</if>
+		
+		<if test=' class_recommend_img != null and class_recommend_img != "" '>
+			,class_recommend_img=#{class_recommend_img}
+		</if>
+		
+		<if test=' share_integral != null and share_integral != "" '>
+			,share_integral=#{share_integral}
+		</if>
+		
+		<if test=' is_share != null and is_share != "" '>
+			,is_share=#{is_share}
+		</if>
+		
+		
+		<if test=' deduct_integral_value != null and deduct_integral_value != "" '>
+			,deduct_integral_value=#{deduct_integral_value}
+		</if>
+		<if test=' is_deduct_integral != null and is_deduct_integral != "" '>
+			,is_deduct_integral=#{is_deduct_integral}
+		</if>
+		
+		
+		<if test=' send_goods_time != null and send_goods_time != "" '>
+			,send_goods_time=#{send_goods_time}
+		</if>
+		<if test=' is_pre_sale != null and is_pre_sale != "" '>
+			,is_pre_sale=#{is_pre_sale}
+		</if>
+		<if test=' is_pre_sale_id != null and is_pre_sale_id != "" '>
+			,is_pre_sale_id=#{is_pre_sale_id}
+		</if>
+		
+		<if test=' is_give_integral != null and is_give_integral != "" '>
+			,is_give_integral=#{is_give_integral}
+		</if>
+		<if test=' give_integral_value != null and give_integral_value != "" '>
+			,give_integral_value=#{give_integral_value}
+		</if>
+		
+		<if test=' goods_img != null and goods_img != "" '>
+			,goods_img=#{goods_img}
+		</if>
+		
+		<if test='is_new != null and is_new !="" '>
+			,is_new=#{is_new}
+		</if>
+		
+		<if test='goods_sku != null and goods_sku !="" '>
+			,goods_sku=#{goods_sku}
+		</if>
+		<if test='goods_skus != null and goods_skus !="" '>
+			,goods_skus=#{goods_skus}
+		</if>
+		<if test='goods_storehouse != null and goods_storehouse !="" '>
+			,goods_storehouse=#{goods_storehouse}
+		</if>
+		<if test='goods_excise_tax != null and goods_excise_tax !="" '>
+			,goods_excise_tax=#{goods_excise_tax}
+		</if>
+		
+		<if test='goods_name!=null and goods_name!="" '>
+			,goods_name=#{goods_name}
+		</if>
+		<if test='is_cross_border != null and is_cross_border !="" '>
+			,is_cross_border=#{is_cross_border}
+		</if>
+		<if test='cross_border_tax != null and cross_border_tax !="" '>
+			,cross_border_tax=#{cross_border_tax}
+		</if>
+		<if test='is_recommend != null and is_recommend !="" '>
+			,is_recommend=#{is_recommend}
+		</if>
+		<if test='sort_time != null and sort_time !="" '>
+			,sort_time=#{sort_time}
+		</if>
+		
+		<if test='is_express != null and is_express !="" '>
+			,is_express=#{is_express}
+		</if>
+		<if test='express_price != null and express_price !="" '>
+			,express_price=#{express_price}
+		</if>
+		<if test='goods_address != null and goods_address !="" '>
+			,goods_address=#{goods_address}
+		</if>
+		<if test='day_sales != null and day_sales !="" '>
+			,day_sales=#{day_sales}
+		</if>
+		<if test='month_sales != null and month_sales !="" '>
+			,month_sales=#{month_sales}
+		</if>
+		<if test='year_sales != null and year_sales !="" '>
+			,year_sales=#{year_sales}
+		</if>
+		<if test='brand_id != null and brand_id !="" '>
+			,brand_id=#{brand_id}
+		</if>
+		<if test='goods_stock != null and goods_stock !="" '>
+			,goods_stock=#{goods_stock}
+		</if>
+		<if test='parent_id != null and parent_id !="" '>
+			,parent_id=#{parent_id}
+		</if>
+		<if test='brand_id != null and brand_id !="" '>
+			,brand_id=#{brand_id}
+		</if>
+		<if test='goods_state != null and goods_state !="" '>
+			,goods_state=#{goods_state}
+		</if>
+		<if test='goods_now_price != null and goods_now_price !="" '>
+			,goods_now_price=#{goods_now_price}
+		</if>
+		<if test='goods_origin_price != null and goods_origin_price !="" '>
+			,goods_origin_price=#{goods_origin_price}
+		</if>
+		<if test='parent_id != null and parent_id !="" '>
+			,goods_parent_uuid=CONCAT(case when (select a.goods_parent_uuid from (
+			select goods_parent_uuid  
+			from tst_goods where goods_id=#{parent_id}
+			) a) is null then "" else 
+			(select a.goods_parent_uuid from (
+			select goods_parent_uuid  
+			from tst_goods where goods_id=#{parent_id}
+			) a) end,"#",goods_uuid)
+		</if>
+		<if test='is_hot != null and is_hot !="" '>
+			,is_hot=#{is_hot}
+		</if>
+		<if test='is_selling != null and is_selling !="" '>
+			,is_selling=#{is_selling}
+		</if>
+		<if test='is_group_buy != null and is_group_buy !="" '>
+			,is_group_buy=#{is_group_buy}
+		</if>
+		
+		<if test='ssp_gift_id != null and ssp_gift_id !="" '>
+			,ssp_gift_id=#{ssp_gift_id}
+		</if>
+		<if test='ssp_fresh_id != null and ssp_fresh_id !="" '>
+			,ssp_fresh_id=#{ssp_fresh_id}
+		</if>
+		<if test='ssp_baby_id != null and ssp_baby_id !="" '>
+			,ssp_baby_id=#{ssp_baby_id}
+		</if>
+		<if test='ssp_feature_id != null and ssp_feature_id !="" '>
+			,ssp_feature_id=#{ssp_feature_id}
+		</if>
+		<if test='ssp_import_id != null and ssp_import_id !="" '>
+			,ssp_import_id=#{ssp_import_id}
+		</if>
+		<if test='ssp_lady_id != null and ssp_lady_id !="" '>
+			,ssp_lady_id=#{ssp_lady_id}
+		</if>
+		<if test='ssp_promotion_id != null and ssp_promotion_id !="" '>
+			,ssp_promotion_id=#{ssp_promotion_id}
+		</if>
+		
+		<if test='ssp_gift != null and ssp_gift !="" '>
+			,ssp_gift=#{ssp_gift}
+		</if>
+		<if test='ssp_fresh != null and ssp_fresh !="" '>
+			,ssp_fresh=#{ssp_fresh}
+		</if>
+		<if test='ssp_baby != null and ssp_baby !="" '>
+			,ssp_baby=#{ssp_baby}
+		</if>
+		<if test='ssp_feature != null and ssp_feature !="" '>
+			,ssp_feature=#{ssp_feature}
+		</if>
+		<if test='ssp_import != null and ssp_import !="" '>
+			,ssp_import=#{ssp_import}
+		</if>
+		<if test='ssp_lady != null and ssp_lady !="" '>
+			,ssp_lady=#{ssp_lady}
+		</if>
+		<if test='ssp_promotion != null and ssp_promotion !="" '>
+			,ssp_promotion=#{ssp_promotion}
+		</if>
+		where goods_id=#{goods_id}
+	</update>
+	
+	<update id="deleteGoodsDetail" parameterType="goodsBean">
+		update tst_goods set is_delete='1' 
+			where goods_id=#{goods_id}
+	</update>
+	
+	<select id="getGoodsImgs" resultType="goodsImgBean" parameterType="goodsImgBean">
+		select * from tst_goods_img where goods_id=#{goods_id}
+		order by sort asc
+	</select>
+	
+	<insert id="insertGoodsImg" parameterType="goodsImgBean">
+		insert into tst_goods_img(goods_id,goods_img,sort)values(#{goods_id},#{goods_img},#{sort})
+	</insert>
+	
+	<delete id="deleteGoodsImg" parameterType="goodsImgBean">
+		delete from tst_goods_img where goods_id=#{goods_id}
+	</delete>
+	
+	<insert id="insertGoodsLabel" parameterType="goodsLabelBean">
+		insert into tst_goods_relation_label
+		(label_id,goods_id)
+		values
+		(#{label_id},#{goods_id})
+	</insert>
+	
+	<update id="deleteGoodsLabel" parameterType="goodsLabelBean">
+		update tst_goods_relation_label set is_delete='1'
+		where goods_id=#{goods_id}
+	</update>
+	
+	<select id='getAllParametersByParent' parameterType="goodsParameterBean" resultType="goodsParameterBean">
+		select * from tst_goods_parameter where 
+		is_delete='0' and parent_id=#{parent_id} 
+		 and parameter_type=#{parameter_type}
+		and (goods_id=#{goods_id} or goods_id=-1)
+		order by sort asc
+	</select>
+	<insert id='insertParameter' parameterType="goodsParameterBean">
+		insert into tst_goods_parameter
+		(goods_id,parameter_name,parameter_type,parameter_price,parent_id,sort,create_time)
+		values
+		(#{goods_id},#{parameter_name},#{parameter_type},#{parameter_price},#{parent_id},#{sort},now())
+	</insert>
+	
+	<update id="updateParameter" parameterType="goodsParameterBean">
+		update tst_goods_parameter set
+		parameter_name=#{parameter_name},parameter_price=#{parameter_price},sort=#{sort}
+		where parameter_id=#{parameter_id}
+	</update>
+	
+	<update id="deleteParameter" parameterType="goodsParameterBean">
+		update tst_goods_parameter set
+		is_delete='1'
+		where parameter_id=#{parameter_id} or parent_id=#{parameter_id}
+	</update>
+	
+	<update id="deleteParameters" parameterType="goodsParameterBean">
+		update tst_goods_parameter set
+		is_delete='1'
+		where goods_id=#{goods_id}
+	</update>
+	
+	<select id="getAllServiceByParent" parameterType="goodsServiceBean" resultType="goodsServiceBean">
+		select * from tst_goods_service where 
+		is_delete='0' and parent_id=#{parent_id} and service_type=#{service_type}
+		and goods_id=#{goods_id}
+		order by sort asc
+	</select>
+	
+	<insert id='insertService' parameterType="goodsServiceBean">
+		insert into tst_goods_service
+		(goods_id,service_name,service_type,service_price,parent_id,sort,create_time)
+		values
+		(#{goods_id},#{service_name},#{service_type},#{service_price},#{parent_id},#{sort},now())
+	</insert>
+	<update id="updateService" parameterType="goodsServiceBean">
+		update tst_goods_service set
+		service_name=#{service_name},service_price=#{service_price},sort=#{sort}
+		where service_id=#{service_id}
+	</update>
+	
+	<update id="deleteService" parameterType="goodsServiceBean">
+		update tst_goods_service set
+		is_delete='1'
+		where service_id=#{service_id} or parent_id=#{service_id}
+	</update>
+	
+	
+	<select id="getBrandPackages" parameterType="brandPackageBean" resultType="brandPackageBean">
+		select * from tst_brand_package
+		where brand_id=#{brand_id}
+	</select>
+	<select id="getBrandPackageImgs" parameterType="brandPackageImgBean" resultType="brandPackageImgBean">
+		select * from tst_brand_package_img 
+		where package_id=#{package_id} and is_delete='0'
+	</select>
+	<insert id="insertBrandPackage" parameterType="brandPackageBean" keyProperty="package_id" useGeneratedKeys="true">
+		insert into tst_brand_package
+		(package_name,brand_id,package_state,package_count,package_origin_price,package_now_price,create_time,sort,package_url,package_sales,package_address)
+		values
+		(#{package_name},#{brand_id},#{package_state},#{package_count},#{package_origin_price},#{package_now_price},now(),#{sort},#{package_url},#{package_sales},#{package_address})
+	</insert>
+	<update id="updateBrandPackage" parameterType="brandPackageBean">
+		update tst_brand_package
+		set package_name=#{package_name},brand_id=#{brand_id},package_state=#{package_state}
+		,package_count=#{package_count},package_origin_price=#{package_origin_price},package_now_price=#{package_now_price},
+		sort=#{sort},package_sales=#{package_sales},package_address=#{package_address}
+		where package_id=#{package_id}
+	</update>
+	<update id="deleteBeandPackageImg" parameterType="brandPackageImgBean">
+		update tst_brand_package_img set is_delete='1'
+		where package_id=#{package_id}
+	</update>
+	<insert id='insertBrandPackageImg' parameterType="brandPackageImgBean">
+		insert into tst_brand_package_img
+		(package_id,package_img,create_time,sort)
+		values
+		(#{package_id},#{package_img},now(),#{sort})
+	</insert>
+	
+	<select id="getGoodsByBrand" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods 
+		where brand_id=#{brand_id} and is_delete='0' and goods_state='1'
+		and goods_type='2'
+	</select>
+	
+	<select id="getBrandPackageGoods" parameterType="brandPackageGoodsBean" resultType="brandPackageGoodsBean">
+		select a.*,b.goods_name,b.goods_now_price,
+		b.goods_origin_price
+		 from tst_brand_package_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		and b.goods_state='1'
+		where a.package_id=#{package_id} and a.is_delete='0'
+	</select>
+	
+	<insert id="insertBrandPackageGoods" parameterType="brandPackageGoodsBean">
+		insert into tst_brand_package_goods
+		(package_id,goods_id,sort,create_time)
+		values
+		(#{package_id},#{goods_id},#{sort},now())
+	</insert>
+	
+	<update id="deleteBrandPackageGoods" parameterType="brandPackageGoodsBean">
+		update tst_brand_package_goods
+		set is_delete='1'
+		where package_goods_id=#{package_goods_id}
+	</update>
+	
+	<select id="getBusinessGoods" parameterType="businessGoodsBean" resultType="businessGoodsBean">		
+		<!-- select b.qrcode_img,a.*,(case when b.business_goods_id is not null then 1 else 0 end) as is_select
+		from tst_goods as a 
+		left join tst_business_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{merchants_id}
+		where goods_type='2' and a.is_delete='0' 
+		order by a.sort_time desc -->
+		select a.* from tst_business_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		where a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getBusinessGoodsQRCodePath" parameterType="businessGoodsBean" resultType="String">
+		select a.qrcode_img from tst_business_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		where a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getBusinessGood" parameterType="businessGoodsBean" resultType="businessGoodsBean">
+		select * from tst_business_goods 
+		where merchants_id=#{merchants_id} and goods_id=#{goods_id} and is_delete='0'
+	</select>
+	
+	<insert id="insertBusinessGoods" parameterType="businessGoodsBean" >
+		insert into tst_business_goods
+		(merchants_id,goods_id,create_time,qrcode_img)
+		values
+		(#{merchants_id},#{goods_id},now(),#{qrcode_img})
+	</insert>
+	
+	<update id="deleteBusinessGoods" parameterType="businessGoodsBean">
+		update tst_business_goods set is_delete='1'
+		where business_goods_id=#{business_goods_id}
+	</update>
+	
+	
+	<!-- 顺手拍 -->
+	<select id="getSSPHomeClasss" parameterType="sspClassBean" resultType="sspClassBean">
+		select * from tst_ssp_class
+		where is_delete='0' and class_type=#{class_type}
+		order by sort asc
+	</select>
+	
+	<insert id='insertSSPHomeClass' parameterType="sspClassBean">
+		insert into tst_ssp_class
+		(class_name,class_type,create_time,sort)
+		values
+		(#{class_name},#{class_type},now(),#{sort})
+	</insert>
+	
+	<update id='updateSSPHomeClass' parameterType="sspClassBean">
+		update tst_ssp_class
+		set class_name=#{class_name},
+		sort=#{sort}
+		where class_id=#{class_id}
+	</update>
+	
+	<update id='deleteSSPHomeClass' parameterType="sspClassBean">
+		update tst_ssp_class
+		set is_delete='1'
+		where class_id=#{class_id}
+	</update>
+</mapper>

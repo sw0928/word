@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/toolbar_item" />
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchBtn"
+        android:layout_width="match_parent"
+        android:layout_below="@id/title"
+        android:iconifiedByDefault="false"
+        android:layout_height="@dimen/y80">
+    </android.support.v7.widget.SearchView>
+
+    <GridView
+        android:id="@+id/hotList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchBtn"
+        android:background="@color/RGB240_240_240"
+        android:numColumns="3">
+
+    </GridView>
+
+    <tts.moudle.api.widget.ListViewPinnedHeader
+        android:id="@+id/mListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/hotList"
+        android:cacheColorHint="@android:color/transparent"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false">
+
+    </tts.moudle.api.widget.ListViewPinnedHeader>
+
+    <tts.moudle.api.widget.BladeView
+        android:id="@+id/mLetterListView"
+        android:layout_width="@dimen/x60"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/hotList">
+
+    </tts.moudle.api.widget.BladeView>
+
+    <ListView
+        android:id="@+id/tipList"
+        android:layout_below="@id/searchBtn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </ListView>
+</RelativeLayout>

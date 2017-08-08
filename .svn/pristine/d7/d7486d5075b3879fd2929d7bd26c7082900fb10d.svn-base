@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <tts.moudle.api.widget.BannerView
+        android:id="@+id/bannerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y390"
+        app:banner_indicator="@+id/demo_slider_banner_indicator"
+        app:banner_pager="@+id/demo_slider_banner_pager">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/demo_slider_banner_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <tts.moudle.api.widget.FlowIndicator
+            android:id="@+id/demo_slider_banner_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/y10"
+            android:layout_marginRight="@dimen/x20"
+            app:point_normal_color="@color/RGB136_136_136"
+            app:point_seleted_color="@color/RGB255_255_255"
+            app:radius="@dimen/x8"
+            app:space="@dimen/x16" />
+    </tts.moudle.api.widget.BannerView>
+</RelativeLayout>

@@ -1,0 +1,319 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.GoodsDaoI2">
+	
+	<select id="getOneGoodsDetail" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_id = #{goods_id} and is_delete='0'
+	</select>
+
+	<select id="getGoodsDetailByGoodsNo" parameterType="goodsBean" resultType="goodsBean">
+		select a.*,b.express_free_price
+		,c.collection_id,(case when c.collection_id is null then "0" else "1" end)
+		as is_collection,(select count(*) from tst_assessment
+		where assessment_type='goods'
+		and is_delete='0' and relation_id=a.goods_id) as assessment_count
+		,(select count(*) from tst_group_buy_member
+		where goods_id=a.goods_id and is_delete='0' and CONVERT(group_buy_now_people,double)>0 )as group_buy_count
+		,(select count(*) from tst_group_buy_member as d
+		inner join tst_group_buy_goods as f on d.goods_group_buy_id=f.goods_group_buy_id
+		and CONVERT(group_buy_need_people,double)>CONVERT(group_buy_now_people,double) 
+		where d.goods_id=a.goods_id and d.is_delete='0' and d.end_time > now() and CONVERT(d.group_buy_now_people,double)>0)	
+		as group_buy_now_count
+		from tst_goods as a
+		inner join tst_merchants as b on a.merchants_id=b.merchants_id and b.is_delete='0'
+		left join tst_collection as c 
+		on a.goods_id=c.relation_id and c.collection_type='goods'
+		and c.is_delete='0' and c.member_id=#{member_id}
+		where a.goods_id=#{goods_id}  and a.is_delete='0'
+		and a.goods_type='2' 
+		
+		
+		union
+		
+		select a.*,b.express_free_price
+		,c.collection_id,(case when c.collection_id is null then "0" else "1" end)
+		as is_collection,(select count(*) from tst_assessment
+		where assessment_type='goods'
+		and is_delete='0' and relation_id=a.goods_id) as assessment_count
+		,(select count(*) from tst_group_buy_member
+		where goods_id=a.goods_id and is_delete='0' and CONVERT(group_buy_now_people,double)>0 )as group_buy_count
+		,(select count(*) from tst_group_buy_member as d
+		inner join tst_group_buy_goods as f on d.goods_group_buy_id=f.goods_group_buy_id
+		and CONVERT(group_buy_need_people,double)>CONVERT(group_buy_now_people,double) 
+		where d.goods_id=a.goods_id and d.is_delete='0' and d.end_time > now() and CONVERT(d.group_buy_now_people,double)>0)	
+		as group_buy_now_count
+		from tst_goods as a
+		inner join tst_merchants as b on a.merchants_id=b.merchants_id and b.is_delete='0'
+		left join tst_collection as c 
+		on a.goods_id=c.relation_id and c.collection_type='goods'
+		and c.is_delete='0' and c.member_id=#{member_id}
+		where a.goods_id!=#{goods_id} and a.is_delete='0'
+		and a.goods_no=#{goods_no}
+	</select>
+	
+	<select id="getGoodsParametersByNo" parameterType="goodsParameterBean" resultType="goodsParameterBean">
+		select * from tst_goods_parameter
+		where goods_no=#{goods_no} and is_delete='0' and parent_id=#{parent_id}
+	</select>
+
+	<select id="getMemberOrderGoods" parameterType="memberBean" resultType="goodsBean">
+		select count(*) as count,c.*  from tst_order as a
+		inner join tst_order_goods as b 
+		on a.order_id=b.order_id 
+		inner join tst_goods as c 
+		on b.goods_id=c.goods_id
+		where a.member_id=2
+		group by c.goods_id 
+		order by count desc
+	</select>
+	
+	<select id="getLoveGoodsByHabit" parameterType="goodsBean" resultType="goodsBean">
+	
+	select * from (	
+		select *
+		from (	
+		select DISTINCT a.* from tst_goods as a
+		
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where 1=1 and a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+		
+		group by goods_no 
+		
+		<if test=" sort=='' or sort==null or sort=='default' ">
+			order by a.sort_time desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'assessment' ">
+			order by a.assessment_count desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'sales' ">
+			order by a.year_sales desc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_now_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_now_price desc
+			</if>
+		</if>	
+		<if test="sort!='' and sort!=null and sort=='pc_price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_pc_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_pc_price desc
+			</if>
+		</if>	
+	</select>
+	
+	<select id="getLoveClassByHabit3" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT b.* from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.is_delete='0' and b.goods_state='1' and b.parent_id=#{parent_id}
+		where 1=1 and a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{activity_id})
+		</if>
+	</select>
+	
+	<select id="getLoveClassByHabit2" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT c.* from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		inner join tst_goods as c 
+		on b.parent_id=c.goods_id and c.is_delete='0' and c.goods_state='1' and c.parent_id=#{parent_id}
+		where 1=1 and a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{activity_id})
+		</if>
+	</select>
+	
+	<select id="getLoveClassByHabit1" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT d.* from tst_goods as a
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		inner join tst_goods as c 
+		on b.parent_id=c.goods_id and c.is_delete='0' and c.goods_state='1'
+		inner join tst_goods as d 
+		on c.parent_id=d.goods_id and d.is_delete='0' and d.goods_state='1' and d.parent_id='-1'
+		where 1=1 and a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{activity_id})
+		</if>
+	</select>
+	
+	<update id="updateGoodsDetail" parameterType="goodsBean">
+		update tst_goods 
+		set goods_name=goods_name
+		<if test=' year_sales != null  '>
+			,year_sales=#{year_sales}
+		</if>
+		<if test=' day_sales != null '>
+			,day_sales=#{day_sales}
+		</if>
+		<if test=' month_sales != null  '>
+			,month_sales=#{month_sales}
+		</if>
+		<if test=' goods_stock != null '>
+			,goods_stock=#{goods_stock}
+		</if>
+		where goods_id=#{goods_id}
+	</update>
+	 
+	<update id="updateGoodsDetailStart" parameterType="goodsBean">
+		update tst_goods 
+		set goods_star1=#{goods_star1},
+		goods_star2=#{goods_star2},
+		goods_star3=#{goods_star3},
+		good_assessment_count=#{good_assessment_count},
+		bad_assessment_count=#{bad_assessment_count},
+		in_assessment_count=#{in_assessment_count},
+		assessment_count=#{assessment_count},
+		good_assessment_percent=#{good_assessment_percent},
+		bad_assessment_percent=#{bad_assessment_percent},
+		in_assessment_percent=#{in_assessment_percent},
+		assessment_img_count=#{assessment_img_count}
+		where goods_id=#{goods_id}
+	</update>
+	
+	<select id='searchGoodsDetailList' parameterType="goodsBean" resultType="goodsBean">
+		select * from (
+			select distinct b.* from tst_goods_relation_class as a
+			inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+			where 1=1 and a.is_delete='0'
+			<if test=' goods_uuid != null and goods_uuid != "" '>
+				and a.parent_uuid like concat('%',#{goods_uuid},'%')
+			</if>
+		) as a where 1=1
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and (a.goods_name like concat('%',#{goods_name},'%') or a.goods_sku like concat('%',#{goods_name},'%') )
+		</if>
+			
+		<if test=" brand_id !=null and brand_id != '' ">
+			and a.brand_id=#{brand_id}
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale !=null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			and convert(a.goods_now_price,double) >convert(#{min_price},double)
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			and convert(#{max_price},double) >convert(a.goods_now_price,double)
+		</if>
+		
+		<if test="sort=='' or sort==null or sort=='default'">
+			order by a.sort_time desc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='sales'">
+			order by a.year_sales asc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='see_num'">
+			order by a.see_num asc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='good_assessment'">
+			and a.goods_star1>3
+			order by a.goods_star1 asc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_now_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_now_price desc
+			</if>
+		</if>	
+		
+	</select>
+	
+	<select id="getGoodsClasss" parameterType="goodsClassBean" resultType="goodsClassBean">
+		select a.*,(select case when count(*)>0 then "0" else "1" end from tst_goods_class 
+		where parent_id=a.class_id  and is_delete='0') as is_end
+			  from tst_goods_class as a
+		where a.parent_id=#{parent_id} and a.is_delete='0' and class_state='1'
+		order by a.sort asc
+	</select>
+</mapper>

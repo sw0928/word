@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.BannerDaoC">
+	<select id="getAllBanners" parameterType="bannerBean" resultType="bannerBean">
+		select *,
+		(case 
+		when banner_type='common' then "普通广告" 
+		when banner_type='goods' then "商品广告" 
+		when banner_type='class' then "分类广告" 
+		when banner_type='chain' then "外链广告" 
+		else "普通广告" end)banner_type_show,
+		 (case 
+		when banner_position='home' then "首页" 
+		when banner_position='is_pre' then "预售商品" 
+		when banner_position='gift' then "礼物商品" 
+		when banner_position='fresh' then "生鲜商品" 
+		when banner_position='baby' then "母婴商品" 
+		when banner_position='lady' then "女士商品" 
+		when banner_position='feature' then "特色商品" 
+		when banner_position='import' then "进口商品" 
+		when banner_position='promotion' then "促销商品" 
+		else "首页" end)banner_position_show
+		from tst_banner 
+		where is_delete='0'
+		<if test=' banner_position != null and banner_position != "" '>
+			and #{banner_position} like concat("%",banner_position,"%")
+		</if>
+		
+		<if test=' banner_type != null and banner_type != "" '>
+			and #{banner_type} like concat("%",banner_type,"%")
+		</if>
+		<if test=' banner_title != null and banner_title != "" '>
+			and banner_title=#{banner_title}
+		</if>
+		order by sort desc
+	</select>
+	
+	<insert id="insertBanner" parameterType="bannerBean">
+		insert into tst_banner 
+		(banner_title,banner_img,banner_url,banner_type,banner_desc,create_time,sort,banner_position,
+		goods_id,goods_name,goods_uuid,goods_class_name,chain_url)
+		values
+		(#{banner_title},#{banner_img},#{banner_url},#{banner_type},#{banner_desc},now(),#{sort},#{banner_position},
+		#{goods_id},#{goods_name},#{goods_uuid},#{goods_class_name},#{chain_url})
+	</insert>
+	
+	<update id="updateBanner" parameterType="bannerBean">
+		update tst_banner set banner_title=#{banner_title},banner_img=#{banner_img},
+		banner_type=#{banner_type},banner_desc=#{banner_desc},
+		sort=#{sort},
+		banner_position=#{banner_position},
+		goods_id=#{goods_id},
+		goods_name=#{goods_name},
+		goods_uuid=#{goods_uuid},
+		goods_class_name=#{goods_class_name},
+		chain_url=#{chain_url}
+		where banner_id=#{banner_id}
+	</update>
+	
+	<update id="deleteBanner" parameterType="bannerBean">
+		update tst_banner set is_delete='1'
+		where banner_id=#{banner_id}
+	</update>
+	
+</mapper>

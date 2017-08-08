@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/okBtn"
+        android:orderInCategory="80"
+        android:textColor="@color/RGB255_255_255"
+        android:title="确定"
+        app:showAsAction="ifRoom" />
+</menu>

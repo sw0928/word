@@ -1,0 +1,140 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.support.v4.util.ArrayMap;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.bean.BarBean;
+import tts.project.livek.R;
+import tts.project.livek.bean.ChargeItemBean;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+
+
+public class MyDimendsActivity extends BaseActivity implements View.OnClickListener {
+
+    public static final int MY_ADTA=0;
+    public static final int DATA=1;
+    public static final int PAY_DATA=-2;
+    private String dimend_count;
+    private UserBean userBean;
+    private ListView listview;
+    private List<ChargeItemBean> list;
+    private int mposition;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_my_dimends);
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        dimend_count = getIntent().getStringExtra(Constant.DIMEND_COUNT);
+        startRequestData(DATA);
+        setTitle(new BarBean().setMsg("我的钻石"));
+        listview = (ListView) findViewById(R.id.listview);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mposition=i;
+                startRequestData(PAY_DATA);
+            }
+        });
+
+
+        TextView dangqianzuanshi= (TextView) findViewById(R.id.dangqianzhuanshi);
+        TextView count= (TextView) findViewById(R.id.count);
+        count.setText(dimend_count);
+
+    }
+
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+            case DATA:
+                getDataWithPost(DATA, Host.hostUrl+"&c=User&a=price_list",map);
+                break;
+            case PAY_DATA:
+//                uid	int	Y
+//                token	string	Y
+//                type	string	Y		支付方式，wx(微信)、alipay(支付宝)
+//                price	string	Y		价格
+//                diamond	string	Y		钻石数
+                map.put("uid",userBean.getUser_id());
+                map.put("token",userBean.getToken());
+                map.put("type","wx");
+                map.put("price",list.get(mposition).getPrice());
+                map.put("diamond",list.get(mposition).getDiamond());
+                getDataWithPost(PAY_DATA, Host.hostUrl+"&c=Pingxx&a=ping",map);
+                break;
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        //支付页面返回处理
+//        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                String result = data.getExtras().getString("pay_result");
+//            /* 处理返回值
+//             * "success" - 支付成功
+//             * "fail"    - 支付失败
+//             * "cancel"  - 取消支付
+//             * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+//             */
+//                if (result.equals("success")){
+//                }else if (result.equals("fail")){
+//                    ToastUtils.show(this,"支付失败");
+//                }else if (result.equals("cancel")){
+//                    ToastUtils.show(this,"取消支付");
+//                }else if (result.equals("invalid")){
+//                    ToastUtils.show(this,"请先安装微信客户端");
+//                }
+//                finish();
+//                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+//                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+//                Logger.e(result+errorMsg+extraMsg);
+//            }
+//        }
+    }
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case DATA:
+                list = new Gson().fromJson(response, new TypeToken<List<ChargeItemBean>>() {
+                }.getType());
+//                listview.setAdapter(new ZhuanShiListViewAdapter(list,this));
+                Logger.e(response);
+                break;
+            case PAY_DATA:
+//                PingppLog.DEBUG = true;
+//                Pingpp.createPayment(MyDimendsActivity.this, response);
+                break;
+        }
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+
+        }
+    }
+
+
+}

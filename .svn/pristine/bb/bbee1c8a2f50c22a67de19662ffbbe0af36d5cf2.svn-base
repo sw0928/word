@@ -1,0 +1,1651 @@
+package tts.project.livek.ui.fragment;
+
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dou361.baseutils.utils.LogUtils;
+import com.dou361.baseutils.utils.UIUtils;
+import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMChatRoomChangeListener;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMChatRoom;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.easeui.controller.EaseUI;
+import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.exceptions.HyphenateException;
+import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import tts.moudle.api.Host;
+import tts.project.livek.R;
+import tts.project.livek.bean.AnchorBean;
+import tts.project.livek.bean.GiftBeans;
+import tts.project.livek.bean.HeadImageBean;
+import tts.project.livek.bean.HomeBean;
+import tts.project.livek.bean.HuanXinDetailsBean;
+import tts.project.livek.bean.MessageBean;
+import tts.project.livek.bean.SongLiResult;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.bean.UserCenterBean;
+import tts.project.livek.module.TestAnchorRepository;
+import tts.project.livek.ui.activity.ChargeActivity;
+import tts.project.livek.ui.activity.StartLiveActivity;
+import tts.project.livek.ui.adapter.AnchorAdapter;
+import tts.project.livek.ui.adapter.HomeClaseeGridViewAdapter;
+import tts.project.livek.ui.adapter.HomeClassViewPagerAdapter;
+import tts.project.livek.ui.config.StatusConfig;
+import tts.project.livek.ui.listener.MessageViewListener;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+import tts.project.livek.ui.listener.OnLiveListener;
+import tts.project.livek.ui.widget.BarrageLayout;
+import tts.project.livek.ui.widget.GiftLayout;
+import tts.project.livek.ui.widget.PeriscopeLayout;
+import tts.project.livek.ui.widget.RoomMessagesView;
+import tts.project.livek.ui.widget.VerticalSeek;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.OthersInformationPopUtils;
+import tts.project.livek.utils.PopUtils;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+import tts.project.livek.utils.Utils;
+
+public class RoomPanlFragment extends BaseFragment {
+    public static final int INIT_DATA = 0;
+    public static final int GET_MORE_DATA = 1;
+    public static final int GUAN_ZHU = 2;
+    public static final int DIAN_ZAN = 3;
+    public static final int GIFT_DATA = 4;
+    public static final double PAGER_SIZE = 8;
+    public static final int SONG_LI = 9;
+    public static final int GET_YU_E = 10;
+    public static final int CHARGE_CALL_BACK =10001;
+    public static final int GUAN_ZHU1=11;
+
+    /**
+     * 抽屉布局的根布局
+     */
+    @BindView(R.id.root_layout)
+    View root_layout;
+    /**
+     * 标题栏布局
+     */
+    @BindView(R.id.ll_anchor)
+    View ll_anchor;
+    /**
+     * 主播头像
+     */
+    @BindView(R.id.eiv_anchor)
+    EaseImageView eiv_anchor;
+    /**
+     * 主播昵称
+     */
+    @BindView(R.id.tv_username)
+    TextView usernameView;
+    /**
+     * 关注
+     */
+    @BindView(R.id.tv_follow)
+    TextView tv_follow;
+    /**
+     * 成员总数
+     */
+    @BindView(R.id.audience_num)
+    TextView audienceNumView;
+    /**
+     * 成员集合布局
+     */
+    @BindView(R.id.horizontal_recycle_view)
+    RecyclerView horizontalRecyclerView;
+    /**
+     * 切换摄像头
+     */
+    @BindView(R.id.img_bt_switch_camera)
+    View img_bt_switch_camera;
+    /**
+     * 底部bar
+     */
+    @BindView(R.id.bottom_bar)
+    View bottomBar;
+    /**
+     * 弹幕
+     */
+    @BindView(R.id.barrage_layout)
+    BarrageLayout barrageLayout;
+    /**
+     * 礼物
+     */
+    @BindView(R.id.gift_layout)
+    GiftLayout giftLayout;
+    /**
+     * 聊天室布局
+     */
+    @BindView(R.id.message_view)
+    RoomMessagesView messageView;
+    /**
+     * 视频点赞布局
+     */
+    @BindView(R.id.periscope_layout)
+    PeriscopeLayout periscopeLayout;
+    /**
+     * 切换闪光灯
+     */
+    @BindView(R.id.img_bt_switch_light)
+    ImageButton lightSwitch;
+    /**
+     * 声音
+     */
+    @BindView(R.id.img_bt_switch_voice)
+    ImageButton voiceSwitch;
+    /**
+     * 私信消息提示
+     */
+    @BindView(R.id.new_messages_warn)
+    ImageView newMsgNotifyImage;
+    /**
+     * 点赞
+     */
+    @BindView(R.id.dian_zan)
+    ImageView dian_zan;
+    /**
+     * 箭头图标 ，只有为主播端才显示
+     */
+    @BindView(R.id.sorrow_img)
+    ImageView sorrow_img;
+
+    @BindView(R.id.present_image)
+    ImageView present_image;
+
+    @BindView(R.id.live_id)
+    TextView live_wanghong_id;
+
+    @BindView(R.id.live_time)
+    TextView live_time;
+
+    @BindView(R.id.rootview)
+    LinearLayout rootview;
+
+    @BindView(R.id.beautyLevel_seekBar)
+    VerticalSeek seekBarBeauty;
+
+    @BindView(R.id.rl_present)
+    RelativeLayout rl_present;
+
+    @BindView(R.id.midou_all_count)
+    TextView midou_all_count;
+
+
+    /**
+     * 主播id
+     */
+    protected String anchorId;
+    /**
+     * 环信聊天室id
+     */
+    protected String roomId = "";
+    /**
+     * ucloud直播id
+     */
+    private String currentMoney;
+    protected String liveId = "";
+    protected boolean isMessageListInited;
+    protected EMChatRoomChangeListener chatRoomChangeListener;
+    protected OnLiveListener mOnLiveListener;
+    protected EMChatRoom chatroom;
+    protected Handler handler = new Handler();
+    private TestAnchorRepository avatarRepository = new TestAnchorRepository();
+    private HomeBean.WangHongListBean liveRoom;
+    private boolean is_guanzhu;
+    private UserBean userBean;
+    private HeadImageBean headImageBean;
+    private List<HeadImageBean.ListBean> list = new ArrayList<>();
+    private AnchorAdapter anchorAdapter;
+    private String newMemberName;
+    private PopupWindow pop;
+    private List<GiftBeans.GiftBean> list1;
+    private ViewPager viewPager;
+    private boolean isdown = false;
+    private PopupWindow sorrow_pop;
+    private RelativeLayout parentview1;
+    private boolean isCoinClude;
+    private OthersInformationPopUtils othersInformationPopUtils;
+    private GiftBeans.GiftBean giftBean;
+    private PopUtils popUtils;
+    private PopupWindow othersPop;
+    private ImageView icon;
+    private TextView nickname;
+    private TextView youmihao;
+    private TextView guanzhu_count;
+    private TextView fans_count;
+    private TextView talk_private;
+    private TextView guanzhu;
+    private HeadImageBean.ListBean mListBean;
+    private TextView dimends_count;
+    private GiftBeans giftBeans;
+    private int is_follow;
+    private Timer timer=new Timer();
+    public boolean is_guanzhu1;
+
+    private TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    periscopeLayout.addHeart();
+                }
+            });
+            //
+        }
+    };
+    private String is_follow1;
+
+    @Override
+    public View initView(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_room_panl, container, false);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(getContext());
+        if (getArguments() != null) {
+            startRequestData(GIFT_DATA);
+            liveRoom = (HomeBean.WangHongListBean) getArguments().getSerializable(StatusConfig.LiveRoom);
+            showMemberList();
+//            is_guanzhu = getArguments().getBoolean(Constant.IS_GUANZHU, false);
+            // 设置基本信息
+            popUtils = new PopUtils(getContext());
+            initContent();
+            initpop();
+            initOthersPop();
+            int roomStyle = getArguments().getInt(StatusConfig.ROOM_STYLE);
+            liveId = liveRoom.getId();
+            roomId = liveRoom.getRoom_id();
+            anchorId = liveRoom.getHx_username();
+
+            /**
+             * 判断当前是播放端还是推
+             */
+            if (roomStyle == StatusConfig.ROOM_STYLE_LIVE) {
+                bottomBar.setVisibility(View.GONE);
+                ll_anchor.setVisibility(View.INVISIBLE);
+                tv_follow.setVisibility(View.GONE);
+                img_bt_switch_camera.setVisibility(View.GONE);
+                lightSwitch.setVisibility(View.GONE);
+                voiceSwitch.setVisibility(View.GONE);
+                dian_zan.setVisibility(View.GONE);
+                sorrow_img.setVisibility(View.VISIBLE);
+                present_image.setVisibility(View.GONE);
+                usernameView.setText(userBean.getUsername().toString());
+                initlistener();
+                initAutoHeart();
+                Glide.with(UIUtils.getContext())
+                        .load(userBean.getImg())
+                        .placeholder(R.color.placeholder)
+                        .into(eiv_anchor);
+            } else {
+                Glide.with(UIUtils.getContext())
+                        .load(liveRoom.getImg())
+                        .placeholder(R.color.placeholder)
+                        .into(eiv_anchor);
+                usernameView.setText(liveRoom.getUsername());
+            }
+        }
+    }
+
+    private void initAutoHeart() {
+        timer.schedule(task,0,1000);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (getActivity() != null) {
+//                    while (!((StartLiveActivity) getActivity()).isFinishing()) {
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                periscopeLayout.addHeart();
+//                            }
+//                        });
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }).start();
+    }
+
+    private void initOthersPop() {
+//        mListBean
+        othersPop = new PopupWindow();
+        View view = View.inflate(getContext(), R.layout.othersinformationpop, null);
+        RelativeLayout parentview1 = (RelativeLayout) view.findViewById(R.id.parentview);
+        parentview1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                othersPop.dismiss();
+            }
+        });
+        ImageView close = (ImageView) view.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                othersPop.dismiss();
+            }
+        });
+        icon = (ImageView) view.findViewById(R.id.icon);
+        nickname = (TextView) view.findViewById(R.id.nickname);
+        youmihao = (TextView) view.findViewById(R.id.youmihao);
+        guanzhu_count = (TextView) view.findViewById(R.id.guanzhu_count);
+        fans_count = (TextView) view.findViewById(R.id.fans_count);
+        talk_private = (TextView) view.findViewById(R.id.talk_private);
+        talk_private.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChatFragment fragment = ChatFragment.newInstance(mListBean, false);
+                othersPop.dismiss();
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.message_container, fragment).commit();
+            }
+        });
+
+        guanzhu = (TextView) view.findViewById(R.id.guanzhu);
+        guanzhu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRequestData(GUAN_ZHU1);
+
+            }
+        });
+        othersPop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        othersPop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        othersPop.setBackgroundDrawable(new BitmapDrawable());
+        othersPop.setFocusable(true);
+        othersPop.setOutsideTouchable(true);
+        othersPop.setContentView(view);
+    }
+
+    private void initlistener() {
+        seekBarBeauty.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                CameraStreamingSetting.FaceBeautySetting fbSetting = ((StartLiveActivity) getActivity()).setting.getFaceBeautySetting();
+                fbSetting.beautyLevel = progress / 100.0f;
+                fbSetting.whiten = progress / 100.0f;
+                fbSetting.redden = progress / 100.0f;
+
+                ((StartLiveActivity) getActivity()).mMediaStreamingManager.updateFaceBeautySetting(fbSetting);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+    }
+
+    private void initpop() {
+        sorrow_pop = new PopupWindow(getContext());
+        View view = View.inflate(getContext(), R.layout.sorrow_layout, null);
+        parentview1 = (RelativeLayout) view.findViewById(R.id.parentview);
+        TextView meiyan = (TextView) view.findViewById(R.id.meiyan);
+        TextView fanzhuan = (TextView) view.findViewById(R.id.fanzhuan);
+        TextView jingyin = (TextView) view.findViewById(R.id.jingyin);
+        /**
+         * 美颜
+         */
+        meiyan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((StartLiveActivity) getActivity()).mMediaStreamingManager.setVideoFilterType(
+                        CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY
+                        );
+                seekBarBeauty.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+
+        /**
+         * 翻转
+         */
+        fanzhuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnLiveListener != null) {
+                    mOnLiveListener.onCamreClick(img_bt_switch_camera);
+                }
+            }
+        });
+        /**
+         * 静音
+         */
+        jingyin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnLiveListener != null) {
+                    mOnLiveListener.onVoiceClick(voiceSwitch);
+                }
+            }
+        });
+        parentview1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sorrow_pop.dismiss();
+            }
+        });
+        sorrow_pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        sorrow_pop.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        sorrow_pop.setBackgroundDrawable(new BitmapDrawable());
+        sorrow_pop.setFocusable(true);
+        sorrow_pop.setOutsideTouchable(true);
+        sorrow_pop.setContentView(view);
+    }
+
+    public void Init() {
+        pop = new PopupWindow(getContext());
+        View view = View.inflate(getContext(), R.layout.gift_layout, null);
+        RelativeLayout parentview = (RelativeLayout) view.findViewById(R.id.parentview);
+        viewPager = (ViewPager) view.findViewById(R.id.gift_viewpager);
+        final LinearLayout ll_dots = (LinearLayout) view.findViewById(R.id.ll_dots);
+        TextView send_gift = (TextView) view.findViewById(R.id.send_gift);
+        dimends_count = (TextView) view.findViewById(R.id.dimends_count);
+        TextView charge = (TextView) view.findViewById(R.id.charge);
+        currentMoney=giftBeans.getUser().getMoney();
+        dimends_count.setText(giftBeans.getUser().getMoney());
+        pop.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        pop.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        pop.setBackgroundDrawable(new BitmapDrawable());
+        pop.setFocusable(true);
+        pop.setOutsideTouchable(true);
+        pop.setContentView(view);
+        /**
+         * 充值
+         */
+        charge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ChargeActivity.class);
+                intent.putExtra(Constant.MONEY,currentMoney);
+                startActivityForResult(intent, CHARGE_CALL_BACK);
+            }
+        });
+        /**
+         * 送礼
+         */
+        send_gift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                giftBean = null;
+                for (int i = 0; i < list1.size(); i++) {
+                    if (list1.get(i).ischecked()) {
+                        giftBean = list1.get(i);
+                    }
+                }
+                if (giftBean == null) {
+                    ToastUtils.show(getContext(), "请先选择礼物");
+                    return;
+                }
+
+                startRequestData(SONG_LI);
+            }
+        });
+        parentview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                pop.dismiss();
+//                viewPager.clearAnimation();
+            }
+        });
+        /**
+         *       礼物占用的页数
+         */
+        int pagerCount = list1.size() / 8;
+        if (list1.size() % 8 != 0) {
+            pagerCount++;
+        }
+
+        /**
+         * 循环建立总共多少gridlayout
+         */
+        List<View> mlist = new ArrayList<>();
+        for (int i = 0; i < pagerCount; i++) {
+            GridView gridView = new GridView(getContext());
+            gridView.setGravity(Gravity.CENTER);
+            gridView.setNumColumns(4);
+            gridView.setAdapter(new HomeClaseeGridViewAdapter(getContext(), list1, i));
+            mlist.add(gridView);
+        }
+        viewPager.setAdapter(new HomeClassViewPagerAdapter(mlist));
+
+        /**
+         * 点的布局
+         */
+
+        for (int i = 0; i < list1.size() / PAGER_SIZE; i++) {
+            ImageView imageView = new ImageView(getContext());
+            if (0 == i) {
+                imageView.setBackgroundResource(R.drawable.white_dot);
+            } else {
+                imageView.setBackgroundResource(R.drawable.gray_dots);
+            }
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelOffset(R.dimen.x10), getResources().getDimensionPixelOffset(R.dimen.x10));
+            params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.x10);
+            imageView.setLayoutParams(params);
+            ll_dots.addView(imageView);
+        }
+        viewPager.setCurrentItem(0);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < list1.size() / PAGER_SIZE; i++) {
+                    if (i == position) {
+                        ll_dots.getChildAt(i).setBackgroundResource(R.drawable.white_dot);
+                    } else {
+                        ll_dots.getChildAt(i).setBackgroundResource(R.drawable.gray_dots);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ToastUtils.show(getContext(),"11");
+        startRequestData(GET_YU_E);
+
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        HashMap<String, String> map = new HashMap<>();
+        switch (index) {
+            case INIT_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("anchor_id", liveRoom.getUser_id());
+                getDataWithPost(INIT_DATA, Host.hostUrl + "&c=Index&a=show_viewer", map);
+                break;
+            case GET_MORE_DATA:
+                map.put("hx_username", newMemberName);
+                getDataWithPost(GET_MORE_DATA, Host.hostUrl + "&c=Index&a=get_user_info", map);
+                break;
+            case GUAN_ZHU:
+                if (is_follow==3){
+                    ToastUtils.show(getContext(),"亲,不能关注自己");
+                    return;
+                }
+//                user_id2	int	Y		主播id
+//                type	int	Y		1：关注 2：取消关注
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("user_id2", liveRoom.getUser_id());
+                if (is_guanzhu) {
+                    map.put("type", "2");
+                } else {
+                    map.put("type", "1");
+                }
+                getDataWithPost(GUAN_ZHU, Host.hostUrl + "&c=Index&a=follow", map);
+                break;
+            case DIAN_ZAN:
+//                periscopeLayout.addHeart();
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("user_id2", liveRoom.getUser_id());
+                getDataWithPost(DIAN_ZAN, Host.hostUrl + "&c=Index&a=zan", map);
+                break;
+            case GIFT_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                getDataWithPost(GIFT_DATA, Host.hostUrl + "&c=Index&a=gift_list", map);
+                break;
+            case SONG_LI:
+//                popUtils.showOwnPop();
+//                uid	int	Y
+//                token	string	Y
+//                user_id2	int	Y		主播id
+//                gift_id	int	Y		礼物id
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("user_id2", liveRoom.getUser_id());
+                map.put("gift_id", giftBean.getGift_id());
+                getDataWithPost(SONG_LI, Host.hostUrl + "&c=Index&a=give_gift", map);
+                break;
+            case GET_YU_E:
+                map.put("uid", SpSingleInstance.getSpSingleInstance().userBean.getUser_id());
+                map.put("token", SpSingleInstance.getSpSingleInstance().userBean.getToken());
+                getDataWithPost(GET_YU_E, Host.hostUrl + "&c=User&a=user_center", map);
+                break;
+            case GUAN_ZHU1:
+//                if (is_follow==3){
+//                    ToastUtils.show(getContext(),"亲,不能关注自己");
+//                    return;
+//                }
+//                user_id2	int	Y		主播id
+//                type	int	Y		1：关注 2：取消关注
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("user_id2", mListBean.getUser_id());
+                if (is_guanzhu1) {
+                    map.put("type", "2");
+                } else {
+                    map.put("type", "1");
+                }
+                getDataWithPost(GUAN_ZHU1, Host.hostUrl + "&c=Index&a=follow", map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doFailed(int what, int index, String response) {
+        super.doFailed(what, index, response);
+        switch (index) {
+            case SONG_LI:
+//                popUtils.closePop();
+                Toast.makeText(getContext(),"送礼失败",Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+    int count=0;
+    long time=0;
+    private String gift_img="";
+    /**
+     * 成功从后天获取数据
+     *
+     * @param index
+     * @param response
+     */
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index) {
+            case INIT_DATA:
+                headImageBean = new Gson().fromJson(response, HeadImageBean.class);
+                if (list.size()>0&&list!=null){
+                    list.clear();
+                }
+                list = headImageBean.getList();
+                anchorAdapter = new AnchorAdapter(getContext(), list);
+                horizontalRecyclerView.setAdapter(anchorAdapter);
+                //成员头像的点击事件
+                anchorAdapter.setOnItemClickListener(new OnItemClickRecyclerListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        showUserDetailsDialog(list.get(position));
+                    }
+                });
+                break;
+            case GET_MORE_DATA:
+                HuanXinDetailsBean headImageBean = new Gson().fromJson(response, HuanXinDetailsBean.class);
+                HeadImageBean.ListBean anchorBean = new HeadImageBean.ListBean();
+                anchorBean.setUsername(headImageBean.getUsername());
+                anchorBean.setImg(headImageBean.getImg());
+                anchorBean.setHx_username(headImageBean.getHx_username());
+                anchorBean.setUser_id(headImageBean.getUser_id());
+                anchorBean.setFollow_my(headImageBean.getFollow_my());
+                anchorBean.setMy_follow(headImageBean.getMy_follow());
+                anchorBean.setID(headImageBean.getID());
+                anchorBean.setIs_follow(headImageBean.getIs_follow());
+                list.add(anchorBean);
+                audienceNumView.setText(String.valueOf(list.size()));
+                horizontalRecyclerView.getAdapter().notifyDataSetChanged();
+                break;
+            case GUAN_ZHU:
+                if (is_guanzhu) {
+                    tv_follow.setText("关注");
+                } else {
+                    tv_follow.setText("已关注");
+                }
+                is_guanzhu = !is_guanzhu;
+                break;
+            case GUAN_ZHU1:
+                if (is_guanzhu1) {
+                    Toast.makeText(getContext(),"取消关注",Toast.LENGTH_SHORT).show();
+                    guanzhu.setText("关注");
+                } else {
+                    Toast.makeText(getContext(),"关注成功",Toast.LENGTH_SHORT).show();
+                    guanzhu.setText("已关注");
+                }
+                is_guanzhu1 = !is_guanzhu1;
+                break;
+            case GIFT_DATA:
+                giftBeans = new Gson().fromJson(response, GiftBeans.class);
+                list1 = giftBeans.getGift();
+                Init();
+                break;
+            case SONG_LI:
+                SongLiResult songLiResult = new Gson().fromJson(response, SongLiResult.class);
+                currentMoney=songLiResult.getMoney()+"";
+                dimends_count.setText(songLiResult.getMoney() + "");
+//                popUtils.closePop();
+
+
+                //EMMessage message = EMMessage.createTxtSendMessage("", roomId);
+                EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                message.setReceipt(roomId);
+                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                MessageBean2 MessageBean = new MessageBean2();
+//                MessageBean.setGiftimg(giftBean.getImg());
+//                MessageBean.setUsername(userBean.getUsername().toString());
+//                MessageBean.setGiftstr(giftBean.getName());
+//                MessageBean.setUserid(userBean.getUser_id());
+//                MessageBean.setUserimg(userBean.getImg());
+//                MessageBean.setGiftprice(giftBean.getPrice());
+//                MessageBean.setGift_id(giftBean.getGift_id());
+//                String s = new Gson().toJson(MessageBean);
+//                message.setAttribute("ext", s);
+
+
+//                EMCmdMessageBody cmdMessageBody = new EMCmdMessageBody("ext");
+//
+//                message.addBody(cmdMessageBody);
+
+
+                message.setAttribute("giftimg", giftBean.getImg());
+                if (userBean.getUsername() != null) {
+                    message.setAttribute("username", userBean.getUsername().toString());
+                } else {
+                    message.setAttribute("username", userBean.getHx_username().toString());
+                }
+
+                message.setAttribute("giftstr", "一个" + giftBean.getName());
+                message.setAttribute("userid", userBean.getUser_id());
+                message.setAttribute("userimg", userBean.getImg());
+                message.setAttribute("giftprice", giftBean.getPrice());
+                message.setAttribute("gift_id", giftBean.getGift_id());
+//                EMCmdMessageBody emCmdMessageBody = new EMCmdMessageBody(StatusConfig.CMD_GIFT);
+//                message.addBody(emCmdMessageBody);
+                //现在还没定义普通消息和礼物消息
+//                EMTextMessageBody body =new EMTextMessageBody("ext");
+//                message.addBody(body);
+                message.setChatType(EMMessage.ChatType.ChatRoom);
+
+                message.setFrom(userBean.getHx_username());
+                EMTextMessageBody textMessageBody = new EMTextMessageBody("");
+                message.addBody(textMessageBody);
+                EMClient.getInstance().chatManager().saveMessage(message);
+                EMClient.getInstance().chatManager().sendMessage(message);
+
+                // 自己的界面显示
+                MessageBean messageBean = new MessageBean();
+                messageBean.setGiftstr(giftBean.getName());
+                messageBean.setGiftimg(giftBean.getImg());
+                messageBean.setUserimg(userBean.getImg());
+
+                if (gift_img.equals(giftBean.getName())){
+                    if(System.currentTimeMillis()-time>3000){
+                        count=1;
+                    }else{
+                        count++;
+                    }
+                }else{
+                    count=1;
+                }
+                gift_img=giftBean.getName();
+
+                time=System.currentTimeMillis();
+
+                messageBean.setCount(count);
+                messageBean.setUsername(userBean.getUsername() == null ? userBean.getHx_username() : userBean.getUsername().toString());
+                if (userBean.getUsername() != null) {
+                    giftLayout.showLeftGiftVeiw(getActivity(), messageBean);
+                } else {
+                    giftLayout.showLeftGiftVeiw(getActivity(), messageBean);
+                }
+
+
+                break;
+            case GET_YU_E:
+                UserCenterBean zhiFuBean = new Gson().fromJson(response, UserCenterBean.class);
+                if (zhiFuBean.getMoney().equals("")){
+                    dimends_count.setText("");
+                }else{
+                    dimends_count.setText(zhiFuBean.getMoney());
+                }
+                break;
+        }
+    }
+
+    /**
+     * 初始化直播间的信息，关注、直播间总人数、直播间ID、直播间开始的时间
+     */
+    private void initContent() {
+        is_follow = liveRoom.getIs_follow();
+        if (is_follow ==1){
+            is_guanzhu=true;
+        }else if (is_follow ==2){
+            is_guanzhu=false;
+        }
+        if (is_guanzhu) {
+            tv_follow.setText("已关注");
+        } else {
+            tv_follow.setText("关注");
+        }
+        if (liveRoom != null && liveRoom.getNums() != null) {
+            audienceNumView.setText(liveRoom.getNums() + "人");
+        } else {
+            audienceNumView.setText("0 人");
+
+        }
+        if (liveRoom != null && liveRoom.getU_money() != null) {
+            midou_all_count.setText(liveRoom.getU_money());
+        } else {
+            midou_all_count.setText("0");
+
+        }
+        live_wanghong_id.setText("幽秘号: " + liveRoom.getId());
+        live_time.setText(liveRoom.getStart_time());
+
+    }
+
+    /**
+     * 创建聊天室监听事件并监听
+     * <p>
+     * 包括：
+     * 新成员加入、退出，
+     * 聊天室的解散、
+     * 成员被移除直播间
+     */
+    protected void addChatRoomChangeListenr() {
+        chatRoomChangeListener = new EMChatRoomChangeListener() {
+            /**
+             * 聊天室被解散。
+             *
+             * @param roomId
+             *            聊天室id
+             * @param roomName
+             *            聊天室名称
+             */
+            @Override
+            public void onChatRoomDestroyed(String roomId, String roomName) {
+                if (roomId.equals(RoomPanlFragment.this.roomId)) {
+                    LogUtils.logTagName(TAG).log(" room : " + roomId + " with room name : " + roomName + " was destroyed");
+                }
+            }
+
+            /**
+             * 聊天室加入新成员事件
+             *
+             * @param roomId
+             *          聊天室id
+             * @param participant
+             *          新成员username  环信账号
+             */
+            @Override
+            public void onMemberJoined(String roomId, String participant) {
+                EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                message.setReceipt(RoomPanlFragment.this.roomId);
+                message.setFrom(participant);
+                EMTextMessageBody textMessageBody = new EMTextMessageBody("来到直播间");
+                message.addBody(textMessageBody);
+                message.setChatType(EMMessage.ChatType.ChatRoom);
+                EMClient.getInstance().chatManager().saveMessage(message);
+                messageView.refreshSelectLast();
+                onRoomMemberAdded(participant);
+                LogUtils.logTagName(TAG).log("-----新成员进入聊天室-----" + participant);
+            }
+
+            /**
+             * 聊天室成员主动退出事件
+             *
+             * @param roomId
+             *          聊天室id
+             * @param roomName
+             *          聊天室名字
+             * @param participant
+             *          退出的成员的username
+             */
+            @Override
+            public void onMemberExited(String roomId, String roomName, String participant) {
+                onRoomMemberExited(participant);
+                LogUtils.logTagName(TAG).log("-----成员退出聊天室-----" + participant);
+            }
+
+            /**
+             * 聊天室人员被移除
+             *
+             * @param roomId
+             *          聊天室id
+             *@param roomName
+             *          聊天室名字
+             * @param participant
+             *          被移除人员的username
+             */
+            @Override
+            public void onMemberKicked(String roomId, String roomName, String participant) {
+                if (roomId.equals(RoomPanlFragment.this.roomId)) {
+                    String curUser = EMClient.getInstance().getCurrentUser();
+                    if (curUser.equals(participant)) {
+                        EMClient.getInstance().chatroomManager().leaveChatRoom(roomId);
+                        UIUtils.showToastCenterShort("你已被移除出此房间");
+                        getActivity().onBackPressed();
+                    } else {
+                        onRoomMemberExited(participant);
+                    }
+                }
+                LogUtils.logTagName(TAG).log("-----成员被移除出聊天室-----" + participant);
+            }
+        };
+        EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
+    }
+
+    /**
+     * 消息接收监听
+     * 普通消息 扩展消息
+     */
+    EMMessageListener msgListener = new EMMessageListener() {
+
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+
+            for (EMMessage message : messages) {
+                String username = null;
+                // 群组消息
+                if (message.getChatType() == EMMessage.ChatType.GroupChat
+                        || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                    username = message.getTo();
+                    try {
+                        if(message.getStringAttribute("giftimg")!=null){
+                            String Gift_IMG = "";
+                            String GIFT_NAME = "";
+                            String USER_NAME = "";
+                            String USER_IMG = "";
+                            MessageBean messageBean = null;
+
+                            Gift_IMG = message.getStringAttribute("giftimg");
+                            GIFT_NAME = message.getStringAttribute("giftstr");
+                            USER_NAME = message.getStringAttribute("username");
+                            String userimg = message.getStringAttribute("userimg");
+                            String userid = message.getStringAttribute("userid");
+                            String gift_id = message.getStringAttribute("gift_id");
+                            String giftprice = message.getStringAttribute("giftprice");
+                            messageBean = new MessageBean();
+                            // 7个字段
+                            messageBean.setGiftstr(GIFT_NAME);
+                            messageBean.setGiftimg(Gift_IMG);
+                            messageBean.setUserimg(userimg);
+                            messageBean.setUsername(USER_NAME);
+                            messageBean.setUserid(userid);
+                            messageBean.setGift_id(gift_id);
+                            messageBean.setGiftprice(giftprice);
+                            //System.currentTimeMillis();
+                            long time=System.currentTimeMillis();
+                            messageBean.setTime(time);
+
+                            boolean is_have=false;
+                            for (MessageBean messageBean1:messageBeanList) {
+                                if(messageBean1.getGiftimg().equals(Gift_IMG)
+                                        &&messageBean1.getUsername().equals(USER_NAME)){
+                                    int count=0;
+                                    if(time-messageBean1.getTime()>3000){
+                                        count=1;
+                                    }else{
+                                        count=messageBean1.getCount()+1;
+                                    }
+                                    messageBean1.setTime(time);
+                                    messageBean1.setCount(count);
+                                    messageBean.setCount(count);
+                                    is_have=true;
+                                }
+                            }
+
+                            if(!is_have){
+                                messageBean.setCount(1);
+                                messageBeanList.add(messageBean);
+                            }
+
+                            giftLayout.showLeftGiftVeiw(getActivity(), messageBean);
+                        }
+
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    // 单聊消息
+                    username = message.getFrom();
+                }
+
+                // 如果是当前会话的消息，刷新聊天页面
+                if (username.equals(roomId)) {
+                    if (message.getBooleanAttribute(StatusConfig.EXTRA_IS_BARRAGE_MSG, false)) {
+                        barrageLayout.addBarrage(((EMTextMessageBody) message.getBody()).getMessage(),
+                                message.getFrom());
+                    }
+                    messageView.refreshSelectLast();
+                } else {
+                    if (message.getChatType() == EMMessage.ChatType.Chat && message.getTo().equals(EMClient.getInstance().getCurrentUser())) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                newMsgNotifyImage.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                    //// 如果消息不是和当前聊天ID的消息
+                    //EaseUI.getInstance().getNotifier().onNewMsg(message);
+                }
+            }
+        }
+
+        private MessageBean lastMessagebean;
+        private int count;
+
+        List<MessageBean> messageBeanList=new ArrayList<MessageBean>();
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+            EMMessage message = messages.get(messages.size() - 1);
+            if (StatusConfig.CMD_GIFT.equals(((EMCmdMessageBody) message.getBody()).action())) {
+                String Gift_IMG = "";
+                String GIFT_NAME = "";
+                String USER_NAME = "";
+                String USER_IMG = "";
+                MessageBean messageBean = null;
+                try {
+                    Gift_IMG = message.getStringAttribute("giftimg");
+                    GIFT_NAME = message.getStringAttribute("giftstr");
+                    USER_NAME = message.getStringAttribute("username");
+                    String userimg = message.getStringAttribute("userimg");
+                    String userid = message.getStringAttribute("userid");
+                    String gift_id = message.getStringAttribute("gift_id");
+                    String giftprice = message.getStringAttribute("giftprice");
+                    messageBean = new MessageBean();
+                    // 7个字段
+                    messageBean.setGiftstr(GIFT_NAME);
+                    messageBean.setGiftimg(Gift_IMG);
+                    messageBean.setUserimg(userimg);
+                    messageBean.setUsername(USER_NAME);
+                    messageBean.setUserid(userid);
+                    messageBean.setGift_id(gift_id);
+                    messageBean.setGiftprice(giftprice);
+                    //System.currentTimeMillis();
+                    long time=System.currentTimeMillis();
+                    messageBean.setTime(time);
+
+                    boolean is_have=false;
+                    for (MessageBean messageBean1:messageBeanList) {
+                        if(messageBean1.getGiftimg().equals(Gift_IMG)
+                          &&messageBean1.getUsername().equals(USER_NAME)){
+                            int count=0;
+                            if(time-messageBean1.getTime()>3000){
+                                count=1;
+                            }else{
+                                count=messageBean1.getCount()+1;
+                            }
+                            messageBean1.setTime(time);
+                            messageBean1.setCount(count);
+                            messageBean.setCount(count);
+                            is_have=true;
+                        }
+                    }
+
+                    if(!is_have){
+                        messageBean.setCount(1);
+                        messageBeanList.add(messageBean);
+                    }
+
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+//                if (lastMessagebean!=null&&(lastMessagebean.getUser_name().equals(messageBean.getUser_name())&&(lastMessagebean.getGift_name().equals(messageBean.getGift_name())))){
+//                    messageBean.setIsdoubleTouch(true);
+//                    messageBean.setCount(count);
+//                }else{
+//                    count=1;
+//                }
+                    giftLayout.showLeftGiftVeiw(getActivity(), messageBean);
+                lastMessagebean = messageBean;
+            }
+        }
+
+        @Override
+        public void onMessageReadAckReceived(List<EMMessage> messages) {
+            if (isMessageListInited) {
+                //                messageList.refresh();
+            }
+        }
+
+        @Override
+        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
+            if (isMessageListInited) {
+                //                messageList.refresh();
+            }
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+            if (isMessageListInited) {
+                messageView.refresh();
+            }
+        }
+    };
+
+    /**
+     * 初始化消息
+     */
+    protected void onMessageListInit() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                messageView.init(roomId);
+                messageView.setMessageViewListener(new MessageViewListener() {
+                    @Override
+                    public void onMessageSend(String content) {
+                        EMMessage message = EMMessage.createTxtSendMessage(content, roomId);
+                        if (messageView.isDanmuShow()) {
+                            message.setAttribute(StatusConfig.EXTRA_IS_BARRAGE_MSG, true);
+                            barrageLayout.addBarrage(content, EMClient.getInstance().getCurrentUser());
+                        }
+                        message.setChatType(EMMessage.ChatType.ChatRoom);
+                        EMClient.getInstance().chatManager().sendMessage(message);
+                        message.setMessageStatusCallback(new EMCallBack() {
+                            @Override
+                            public void onSuccess() {
+                                //刷新消息列表
+                                messageView.refreshSelectLast();
+                                LogUtils.logTagName(TAG).log("-----消息发送成功-----");
+                            }
+
+                            @Override
+                            public void onError(int i, String s) {
+                                UIUtils.showToastCenterShort("消息发送失败！");
+                                LogUtils.logTagName(TAG).log("-----消息发送失败！-----" + s);
+                            }
+
+                            @Override
+                            public void onProgress(int i, String s) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onHiderBottomBar() {
+                        bottomBar.setVisibility(View.VISIBLE);
+                        Utils.hideKeyboard(messageView.getInputView());
+                    }
+
+                    @Override
+                    public void onItemClickListener(int id, String sid) {
+                        if (sid != null && !sid.equals(EMClient.getInstance().getCurrentUser())) {
+                            messageView.setShowInputView(true);
+                            bottomBar.setVisibility(View.INVISIBLE);
+                            messageView.setReplyer(sid);
+                        }
+                        LogUtils.logTagName(TAG).log("-----点击聊天消息的条目-----" + sid);
+                    }
+
+                    @Override
+                    public void onLoadMore() {
+
+                    }
+                });
+                messageView.setVisibility(View.VISIBLE);
+                bottomBar.setVisibility(View.VISIBLE);
+                isMessageListInited = true;
+                updateUnreadMsgView();
+
+            }
+        });
+    }
+
+    /**
+     * 更新未读显示提示
+     */
+    protected void updateUnreadMsgView() {
+        if (isMessageListInited) {
+            for (EMConversation conversation : EMClient.getInstance()
+                    .chatManager()
+                    .getAllConversations()
+                    .values()) {
+                if (conversation.getType() == EMConversation.EMConversationType.Chat
+                        && conversation.getUnreadMsgCount() > 0) {
+                    newMsgNotifyImage.setVisibility(View.VISIBLE);
+                    return;
+                }
+            }
+            newMsgNotifyImage.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 显示成员详情
+     */
+    private void showUserDetailsDialog(final HeadImageBean.ListBean anchorBean) {
+
+//        final RoomUserDetailsDialog dialog =
+//                RoomUserDetailsDialog.newInstance(anchorBean);
+//        dialog.setOnATUserListener(
+//                new OnATUserListener() {
+//                    @Override
+//                    public void onATClick(String username) {
+//                        dialog.dismiss();
+//                        messageView.getInputView().setText("@" + username + " ");
+//                        showInputView();
+//                    }
+//                });
+//        dialog.show(getActivity().getSupportFragmentManager(), "RoomUserDetailsDialog");
+//        LogUtils.logTagName(TAG).log("-----显示成员详情-----" + anchorBean.getUsername());
+        mListBean = anchorBean;
+        is_follow1 = mListBean.getIs_follow();
+        if (is_follow1.equals("1")){
+            // 2 已关注
+            is_guanzhu1=true;
+            guanzhu.setText("已关注");
+
+        }else{
+            is_guanzhu1=false;
+            // 1. 未关注
+            guanzhu.setText("关注");
+        }
+        fans_count.setText(anchorBean.getFollow_my());
+        guanzhu_count.setText(anchorBean.getMy_follow());
+        nickname.setText(anchorBean.getUsername());
+        Glide.with(getContext()).load(anchorBean.getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into(icon);
+        youmihao.setText("幽秘号:" + liveId);
+        othersPop.showAtLocation(rootview, Gravity.CENTER, 0, 0);
+    }
+
+    /**
+     * 显示输入框
+     */
+    private void showInputView() {
+        bottomBar.setVisibility(View.INVISIBLE);
+        messageView.setShowInputView(true);
+        messageView.getInputView().requestFocus();
+        messageView.getInputView().requestFocusFromTouch();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showKeyboard(messageView.getInputView());
+            }
+        }, 200);
+    }
+
+    /**
+     * 显示成员列表
+     * 成员头像的点击事件
+     */
+    private void showMemberList() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        horizontalRecyclerView.setLayoutManager(layoutManager);
+
+        // 获取成员列表
+        startRequestData(INIT_DATA);
+        root_layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //根布局点赞
+                periscopeLayout.addHeart();
+                return false;
+            }
+        });
+    }
+
+
+    /**
+     * 新成员进入聊天室
+     */
+    private void onRoomMemberAdded(String name) {
+        if (list.size() > 0) {
+
+            for (HeadImageBean.ListBean bean : list) {
+                if (bean!=null&&bean.getHx_username()!=null&&bean.getHx_username().equals(name)) {
+                    isCoinClude = true;
+                }
+            }
+            newMemberName = name;
+            if (!isCoinClude) {
+//                startRequestData(GET_MORE_DATA);
+                startRequestData(INIT_DATA);
+            }
+        } else {
+            newMemberName = name;
+//            startRequestData(GET_MORE_DATA);
+            if (name.equals(SpSingleInstance.getSpSingleInstance().getUserBean(getContext()).getHx_username())){
+                return;
+            }
+            startRequestData(INIT_DATA);
+
+        }
+    }
+
+    /**
+     * 成员离开聊天室
+     */
+    private void onRoomMemberExited(String name) {
+        removeMember(name);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                audienceNumView.setText(String.valueOf(list.size()));
+                horizontalRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**
+     * 移除聊天室成员
+     */
+    private synchronized void removeMember(String name) {
+        startRequestData(INIT_DATA);
+//        if (name == null || "".equals(name)) {
+//            return;
+//        }
+//        for (int i = 0; i < list.size(); i++) {
+//            if (name.equals(list.get(i).getHx_username())) {
+//                list.remove(i);
+//                break;
+//            }
+//        }
+    }
+
+    /**
+     * 友盟分享监听回调是否授权成功
+     */
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+//            Log.d("plat","platform"+platform);
+            Toast.makeText(getActivity(), "邀请成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(getActivity(), "邀请失败", Toast.LENGTH_SHORT).show();
+            if (t != null) {
+                Logger.e("++++++++++++++:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(getActivity(), "邀请取消", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    /**
+     * bottombar 中的各种按钮的点击事件
+     *
+     * @param v
+     */
+    @OnClick({R.id.rootview, R.id.screenshot_image, R.id.comment_image, R.id.present_image, R.id.chat_image, R.id.img_bt_switch_camera, R.id.img_bt_switch_light, R.id.img_bt_switch_voice, R.id.dian_zan, R.id.sorrow_img, R.id.tv_follow})
+    public void onBaseClick(View v) {
+        switch (v.getId()) {
+            case R.id.screenshot_image:
+                // 原来的截屏分享，现在的分享
+//                Bitmap bitmap = screenshot();
+//                if (bitmap != null) {
+//                    ScreenshotDialog dialog = new ScreenshotDialog(getContext(), bitmap);
+//                    dialog.show();
+//                }
+                new ShareAction(getActivity()).withText("hello")
+                        .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
+                        .setCallback(umShareListener).open();
+                break;
+            case R.id.comment_image:
+                //聊天
+                showInputView();
+                break;
+            case R.id.present_image:
+//                parentview.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.activity_translate_in));
+                pop.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
+                //弹幕
+//                EMMessage message = EMMessage.createSendMessage(EMMessage.Type.CMD);
+//                message.setReceipt(roomId);
+//                EMCmdMessageBody cmdMessageBody = new EMCmdMessageBody(StatusConfig.CMD_GIFT);
+//                message.addBody(cmdMessageBody);
+//                message.setChatType(EMMessage.ChatType.ChatRoom);
+//                EMClient.getInstance().chatManager().sendMessage(message);
+//                giftLayout.showLeftGiftVeiw(getActivity(), EMClient.getInstance().getCurrentUser(), EMClient.getInstance().getCurrentUser());
+                break;
+            case R.id.chat_image:
+                //聊天列表
+                AnchorBean anchorBean = new AnchorBean();
+                anchorBean.setAnchorId(userBean.getHx_username());
+                anchorBean.setName(userBean.getHx_username());
+                ConversationListFragment fragment = ConversationListFragment.newInstance(anchorBean, false);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.message_container, fragment)
+                        .commit();
+                break;
+            case R.id.img_bt_switch_camera:
+                if (mOnLiveListener != null) {
+                    mOnLiveListener.onCamreClick(img_bt_switch_camera);
+                }
+                break;
+            case R.id.img_bt_switch_light:
+                if (mOnLiveListener != null) {
+                    mOnLiveListener.onLightClick(lightSwitch);
+                }
+                break;
+            case R.id.img_bt_switch_voice:
+                if (mOnLiveListener != null) {
+                    mOnLiveListener.onVoiceClick(voiceSwitch);
+                }
+                break;
+            case R.id.tv_follow:
+                startRequestData(GUAN_ZHU);
+                break;
+            case R.id.dian_zan:
+                EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                message.setReceipt(RoomPanlFragment.this.roomId);
+                if (userBean.getHx_username()!=null){
+                    message.setFrom(userBean.getHx_username());
+                 }
+                EMTextMessageBody textMessageBody = new EMTextMessageBody("点亮了爱心");
+                message.addBody(textMessageBody);
+                message.setChatType(EMMessage.ChatType.ChatRoom);
+                EMClient.getInstance().chatManager().sendMessage(message);
+                messageView.refreshSelectLast();
+                periscopeLayout.addHeart();
+                startRequestData(DIAN_ZAN);
+                break;
+            case R.id.rootview:
+                seekBarBeauty.setVisibility(View.GONE);
+                break;
+            case R.id.sorrow_img:
+                // 默认为向上的图标
+                if (isdown) {
+                    // 目前是想下，想向上，显示pop
+                    sorrow_img.setImageResource(R.drawable.up_sorrow);
+                    showpop(sorrow_img);
+                } else {
+                    sorrow_img.setImageResource(R.drawable.down_sorrow);
+                    showpop(sorrow_img);
+                }
+                isdown = !isdown;
+                break;
+        }
+    }
+
+    /**
+     * 关闭主播中美颜，翻转的pop
+     */
+    private void clearpop() {
+        sorrow_pop.dismiss();
+    }
+
+    /**
+     * 打开主播中美颜，翻转的pop
+     */
+    private void showpop(View v) {
+        sorrow_pop.showAtLocation(rootview, Gravity.BOTTOM, 0, -100);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (pop!=null){
+            pop.dismiss();
+        }
+
+
+        if (timer!=null){
+            timer.cancel();
+        }
+    }
+
+    /**
+     * 截屏
+     */
+    // 获取屏幕
+    private Bitmap screenshot() {
+        View dView = getActivity().getWindow().getDecorView();
+        dView.setDrawingCacheEnabled(true);
+        dView.buildDrawingCache();
+        Bitmap bmp = dView.getDrawingCache();
+        return bmp;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isMessageListInited) {
+            messageView.refresh();
+        }
+        EaseUI.getInstance().pushActivity(getActivity());
+        // register the event listener when enter the foreground
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // unregister this event listener when this activity enters the
+        // background
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+
+        // 把此activity 从foreground activity 列表里移除
+        EaseUI.getInstance().popActivity(getActivity());
+    }
+
+    public void destroy() {
+        EMClient.getInstance().chatroomManager().leaveChatRoom(roomId);
+        if (chatRoomChangeListener != null) {
+            EMClient.getInstance().chatroomManager().removeChatRoomChangeListener(chatRoomChangeListener);
+        }
+    }
+
+    /**
+     * 加入聊天室
+     */
+    public void joinChatRoom() {
+        EMClient.getInstance().chatroomManager().joinChatRoom(roomId, new EMValueCallBack<EMChatRoom>() {
+            @Override
+            public void onSuccess(EMChatRoom emChatRoom) {
+                chatroom = emChatRoom;
+                addChatRoomChangeListenr();
+                onMessageListInit();
+                LogUtils.logTagName(TAG).log("-----加入聊天室成功-----");
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                UIUtils.showToastCenterShort("加入聊天室失败");
+                LogUtils.logTagName(TAG).log("-----加入聊天室失败-----" + s);
+            }
+        });
+        ll_anchor.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 自动添加红心并显示
+     */
+    public void addPeriscope() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (!getActivity().isFinishing()) {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            periscopeLayout.addHeart();
+//                        }
+//                    });
+//                    try {
+//                        Thread.sleep(new Random().nextInt(2000) + 200);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }).start();
+    }
+
+    public void setOnLiveListener(OnLiveListener listener) {
+        this.mOnLiveListener = listener;
+    }
+
+    public void cancelPop() {
+        if (pop!=null){
+            pop.dismiss();
+        }
+    }
+}

@@ -1,0 +1,77 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.ChargeListBean;
+
+
+/**
+ * Created by lenove on 2016/8/23.
+ */
+public class CharListviewAdapter extends BaseAdapter {
+    private List<ChargeListBean.ListBean> mList;
+    private Context mContext;
+    private boolean isTrue;
+    public CharListviewAdapter(List<ChargeListBean.ListBean> list, Context context){
+        this.mList=list;
+        this.mContext=context;
+    }
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+
+    @Override
+    public ChargeListBean.ListBean getItem(int position) {
+        return mList.get(position);
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+
+        final ViewHolder viewHolder;
+        if(convertView==null){
+            viewHolder=new ViewHolder();
+            convertView=View.inflate(parent.getContext(), R.layout.item_charge,null);
+            viewHolder.money_count= (TextView) convertView.findViewById(R.id.money_count);
+            viewHolder.dou_count= (TextView) convertView.findViewById(R.id.dou_count);
+            viewHolder.parentview= (LinearLayout) convertView.findViewById(R.id.parentview);
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder)convertView.getTag();
+        }
+        if (mList.get(position).isChecked()){
+            viewHolder.parentview.setBackgroundResource(R.drawable.charge_item_select_bg);
+            viewHolder.dou_count.setTextColor(Color.parseColor("#ffffff"));
+            viewHolder.money_count.setTextColor(Color.parseColor("#ffffff"));
+        }else{
+            viewHolder.parentview.setBackgroundResource(R.drawable.charge_item_bg);
+            viewHolder.dou_count.setTextColor(Color.parseColor("#2a2430"));
+            viewHolder.money_count.setTextColor(Color.parseColor("#909090"));
+        }
+        viewHolder.dou_count.setText(mList.get(position).getDiamond()+"豆");
+        viewHolder.money_count.setText("¥ "+mList.get(position).getPrice());
+        return convertView;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+     class ViewHolder{
+         public TextView money_count;
+         public TextView dou_count;
+         public LinearLayout parentview;
+     }
+
+}

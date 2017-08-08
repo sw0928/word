@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.DistributionDao">
+	<select id="exportAllDistributon1" parameterType="distributionBean" resultType="distributionBean">
+
+			select sum(vip1_count) as vip1_count,sum(vip1_price) as vip1_price,
+sum(vip2_count) as vip2_count,sum(vip2_price) as vip2_price
+,sum(unvip1_count) as unvip1_count,sum(unvip1_price) as unvip1_price
+,sum(unvip2_count) as unvip2_count,sum(unvip2_price) as unvip2_price
+from(
+			select a.mobile_phone,a.nick_name as user_name,
+			(select ( case when sum(
+			(select percent_value from tst_percent where percent_type='svip')
+			*(select percent_value from tst_percent where percent_type='vip1')/100) 
+			is null then 0 else sum(
+			(select percent_value from tst_percent where percent_type='svip')
+			*(select percent_value from tst_percent where percent_type='vip1')/100)  end)
+			as total_price
+			from ecs_users
+			where fill_invitation_code=a.invitation_code and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		) as unvip1_price,
+			(select  count(*)
+			from ecs_users
+			where fill_invitation_code=a.invitation_code and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		)  as unvip1_count,
+
+		(select (case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		) is null then 0  else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		)  end) as total_price
+		from ecs_users as c
+		inner join ecs_users as b on c.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where c.fill_invitation_code=a.invitation_code )
+		as unvip2_price,
+		
+			(select count(*) 
+		from ecs_users as c
+		inner join ecs_users as b on c.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where c.fill_invitation_code=a.invitation_code )
+		as unvip2_count,
+		(select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip1') as vip1_price,
+(select  count(*)
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip1') as vip1_count,
+
+(select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip2') as vip2_price,
+(select  count(*)
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip2') as vip2_count
+		from ecs_users as a
+		where a.wx_pub_openid is not null
+		) as t
+	</select>
+
+	<select id="exportAllDistributon" parameterType="distributionBean" resultType="distributionBean">
+			select a.mobile_phone,a.nick_name as user_name,
+			(select ( case when sum(
+			(select percent_value from tst_percent where percent_type='svip')
+			*(select percent_value from tst_percent where percent_type='vip1')/100) 
+			is null then 0 else sum(
+			(select percent_value from tst_percent where percent_type='svip')
+			*(select percent_value from tst_percent where percent_type='vip1')/100)  end)
+			as total_price
+			from ecs_users
+			where fill_invitation_code=a.invitation_code and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		) as unvip1_price,
+			(select  count(*)
+			from ecs_users
+			where fill_invitation_code=a.invitation_code and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		)  as unvip1_count,
+
+		(select (case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		) is null then 0  else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		)  end) as total_price
+		from ecs_users as c
+		inner join ecs_users as b on c.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where c.fill_invitation_code=a.invitation_code )
+		as unvip2_price,
+			(select count(*) 
+		from ecs_users as c
+		inner join ecs_users as b on c.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where c.fill_invitation_code=a.invitation_code )
+		as unvip2_count,
+		(select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip1') as vip1_price,
+(select  count(*)
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip1') as vip1_count,
+
+(select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip2') as vip2_price,
+(select  count(*)
+		from tst_distribution as c
+		inner join ecs_users as b on c.user_id=b.user_id
+		where c.member_id=a.user_id
+		and distribution_relation='vip2') as vip2_count
+		from ecs_users as a
+		where a.wx_pub_openid is not null
+	</select>
+	
+	<select id="exportDistributionsExcel" parameterType="memberBean" resultType="memberBean">
+			select * from ecs_users
+		where FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') > now()
+		and wx_pub_openid is not null
+	</select>
+	
+	<select id="exportUnDistributionsExcel" parameterType="memberBean" resultType="memberBean">
+			select * from ecs_users
+			where (now() > FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='')
+			and wx_pub_openid is not null
+	</select>
+	
+	<select id="getUnDistributions1" parameterType="memberBean" resultType="distributionBean">
+		select  user_name,user_id,
+			head_path as user_img,'vip1' as distribution_relation,
+			create_time,
+			(select percent_value from tst_percent where percent_type='svip')*(select percent_value from tst_percent where percent_type='vip1')/100 as distribution_price
+		from ecs_users
+		where fill_invitation_code=#{invitation_code} and (now() > FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		order by create_time desc
+	</select>
+	
+	<select id="exportUnDistributions1" parameterType="memberBean" resultType="distributionBean">
+			select  "未获得" as distribution_type,user_name,user_id,mobile_phone,
+			head_path as user_img,'1级用户' as distribution_relation,
+			create_time,
+			(select percent_value from tst_percent where percent_type='svip')
+			*(select percent_value from tst_percent where percent_type='vip1')/100 as distribution_price
+			from ecs_users
+			where fill_invitation_code=#{invitation_code} 
+			and (now() > FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+			order by create_time desc
+	</select>
+	
+	<select id="exportUnDistributions2" parameterType="memberBean" resultType="distributionBean">
+		select * from(
+		select  "未获得" as distribution_type,b.user_name,b.user_id,b.mobile_phone,
+		b.head_path as user_img,'2级用户' as distribution_relation,
+		b.create_time,
+		(select percent_value from tst_percent where percent_type='svip')*(select percent_value from tst_percent where percent_type='vip2')/100 as distribution_price
+		from ecs_users as a
+		inner join ecs_users as b on a.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where a.fill_invitation_code=#{invitation_code}
+		) as a
+		order by a.create_time desc
+	</select>
+
+	<select id="getTotalUnDistributionsCount" parameterType="totalDistributionBean" resultType="totalDistributionBean">
+		select count(*) as total_count,
+		sum((select percent_value from tst_percent where percent_type='svip'))
+		as total_price
+		from ecs_users
+		where (now() > FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='')
+	</select>
+	
+	<select id="getUnDistributionsCount1" parameterType="memberBean" resultType="totalDistributionBean">
+		select ( case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip1')/100) 
+		is null then 0 else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip1')/100)  end)
+		as total_price,count(*) as total_count
+		from ecs_users
+		where fill_invitation_code=#{invitation_code} and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+	</select>
+	<select id="getUnDistributionsCount2" parameterType="memberBean" resultType="totalDistributionBean">
+		select (case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		) is null then 0  else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		)  end) as total_price,count(*) as total_count
+		from ecs_users as a
+		inner join ecs_users as b on a.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where a.fill_invitation_code=#{invitation_code} 
+	</select>
+	
+	<select id="getUnDistributions2" parameterType="memberBean" resultType="distributionBean">
+		select * from(
+		select  b.user_name,b.user_id,
+		b.head_path as user_img,'vip2' as distribution_relation,
+		b.create_time,
+		(select percent_value from tst_percent where percent_type='svip')*(select percent_value from tst_percent where percent_type='vip2')/100 as distribution_price
+		from ecs_users as a
+		inner join ecs_users as b on a.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where a.fill_invitation_code=#{invitation_code}
+		) as a
+		order by a.create_time desc
+	</select>
+	
+	<select id="exportDistributions1" parameterType="memberBean" resultType="distributionBean">
+		select "已获得" as distribution_type,distribution_price,b.nick_name as user_name,
+		b.head_path as user_img ,"1级用户" as distribution_relation
+		from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id} 
+		and distribution_relation='vip1'
+		order by a.create_time desc	
+	</select>
+	<select id="exportDistributions2" parameterType="memberBean" resultType="distributionBean">
+		select "已获得" as distribution_type,distribution_price,b.nick_name as user_name,
+		b.head_path as user_img ,"2级用户" as distribution_relation
+		from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id} 
+			and distribution_relation='vip2'
+		order by a.create_time desc	
+	</select>
+	<select id="getDistributions" parameterType="distributionBean" resultType="distributionBean">
+		select a.*,b.nick_name as user_name,b.head_path as user_img from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id} 
+		<if test=' distribution_relation != null and distribution_relation != "" '>
+			and distribution_relation=#{distribution_relation}
+		</if>	
+		order by a.create_time desc	
+	</select>
+	
+	<select id="getTotalDistributionsCount" parameterType="totalDistributionBean" resultType="totalDistributionBean">
+		select 
+		(select count(DISTINCT member_id) from tst_distribution_card) as total_card_count,
+		count(DISTINCT member_id) as total_count,sum(order_total_price) as total_price from tst_order
+	</select>
+	
+	<select id="getDistributionsCount" parameterType="distributionBean" resultType="float">
+		select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id}
+		<if test=' distribution_relation != null and distribution_relation != "" '>
+			and distribution_relation=#{distribution_relation}
+		</if>	
+	</select>
+	
+	
+	<select id="getProfits" parameterType="distributionBean" resultType="distributionBean">
+		select * from tst_distribution
+		where 1=1
+		<if test=' member_id != null and member_id != "" '>
+			and member_id=#{member_id}
+		</if>
+		<if test=' user_id != null and user_id != "" '>
+			and user_id=#{user_id}
+		</if>
+		<if test=' distribution_relation != null and distribution_relation != "" '>
+			and #{distribution_relation} like concat('%',distribution_relation,'%')
+		</if>
+	</select>
+
+	<update id="deleteCardGoods" parameterType="cardBean">
+		update tst_distribution_card
+		set is_delete='1'
+		where card_code=#{card_code}
+	</update>
+	
+	<insert id="insertCardGoods" parameterType="cardBean">
+		insert into tst_distribution_card
+		(card_code,card_type,valid_time,card_price,create_time)
+		values
+		(#{card_code},#{card_type},#{valid_time},#{card_price},now())
+	</insert>
+	
+	<select id="getCardGoodss" parameterType="cardBean" resultType="cardBean">
+		select a.*,b.user_name as nick_name from tst_distribution_card as a
+		left join ecs_users as b on a.member_id=b.user_id
+		where a.is_delete='0'
+		
+		<if test=' card_code != null and card_code != "" '>
+			and a.card_code=#{card_code}
+		</if>
+		
+		<if test=' card_type != null and card_type != "" '>
+			and #{card_type} like concat('%',a.card_type,'%')
+		</if>
+		
+		order by a.create_time desc
+	</select>
+</mapper>

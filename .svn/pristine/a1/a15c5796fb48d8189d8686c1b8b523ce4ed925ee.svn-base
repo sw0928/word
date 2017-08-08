@@ -1,0 +1,94 @@
+package tts.moudle.api.widget;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.MotionEvent;
+import android.view.View;
+
+/**
+ * Created by shanghang on 2016/8/2.
+ */
+public class SlidView  extends View {
+    private String[] strs = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    private Paint paint;
+    private OnTouchFirstListener listener;
+
+    public SlidView(Context context) {
+        this(context, null);
+    }
+
+    public SlidView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SlidView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.GRAY);
+        paint.setTypeface(Typeface.DEFAULT_BOLD);
+
+    }
+
+    //  px---->sp
+    protected int sp2px(int spVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spVal, getResources().getDisplayMetrics());
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        for (int i = 0; i < strs.length; i++) {
+            paint.setColor(i == index ? Color.RED : Color.BLACK);
+            paint.setTextSize(i == index ? sp2px(18) : sp2px(16));
+            int x = (int) (getWidth() - paint.measureText(strs[i])) / 2;
+            int y = getHeight() / strs.length * (i + 1);
+            canvas.drawText(strs[i], x, y, paint);
+        }
+    }
+
+    int index = -1;  //获取触摸到字母索引的位置
+
+    //触碰事件
+    //按下，松开，拖动
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                float y = event.getY();
+                this.setBackgroundColor(Color.GRAY);
+                //获取触摸到字母的位置
+                index = (int) y * strs.length / getHeight();
+                listener.onTouch(strs[index]);
+                break;
+            case MotionEvent.ACTION_UP:
+                this.setBackgroundColor(android.R.color.transparent);
+                index = -1;
+                listener.onRelease();
+                break;
+        }
+        //重绘
+        invalidate();
+        return true;
+    }
+
+    public void setFirstListener(OnTouchFirstListener listener) {
+        this.listener = listener;
+    }
+    /**
+     * OnTouchFirstListener 接口
+     * onTouch：触摸到了那个字母
+     * onRelease:up释放时中间显示的字母需要设置为GONE
+     */
+    public interface OnTouchFirstListener {
+        void onTouch(String ch);
+        void onRelease();
+    }
+}

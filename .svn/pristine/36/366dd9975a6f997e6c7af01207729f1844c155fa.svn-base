@@ -1,0 +1,241 @@
+package tts.project.livek.ui.widget;
+
+import android.app.Activity;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tts.project.livek.R;
+import tts.project.livek.bean.GiftBeans;
+import tts.project.livek.bean.MessageBean;
+
+public class GiftLayout extends LinearLayout {
+
+    @BindView(R.id.left_gift_view1)
+    LiveLeftGiftView leftGiftView;
+    @BindView(R.id.left_gift_view2)
+    LiveLeftGiftView leftGiftView2;
+
+    /**
+     * 礼物管理
+     */
+    volatile boolean isGiftShowing = false;
+    volatile boolean isGift2Showing = false;
+    List<MessageBean> toShowList = Collections.synchronizedList(new LinkedList<MessageBean>());
+
+    public GiftLayout(Context context) {
+        super(context);
+        init(context, null);
+    }
+
+    public GiftLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public GiftLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        LayoutInflater.from(context).inflate(R.layout.live_widget_gift_layout, this);
+        ButterKnife.bind(this);
+
+    }
+    private String lastUsername;
+    private String lastgiftname;
+    private int count=1;
+    private GiftBeans.GiftBean giftBean;
+
+    /**
+     * 显示礼物管理
+     */
+    public synchronized void showLeftGiftVeiw(Activity activity, MessageBean messageBean){
+        // 新来的name，如果名字相同，判断礼物是否相同，礼物相同数据就加1
+        if (messageBean==null){
+           throw  new NullPointerException("获取到的礼物空指针。。。。。。");
+        }
+        if (!isGift2Showing) {
+            showGift2Derect(activity, messageBean);
+        } else if (!isGiftShowing) {
+            showGift1Derect(activity, messageBean);
+        } else {
+            toShowList.add(messageBean);
+        }
+
+//        if (isGiftShowing){
+//            if (messageBean.isdoubleTouch()){
+//                leftGiftView.setGift_count(messageBean.getCount()+"");
+//            }else{
+//                showGift1Derect(activity, messageBean);
+//                toShowList.add(messageBean);
+//            }
+//        }else{
+//            showGift1Derect(activity, messageBean);
+//        }
+
+
+//            if (messageBean.isdoubleTouch()){
+////                showGift1Derect(activity,messageBean);
+//                if (isGiftShowing){
+//                    // 如果在显示
+//                    leftGiftView.setGift_count(messageBean.getCount()+"");
+//                }else{
+//                    leftGiftView.setGift_count(messageBean.getCount()+"");
+//                    showGift1Derect(activity, messageBean);
+//                }
+//            }else {
+//                showGift1Derect(activity, messageBean);
+//            }
+//
+//        if (messageBean.isdoubleTouch()){
+//            // 如果2是空闲的那么就是1，如果1同时不是空闲的就开始开变1 的文字和动画延时
+//            if (!isGift2Showing&&!isGiftShowing){
+//                // 1和2都是空闲的
+//                showGift1Derect(activity,messageBean);
+//            }else if (isGift2Showing&&isGiftShowing){
+//                // 2显示1显示
+//                    leftGiftView2.setGift_count(messageBean.getCount()+"");
+//            }else if (isGift2Showing && !isGiftShowing){
+//                leftGiftView2.setGift_count(messageBean.getCount()+"");
+//            }else if (isGiftShowing&&!isGift2Showing){
+//                // 2空闲1显示
+//                leftGiftView.setGift_count(messageBean.getCount()+"");
+//            }
+//        }else{
+//            if (!isGift2Showing) {
+//                showGift2Derect(activity, messageBean);
+//            } else if (!isGiftShowing) {
+//                showGift1Derect(activity, messageBean);
+//
+//            } else {
+//                toShowList.add(messageBean);
+//            }
+//        }
+
+    }
+        // 传递进来的messagebean如果是两次相同，就设置之前的view延时消失，并改变文字
+
+
+    /**
+     * 显示礼物1
+     */
+    private void showGift1Derect(final Activity activity, final MessageBean messageBean) {
+        isGiftShowing = true;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                leftGiftView.setVisibility(View.VISIBLE);
+                leftGiftView.setName(messageBean.getUsername());
+                leftGiftView.setGift_name("送了一个"+messageBean.getGiftstr());
+                leftGiftView.setAvatar(messageBean.getUserimg());
+                leftGiftView.setGiftImage(messageBean.getGiftimg());
+                leftGiftView.setTranslationY(0);
+                leftGiftView.setGift_count(messageBean.getCount()+"");
+                ViewAnimator.animate(leftGiftView)
+                        .alpha(0, 1)
+                        .translationX(-leftGiftView.getWidth(), 0)
+                        .duration(600)
+                        .thenAnimate(leftGiftView)
+                        .alpha(1, 0)
+                        .translationY(-1.5f * leftGiftView.getHeight())
+                        .duration(800)
+                        .onStop(new AnimationListener.Stop() {
+                            @Override
+                            public void onStop() {
+                                MessageBean pollName = null;
+                                try {
+                                    pollName= toShowList.remove(0);
+                                } catch (Exception e) {
+
+                                }
+                                if (pollName != null) {
+                                    showGift1Derect(activity,pollName);
+                                } else {
+                                    isGiftShowing = false;
+                                }
+                            }
+                        })
+                        .startDelay(2000)
+                        .start();
+                ViewAnimator.animate(leftGiftView.getGiftImageView())
+                        .translationX(-leftGiftView.getGiftImageView().getX(), 0)
+                        .duration(1100)
+                        .start();
+            }
+        });
+    }
+
+    /**
+     * 显示礼物
+     * name 用户名
+     *  String url,  头像
+     *  giftimg     礼物头像
+     *
+     */
+    private void showGift2Derect(final Activity activity, final  MessageBean messageBean) {
+        isGift2Showing = true;
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                leftGiftView2.setVisibility(View.VISIBLE);
+                leftGiftView2.setName(messageBean.getUsername());
+                leftGiftView2.setGift_name("送了一个"+messageBean.getGiftstr());
+                leftGiftView2.setAvatar(messageBean.getUserimg());
+                leftGiftView2.setGiftImage(messageBean.getGiftimg());
+                leftGiftView2.setTranslationY(0);
+                leftGiftView2.setGift_count(messageBean.getCount()+"");
+                ViewAnimator.animate(leftGiftView2)
+                        .alpha(0, 1)
+                        .translationX(-leftGiftView2.getWidth(), 0)
+                        .duration(600)
+                        .thenAnimate(leftGiftView2)
+                        .alpha(1, 0)
+                        .translationY(-1.5f * leftGiftView2.getHeight())
+                        .duration(800)
+                        .onStop(new AnimationListener.Stop() {
+                            @Override
+                            public void onStop() {
+                                MessageBean pollName = null;
+                                try {
+                                    pollName = toShowList.remove(0);
+                                } catch (Exception e) {
+
+                                }
+                                if (pollName != null) {
+                                    showGift2Derect(activity, pollName);
+                                } else {
+                                    isGift2Showing = false;
+                                }
+                            }
+                        })
+                        .startDelay(2000)
+                        .start();
+                ViewAnimator.animate(leftGiftView2.getGiftImageView())
+                        .translationX(-leftGiftView2.getGiftImageView().getX(), 0)
+                        .duration(1100)
+                        .start();
+            }
+        });
+    }
+
+    /**
+     * 重置礼物堆集合
+     */
+    public void release() {
+        if (toShowList != null) {
+            toShowList.clear();
+        }
+    }
+}

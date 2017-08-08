@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000000"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/eiv_stop_avatar"
+            android:scaleType="centerCrop"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="@dimen/y80"
+            android:src="@drawable/ease_default_avatar"
+            />
+
+        <TextView
+            android:id="@+id/tv_stop_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="username"
+            android:textColor="@color/common_white"
+            android:textSize="18sp"
+            />
+
+
+        <TextView
+            style="@style/LiveEndTitleStyle"
+            android:layout_marginTop="26dp"
+            android:text="直播已结束"
+            />
+
+        <TextView
+            android:visibility="gone"
+            style="@style/LiveEndTextStyle"
+            android:layout_marginTop="5dp"
+            android:text="32:21"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/watch_count"
+                    style="@style/LiveEndTextStyle"
+                    android:layout_marginTop="5dp"
+                    android:text="0"
+                    />
+                <TextView
+                    style="@style/LiveEndTitleStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="人看过"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/like_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:orientation="vertical"
+                >
+
+
+
+                <TextView
+                    android:id="@+id/mibao"
+                    style="@style/LiveEndTextStyle"
+                    android:layout_marginTop="5dp"
+                    android:text="0"
+                    />
+                <TextView
+                    style="@style/LiveEndTitleStyle"
+                    android:layout_marginTop="2dp"
+                    android:text="密保"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="分享至"
+            android:textColor="@color/common_white"
+            android:textSize="18sp"
+            />
+        <RelativeLayout
+            android:layout_marginTop="@dimen/y70"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/weixin"
+                android:layout_marginLeft="@dimen/x80"
+                android:layout_width="@dimen/x90"
+                android:layout_height="@dimen/x90"
+                android:src="@drawable/weixin"/>
+            <ImageView
+                android:id="@+id/pengyouquan"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/x90"
+                android:layout_height="@dimen/x90"
+                android:src="@drawable/pengyouquan"/>
+            <ImageView
+                android:id="@+id/qq"
+                android:layout_marginRight="@dimen/x80"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/x90"
+                android:layout_height="@dimen/x90"
+                android:src="@drawable/qq"/>
+        </RelativeLayout>
+        <Button
+            android:id="@+id/live_close_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/y90"
+            android:layout_marginTop="@dimen/y120"
+            android:layout_weight="0"
+            android:background="@drawable/back_to_shouye"
+            android:text="返回首页"
+            android:textColor="@color/common_white"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/delete_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y40"
+            android:text="删除视频"
+            android:textColor="@color/common_white"
+            android:textSize="18sp"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

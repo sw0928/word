@@ -1,0 +1,124 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.support.v4.util.ArrayMap;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+/**
+ * Created by lenove on 2016/9/8.
+ */
+public class AutoGraphSetActivity extends BaseActivity {
+    
+    public static final int DATA=0;
+    private UserBean userBean;
+    private ListView mListview;
+    private EditText mBlocks;
+    private EditText mProvince;
+    private EditText mName;
+    private EditText mPhone;
+    private EditText mDetails;
+    private TextView mSave;
+    private ImageView mBack;
+    private String name;
+    private String blocks;
+    private String province;
+    private String shi;
+    private String qu;
+    private String detail;
+    private String phone;
+    private EditText mShi;
+    private EditText mQu;
+    private boolean is_autograph;
+    private String autograph;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.autograph_set_activity);
+        autograph = getIntent().getStringExtra(Constant.AUTOGRAPH);
+        findAllView();
+        initData();
+    }
+
+
+    private void initData() {
+        TextView qianmingshezhi= (TextView) findViewById(R.id.qianmingshezhi);
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+         mBack.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               finish();
+           }
+        });
+            qianmingshezhi.setText("签名设置");
+            mDetails.setHint("在这里设置您的个性签名");
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                detail = mDetails.getText().toString().trim();
+                if (TextUtils.isEmpty(detail)){
+                    ToastUtils.show(v.getContext(),"个性签名不能为空");
+                    return;
+                }
+                Intent intent = new Intent();
+                intent.putExtra(Constant.AUTOGRAPH,detail);
+                setResult(RESULT_OK,intent);
+                finish();
+
+            }
+        });
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+            case DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("autograph", detail);
+                getDataWithPost(DATA, Host.hostUrl+"&c=User&a=update_user",map);
+
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case DATA:
+                Logger.e(response);
+                finish();
+                break;
+        }
+    }
+
+    private void findAllView() {
+        mBack =(ImageView)findViewById(R.id.autograph_activity_back);
+        mSave = (TextView) findViewById(R.id.autograph_activity_save);
+        mDetails = (EditText) findViewById(R.id.autograph_activity_detail);
+        if (autograph!=null){
+            mDetails.setText(autograph);
+            mDetails.setSelection(autograph.length());
+        }
+    }
+}

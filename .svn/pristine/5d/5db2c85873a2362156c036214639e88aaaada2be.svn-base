@@ -1,0 +1,144 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.support.v4.util.ArrayMap;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.PopUtils;
+import tts.project.livek.utils.SPUtils;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+
+public class LoginActivity2 extends BaseActivity implements View.OnClickListener{
+
+    public static final int DATA=0;
+    private EditText mphone;
+    private EditText mpwd;
+    private String phonenum;
+    private String password;
+    private PopUtils popUtils;
+    private RelativeLayout parentview;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_login2);
+        findAllView();
+        initData();
+        popUtils = new PopUtils(this);
+    }
+
+    private void initData() {
+
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+            case DATA:
+                popUtils.showPop(parentview);
+                map.put("phone",phonenum);
+                map.put("password",password);
+                getDataWithPost(DATA, Host.hostUrl+"&c=Login&a=login",map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doFailed(int what, int index, String response) {
+        super.doFailed(what, index, response);
+        popUtils.closePop();
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case DATA:
+                popUtils.closePop();
+                final UserBean userBean = new Gson().fromJson(response, UserBean.class);
+                SPUtils.saveObJ1(this, Constant.USER_BEAN, userBean);
+                SpSingleInstance.getSpSingleInstance().setUserBean(userBean);
+                if (EMClient.getInstance().isLoggedInBefore()){
+                    EMClient.getInstance().logout(true);
+                }
+                SPUtils.saveString(this,"img",userBean.getImg());
+                EMClient.getInstance().login(userBean.getHx_username().toLowerCase(), userBean.getHx_password(), new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        // 登录成功
+                        startActivity(new Intent(LoginActivity2.this,MainActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+                        // 登录失败
+                        ToastUtils.show(LoginActivity2.this,"登录失败");
+                    }
+
+                    @Override
+                    public void onProgress(int i, String s) {
+
+                    }
+                });
+
+
+        }
+    }
+
+    private void findAllView() {
+        parentview = (RelativeLayout) findViewById(R.id.activity_login);
+        mphone = (EditText) findViewById(R.id.login_activity_et_input_phone);
+        mpwd = (EditText) findViewById(R.id.login_activity_et_input_pwd);
+        TextView third_platform= (TextView) findViewById(R.id.login_activity_third_platform);
+        TextView mforget_pwd= (TextView) findViewById(R.id.login_activity_forget_pwd);
+        TextView mregister= (TextView) findViewById(R.id.login_activity_register);
+        ImageView mlogin= (ImageView) findViewById(R.id.login_activity_login);
+
+        mlogin.setOnClickListener(this);
+        mregister.setOnClickListener(this);
+        mforget_pwd.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.login_activity_forget_pwd:
+                startActivity(new Intent(this,FindPwdBackActivity.class));
+                break;
+            case R.id.login_activity_register:
+                startActivity(new Intent(this,RegisterActivity.class));
+                break;
+            case R.id.login_activity_login:
+                phonenum = mphone.getText().toString().trim();
+                if (TextUtils.isEmpty(phonenum)){
+                    ToastUtils.show(this,"手机号不能为空");
+                    return;
+                }
+                password = mpwd.getText().toString().trim();
+                if (TextUtils.isEmpty(password)){
+                    ToastUtils.show(this,"密码不能为空");
+                    return;
+                }
+                startRequestData(DATA);
+                break;
+        }
+
+    }
+
+}

@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f2f0eb">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarNormal"
+        android:background="@color/colorPrimary"
+        app:navigationIcon="@mipmap/ic_arrow_back"
+        >
+
+        <TextView
+            android:id="@+id/username"
+            style="@style/TitleNormal"
+            android:text="消息"
+            android:textColor="@android:color/white"
+            />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="12dp"
+            android:src="@mipmap/ic_arrow_close"
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+    <com.hyphenate.easeui.widget.EaseChatMessageList
+        android:id="@+id/message_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/container_send"
+        app:msgListShowUserAvatar="true"
+        app:msgListShowUserNick="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="1dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/container_send"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="#E9E9E9"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+
+        >
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="3dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:hint="说点什么吧..."
+            android:maxLines="3"
+            android:minHeight="36dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="1dp"
+            android:textSize="18sp"
+            />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="0"
+            android:background="@drawable/live_blue_selector"
+            android:text="发送"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            />
+    </LinearLayout>
+</RelativeLayout>

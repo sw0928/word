@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>关于我们</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="./common.js"></script>
+
+
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="./UEditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="./UEditor/ueditor.all.js"></script>
+
+    <script  src="JS/jquery-mobile/jquery.js"></script>
+</head>
+
+<body>
+<!-- 加载编辑器的容器 -->
+<script id="container" name="content" type="text/plain"  style='width:1000px;height:300px;'>
+
+</script>
+
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container');
+    var url=getParameter(0,'url');
+
+    ue.ready(function() {
+        $.post(homeurl+"othersController.api?getAboutOurUrlHtml",
+                {url:url}, function(data) {
+                    ue.setContent(data);
+                });
+        baidu.editor.commands['save'] = {
+            execCommand: function() {
+                var html = ue.getContent();
+                $.post(homeurl+"othersController.api?setAboutOurUrlHtml",
+                        {url:url,desc:html}, function(data) {
+                            var result=eval("("+data+")")
+                            if(result.status=="ok"){
+                                alert("保存成功");
+                            }else{
+                                alert("保存失败");
+                            }
+                        });
+            },queryCommandState: function() {
+
+            }};
+    });
+</script>
+</body>
+</html>

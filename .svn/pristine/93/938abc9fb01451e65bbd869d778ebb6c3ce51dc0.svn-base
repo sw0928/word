@@ -1,0 +1,76 @@
+package tts.project.livek.ui.fragment;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.hyphenate.chat.EMClient;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import tts.project.livek.R;
+import tts.project.livek.bean.AnchorBean;
+import tts.project.livek.ui.activity.MessageActivity;
+import tts.project.livek.ui.activity.SearchActivity;
+import tts.project.livek.ui.activity.StartLiveActivity;
+import tts.project.livek.ui.adapter.HomeAdapter;
+
+public class HomeFragment extends BaseFragment {
+
+    @BindView(R.id.iv_search)
+    ImageView iv_search;
+    @BindView(R.id.iv_msg)
+    ImageView iv_msg;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.start_live)
+    TextView start_live;
+    @Override
+    public View initView(LayoutInflater inflater, ViewGroup container) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupViewPager();
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void setupViewPager() {
+        HomeAdapter adapter = new HomeAdapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(new FollowLiveFragment(), "幽尤");
+//        adapter.addFragment(new HotLiveFragment(), "热门");
+//        adapter.addFragment(new NearbyLiveFragment(), "附近");
+        viewPager.setAdapter(adapter);
+    }
+
+    @OnClick({R.id.iv_search, R.id.iv_msg,R.id.start_live})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_search:
+                startActivity(SearchActivity.class);
+                break;
+            case R.id.start_live:
+              startActivity(new Intent(getContext(), StartLiveActivity.class));
+                break;
+            case R.id.iv_msg:
+                AnchorBean anchorBean = new AnchorBean();
+                anchorBean.setAnchorId(EMClient.getInstance().getCurrentUser());
+                anchorBean.setName(EMClient.getInstance().getCurrentUser());
+                startActivity(MessageActivity.class, anchorBean);
+                break;
+        }
+    }
+
+}

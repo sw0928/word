@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/x10" android:layout_width="@dimen/y320"
+    android:layout_height="@dimen/y320">
+    <ImageView
+        android:src="@drawable/moren_icon"
+        android:scaleType="centerCrop"
+        android:id="@+id/item_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/watch_count"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginLeft="@dimen/x20"
+        android:text="0人看过"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:background="@drawable/state_bg"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginRight="@dimen/x20"
+        android:text="回放"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="@dimen/x80"
+        android:layout_height="@dimen/y40" />
+</RelativeLayout>

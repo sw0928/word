@@ -1,0 +1,103 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-native-storage",
+        "scope": null,
+        "escapedName": "react-native-storage",
+        "name": "react-native-storage",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/shenjiabo/Documents/rnspace/Indiana"
+    ]
+  ],
+  "_cnpm_publish_time": 1467104978608,
+  "_from": "react-native-storage@latest",
+  "_id": "react-native-storage@0.1.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-storage",
+  "_nodeVersion": "6.0.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/react-native-storage-0.1.2.tgz_1467104975906_0.25888010510243475"
+  },
+  "_npmUser": {
+    "name": "sunnylqm",
+    "email": "sunnylqm@qq.com"
+  },
+  "_npmVersion": "3.8.6",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-storage",
+    "scope": null,
+    "escapedName": "react-native-storage",
+    "name": "react-native-storage",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/react-native-storage/download/react-native-storage-0.1.2.tgz",
+  "_shasum": "a5d13881eb29d03f22c0994f6f1e79966c0ad6b7",
+  "_shrinkwrap": null,
+  "_spec": "react-native-storage",
+  "_where": "/Users/shenjiabo/Documents/rnspace/Indiana",
+  "author": {
+    "name": "sunnylqm"
+  },
+  "bugs": {
+    "url": "https://github.com/sunnylqm/react-native-storage/issues"
+  },
+  "dependencies": {},
+  "description": "A local storage wrapper for both react-native(AsyncStorage) and browser(localStorage). Support size controlling, auto expiring, remote data auto syncing and getting batch data in one query.",
+  "devDependencies": {
+    "babel-jest": "^5.3.0",
+    "jest-cli": "^0.8.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "a5d13881eb29d03f22c0994f6f1e79966c0ad6b7",
+    "size": 21301,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/react-native-storage/download/react-native-storage-0.1.2.tgz"
+  },
+  "gitHead": "125eb58eb5219396c6c6392ca0883a0a79f3ba56",
+  "homepage": "https://github.com/sunnylqm/react-native-storage#readme",
+  "jest": {
+    "verbose": true,
+    "bail": true,
+    "scriptPreprocessor": "node_modules/babel-jest",
+    "setupEnvScriptFile": "jestSupport/mockStorage.js"
+  },
+  "keywords": [
+    "react-native",
+    "localStorage",
+    "AsyncStorage"
+  ],
+  "license": "MIT",
+  "main": "storage.js",
+  "maintainers": [
+    {
+      "name": "sunnylqm",
+      "email": "sunnylqm@qq.com"
+    }
+  ],
+  "name": "react-native-storage",
+  "optionalDependencies": {},
+  "publish_time": 1467104978608,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunnylqm/react-native-storage.git"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "version": "0.1.2"
+}

@@ -1,0 +1,58 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'webpack',
+1 verbose cli   '-g' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.3
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData webpack
+8 silly fetchNamedPackageData webpack
+9 silly mapToRegistry name webpack
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'webpack',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'webpack',
+12 silly mapToRegistry   name: 'webpack',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.npmjs.org/webpack
+14 verbose request uri https://registry.npmjs.org/webpack
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 15:25:15
+17 verbose request id 8bc677538fb8c2e7
+18 verbose etag W/"59124efb-ef7e7"
+19 verbose lastModified Tue, 09 May 2017 23:21:31 GMT
+20 http request GET https://registry.npmjs.org/webpack
+21 info retry will retry, error on last attempt: Error: read ECONNRESET
+22 info attempt registry request try #2 at 15:26:05
+23 verbose etag W/"59124efb-ef7e7"
+24 verbose lastModified Tue, 09 May 2017 23:21:31 GMT
+25 http request GET https://registry.npmjs.org/webpack
+26 verbose stack Error: kill ENOSYS
+26 verbose stack     at exports._errnoException (util.js:1018:11)
+26 verbose stack     at process.kill (internal/process.js:190:13)
+26 verbose stack     at process.listener (C:\Program Files\nodejs\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:86:15)
+26 verbose stack     at emitNone (events.js:91:20)
+26 verbose stack     at process.emit (events.js:185:7)
+26 verbose stack     at processEmit (C:\Program Files\nodejs\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+26 verbose stack     at processEmit (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+26 verbose stack     at Signal.wrap.onsignal (internal/process.js:217:44)
+27 verbose cwd D:\Data\shop_web_sw
+28 error Windows_NT 10.0.14393
+29 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "webpack" "-g"
+30 error node v6.10.3
+31 error npm  v3.10.10
+32 error code ENOSYS
+33 error errno ENOSYS
+34 error syscall kill
+35 error kill ENOSYS
+36 error If you need help, you may report this error at:
+36 error     <https://github.com/npm/npm/issues>
+37 verbose exit [ 1, true ]

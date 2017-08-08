@@ -1,0 +1,519 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.util.ArrayMap;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.activity.CustomPictureSelectorView;
+import tts.moudle.api.bean.ImgBean;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.bean.WangHongRenZhengContent;
+import tts.project.livek.utils.BitmapUtils;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+/**
+ * Created by lenove on 2016/9/8.
+ */
+public class WangHongRenZhengActivity extends BaseActivity implements View.OnClickListener {
+
+    public static final int DATA = 0;
+    public static final int SAVE_DATA = 2;
+    public static final int LIST_DATA = 1;
+    public static final int LIST_DATA1 = 3;
+    public static final int INIT_DATA = 4;
+    public static final int ZHEN_LUAN = 11;
+    public static final int POSITIVE_PIC = 6;
+    public static final int NEGATIVE_PIC = 7;
+    public static final int ALL_PIC = 8;
+    public static final int UPDATE_DATA=9;
+    private UserBean userBean;
+    private EditText mName;
+    private TextView mArt;
+    private GridView mGridview;
+    private EditText mPhoneNum;
+    private TextView mRenzheng;
+    private EditText mCard;
+    private TextView mSave;
+    private List<ImgBean> mList;
+    //    private MyMutiPictureGridViewAdapter adapter;
+    private EditText detail_position;
+    private TextView province_city;
+    private String province1, city1, area1, text, text2, path1, path2;
+    private ImageView idcard_icon_reverse;
+    private ImageView idcard_icon_positive;
+    private boolean booleanExtra;
+    private WangHongRenZhengContent news;
+    private boolean isALL;
+    private boolean isready;
+    private List<String> imgs = new ArrayList<>();
+    private String imgs1;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.wanghongrenzheng_activity);
+        booleanExtra = getIntent().getBooleanExtra(Constant.ISADD, false);
+        findAllView();
+        initData();
+    }
+
+
+    private void initData() {
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        if (!booleanExtra) {
+            // 修改内容，回显数据
+            startRequestData(INIT_DATA);
+        }
+
+
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (booleanExtra) {
+                    startRequestData(SAVE_DATA);
+                } else {
+                    // 如果是修改，走另一条提交路线
+                    // 如果是修改，走另一条提交路线
+                    if ((!TextUtils.isEmpty(path1))&&(!TextUtils.isEmpty(path2))){
+                        startRequestData(ALL_PIC);
+                    }else {
+                        ToastUtils.show(WangHongRenZhengActivity.this,"请选择身份证照片");
+                        return;
+
+                    }
+
+
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        List<PostFormBuilder.FileInput> files = new ArrayList<>();
+        switch (index) {
+            case SAVE_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+
+                if (!TextUtils.isEmpty(mName.getText().toString().trim())) {
+
+                    map.put("name", mName.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入姓名");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mPhoneNum.getText().toString().trim())) {
+
+                    map.put("mobile", mPhoneNum.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入手机号码");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mCard.getText().toString().trim())) {
+
+                    map.put("idcard", mCard.getText().toString().trim());
+                } else {
+
+                    ToastUtils.show(this, "请先输入身份证号码");
+                    return;
+                }
+
+
+                if (!TextUtils.isEmpty(path1)) {
+                    File scal1 = BitmapUtils.scal(URI.create(path1));
+                    files.add(new PostFormBuilder.FileInput("idcard_img1", ".jpg", scal1));
+                } else {
+                    ToastUtils.show(this, "未选择身份证照片");
+                    return;
+                }
+                if (!TextUtils.isEmpty(path2)) {
+                    File scal2 = BitmapUtils.scal(URI.create(path2));
+                    files.add(new PostFormBuilder.FileInput("idcard_img2", ".jpg", scal2));
+                } else {
+                    ToastUtils.show(this, "未选择身份证照片");
+                    return;
+                }
+                uploadFile(SAVE_DATA, Host.hostUrl + "&c=User&a=user_authen", map, files);
+                break;
+            case LIST_DATA:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("type", "1");
+                getDataWithPost(LIST_DATA, Host.hostUrl + "&c=User&a=skill_list", map);
+                break;
+            case LIST_DATA1:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("type", "2");
+                getDataWithPost(LIST_DATA1, Host.hostUrl + "&c=User&a=skill_list", map);
+                break;
+            case INIT_DATA:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                getDataWithPost(INIT_DATA, Host.hostUrl + "&c=User&a=my_user_authen", map);
+                break;
+            case ZHEN_LUAN:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+
+                if (!TextUtils.isEmpty(mName.getText().toString().trim())) {
+
+                    map.put("name", mName.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入姓名");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mPhoneNum.getText().toString().trim())) {
+
+                    map.put("mobile", mPhoneNum.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入手机号码");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mCard.getText().toString().trim())) {
+
+                    map.put("idcard", mCard.getText().toString().trim());
+                } else {
+
+                    ToastUtils.show(this, "请先输入身份证号码");
+                    return;
+                }
+
+//                if (!TextUtils.isEmpty(mArt.getText().toString())) {
+//                    map.put("skill", mArt.getText().toString());
+//                } else {
+//                    ToastUtils.show(this, "请选择具备的才艺");
+//                    return;
+//                }
+//
+//                if (!TextUtils.isEmpty(mRenzheng.getText().toString())) {
+//                    map.put("authen", mRenzheng.getText().toString());
+//                } else {
+//                    ToastUtils.show(this, "请选择认证平台");
+//                    return;
+//                }
+//                idcard_img1	string	Y		正面
+//                idcard_img2	string	Y		反面
+//                map.put("idcard_img1", news.getIdcard_img().);
+//                map.put("idcard_img2", news.getIdcard_img2());
+                map.put("user_authen_id", news.getUser_authen_id());
+                List<String> idcard_img = news.getIdcard_img();
+                String s = new Gson().toJson(idcard_img);
+                map.put("idcard_img", s);
+                getDataWithPost(ZHEN_LUAN, Host.hostUrl + "&c=User&a=save_authen", map);
+                break;
+            case POSITIVE_PIC:
+//              身份证正面
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                File scal2 = BitmapUtils.scal(URI.create(path1));
+                files.add(new PostFormBuilder.FileInput("idcard_img1", ".jpg", scal2));
+                uploadFile(POSITIVE_PIC, Host.hostUrl + "&c=User&a=upload", map, files);
+                break;
+            case NEGATIVE_PIC:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                File scal3 = BitmapUtils.scal(URI.create(path2));
+                files.add(new PostFormBuilder.FileInput("idcard_img2", ".jpg", scal3));
+                getDataWithPost(NEGATIVE_PIC, Host.hostUrl + "&c=User&a=upload", map);
+                break;
+            case ALL_PIC:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                File scal4 = BitmapUtils.scal(URI.create(path1));
+                files.add(new PostFormBuilder.FileInput("idcard_img1", ".jpg", scal4));
+                File scal5 = BitmapUtils.scal(URI.create(path2));
+                files.add(new PostFormBuilder.FileInput("idcard_img2", ".jpg", scal5));
+                uploadFile(ALL_PIC, Host.hostUrl + "&c=User&a=upload", map,files);
+                break;
+            case UPDATE_DATA:
+//              1:才艺 2：证书认证
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+
+                if (!TextUtils.isEmpty(mName.getText().toString().trim())) {
+
+                    map.put("name", mName.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入姓名");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mPhoneNum.getText().toString().trim())) {
+
+                    map.put("mobile", mPhoneNum.getText().toString().trim());
+                } else {
+                    ToastUtils.show(this, "请先输入手机号码");
+                    return;
+                }
+
+                if (!TextUtils.isEmpty(mCard.getText().toString().trim())) {
+
+                    map.put("idcard", mCard.getText().toString().trim());
+                } else {
+
+                    ToastUtils.show(this, "请先输入身份证号码");
+                    return;
+                }
+
+//                if (!TextUtils.isEmpty(mArt.getText().toString())) {
+//                    map.put("skill", mArt.getText().toString());
+//                } else {
+//                    ToastUtils.show(this, "请选择具备的才艺");
+//                    return;
+//                }
+//
+//                if (!TextUtils.isEmpty(mRenzheng.getText().toString())) {
+//                    map.put("authen", mRenzheng.getText().toString());
+//                } else {
+//                    ToastUtils.show(this, "请选择认证平台");
+//                    return;
+//                }
+//                idcard_img1	string	Y		正面
+//                idcard_img2	string	Y		反面
+                map.put("idcard_img", imgs1);
+                map.put("user_authen_id", news.getUser_authen_id());
+                getDataWithPost(UPDATE_DATA, Host.hostUrl + "&c=User&a=user_authen", map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index) {
+            case DATA:
+                Logger.e(response);
+                break;
+//            case LIST_DATA:
+//                artList = new Gson().fromJson(response, new TypeToken<List<ArtBean>>() {
+//                }.getType());
+//                Logger.e(response);
+//                break;
+//            case LIST_DATA1:
+//                verifyList = new Gson().fromJson(response, new TypeToken<List<ArtBean>>() {
+//                }.getType());
+//                Logger.e(response);
+//                break;
+            case SAVE_DATA:
+                ToastUtils.show(this, "申请成功");
+                finish();
+                break;
+            case INIT_DATA:
+                Logger.e("+" + response);
+                news = new Gson().fromJson(response, WangHongRenZhengContent.class);
+                filldata(news);
+            case ZHEN_LUAN:
+//                ToastUtils.show(this, "修改成功");
+//                finish();
+                break;
+            case POSITIVE_PIC:
+                Logger.e("zheng" + response);
+//                news.getIdcard_img.get()(response);
+                imgs.add(0, response);
+                if (isready) {
+                    startRequestData(ZHEN_LUAN);
+                }
+                isready = true;
+                break;
+            case NEGATIVE_PIC:
+                Logger.e("fan" + response);
+//                news.setIdcard_img2(response);
+                imgs.add(0, response);
+                if (isready) {
+                    startRequestData(ZHEN_LUAN);
+                }
+                isready = true;
+                break;
+            case ALL_PIC:
+                // 所有的图片
+                imgs1 = response;
+                startRequestData(UPDATE_DATA);
+                break;
+            case UPDATE_DATA:
+                ToastUtils.show(this, "修改成功");
+                finish();
+
+        }
+    }
+
+    private void filldata(WangHongRenZhengContent news) {
+        mCard.setText(news.getIdcard());
+        mName.setText(news.getName());
+        mPhoneNum.setText(news.getMobile());
+//        mArt.setText(news.getSkill().toString());
+//        mRenzheng.setText(news.getAuthen().toString());
+//        if (news.getIdcard_img1()!=null){
+//            Glide.with(this).load(news.getIdcard_img1()).diskCacheStrategy(DiskCacheStrategy.ALL).into(idcard_icon_positive);
+//        }
+//        if (news.getIdcard_img2()!=null){
+//            Glide.with(this).load(news.getIdcard_img2()).diskCacheStrategy(DiskCacheStrategy.ALL).into(idcard_icon_reverse);
+//        }
+
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+
+    private void findAllView() {
+        findViewById(R.id.autograph_activity_back).setOnClickListener(this);
+        idcard_icon_positive = (ImageView) findViewById(R.id.idcard_icon_positive);
+        idcard_icon_reverse = (ImageView) findViewById(R.id.idcard_icon_reverse);
+        mArt = (TextView) findViewById(R.id.wanghongrenzheng_activity_art);
+        mCard = (EditText) findViewById(R.id.wanghongrenzheng_activity_card);
+        mName = (EditText) findViewById(R.id.wanghongrenzheng_activity_name);
+        mPhoneNum = (EditText) findViewById(R.id.wanghongrenzheng_activity_phone_num);
+        mRenzheng = (TextView) findViewById(R.id.wanghongrenzheng_activity_renzheng);
+        mSave = (TextView) findViewById(R.id.wanghongrenzheng_activity_save);
+        mArt.setOnClickListener(this);
+        mRenzheng.setOnClickListener(this);
+        idcard_icon_reverse.setOnClickListener(this);
+        idcard_icon_positive.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 110:
+                if (resultCode == RESULT_OK) {
+                    if (((List<ImgBean>) data.getSerializableExtra("imgBeans")).size() > 0) {
+                        List<ImgBean> mPictures = ((List<ImgBean>) data.getSerializableExtra("imgBeans"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(mPictures.get(0).getPath());
+                        path1 = mPictures.get(0).getPath();
+                        idcard_icon_positive.setImageBitmap(bitmap);
+                    }
+                }
+                break;
+            case 120:
+                if (resultCode == RESULT_OK) {
+                    if (((List<ImgBean>) data.getSerializableExtra("imgBeans")).size() > 0) {
+                        List<ImgBean> mPictures = ((List<ImgBean>) data.getSerializableExtra("imgBeans"));
+                        Bitmap bitmap = BitmapFactory.decodeFile(mPictures.get(0).getPath());
+                        path2 = mPictures.get(0).getPath();
+                        idcard_icon_reverse.setImageBitmap(bitmap);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.autograph_activity_back:
+                finish();
+                break;
+            case R.id.idcard_icon_positive:
+                startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 110);
+
+                break;
+            case R.id.idcard_icon_reverse:
+                startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 120);
+
+                break;
+//            case R.id.wanghongrenzheng_activity_art:
+//                ToDialog(artList, 1);
+//                break;
+//            case R.id.wanghongrenzheng_activity_renzheng:
+//                ToDialog(verifyList, 2);
+//                break;
+//            case R.id.province_city:
+//                new CityMoudle().showProvincePopupwindow(this, province_city,2,new ProvinceSelectPopupwindow.OnClickListener() {
+//                    @Override
+//                    public void doClick(String province, String city, String area) {
+//                        province1=province;
+//                        city1=city;
+//                        area1=area;
+//                        province_city.setText(province+city+area);
+//                        province_city.setTextColor(Color.parseColor("#333333"));
+//                    }
+//                });
+//                break;
+        }
+    }
+
+//    private void ToDialog(final List<ArtBean> verifyList1, final int a) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setIcon(android.R.drawable.alert_dark_frame);
+//        builder.setTitle("请选择多个选项");
+//        final String[] items = new String[verifyList1.size()];
+//        final boolean[] checkedItems = new boolean[verifyList1.size()];
+//        for (int i = 0; i < verifyList1.size(); i++) {
+//            items[i] = verifyList1.get(i).getName();
+//            checkedItems[i] = false;
+//        }
+//        builder.setMultiChoiceItems(items, checkedItems,
+//                new DialogInterface.OnMultiChoiceClickListener() {
+//
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which,
+//                                        boolean isChecked) {
+//                        checkedItems[which] = isChecked;
+//                        verifyList1.get(which).setIschecked(isChecked);
+//
+//                    }
+//                });
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//                String text = "";
+//                for (int i = 0; i < items.length; i++) {
+//                    if (checkedItems[i]) {
+//                        text += items[i] + ",";
+//                    }
+//                }
+//                if (!TextUtils.isEmpty(text)) {
+//                    if (a == 1) {
+//
+//                        mArt.setText(text.substring(0, text.length() - 1));
+//                        mArt.setTextColor(Color.parseColor("#333333"));
+//                    } else if (a == 2) {
+//                        mRenzheng.setText(text.substring(0, text.length() - 1));
+//                        mRenzheng.setTextColor(Color.parseColor("#333333"));
+//                    }
+//                }
+//                dialog.dismiss();
+//
+//            }
+//        });
+//        builder.show();
+//    }
+}

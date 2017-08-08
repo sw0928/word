@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tst.project.dao.interfaces.CollectionDao">
+	<insert id="insertCollection" parameterType="collectionBean" useGeneratedKeys="true" keyProperty="collection_id">
+		insert into tst_collection(member_id,relation_id,collection_type,create_time)
+		values(#{member_id},#{relation_id},#{collection_type},now())
+	</insert>
+	
+	<select id="getCollectionBySearch" parameterType="collectionBean" resultType="collectionBean">
+		select * from tst_collection where member_id=#{member_id} and collection_type=#{collection_type}
+		and relation_id=#{relation_id}
+	</select>
+	
+	<update id="updateCollectionState" parameterType="collectionBean">
+		update tst_collection set is_delete=#{is_delete} where collection_id=#{collection_id} and member_id=#{member_id}
+	</update>
+	
+	<select id="getCollection" parameterType="collectionBean" resultType="collectionBean">
+		select * from tst_collection where member_id=#{member_id} and is_delete='0' 
+		<if test="collection_type!=null and collection_type!=''">
+			and collection_type=#{collection_type}
+		</if>	
+	</select>
+	
+</mapper>

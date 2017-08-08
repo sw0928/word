@@ -1,0 +1,141 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/4.
+ */
+
+public class AttentionBean {
+
+    /**
+     * follow_id : 2
+     * user_id : 2
+     * user_id2 : 1
+     * intime : 0
+     * img : http://fkdc1.tstmobile.com/public/admin/touxiang.png
+     * type : 1
+     * id : 36789404
+     * username : fkdc
+     * hx_username : ju7vv66x8x4k
+     * hx_password : 123456
+     * sex : 1
+     * autograph : null
+     */
+    private int is_follow;
+
+    public int getIs_follow() {
+        return is_follow;
+    }
+
+    public void setIs_follow(int is_follow) {
+        this.is_follow = is_follow;
+    }
+
+    private String follow_id;
+    private String user_id;
+    private String user_id2;
+    private String intime;
+    private String img;
+    private String type;
+    private String id;
+    private String username;
+    private String hx_username;
+    private String hx_password;
+    private String sex;
+    private Object autograph;
+
+    public String getFollow_id() {
+        return follow_id;
+    }
+
+    public void setFollow_id(String follow_id) {
+        this.follow_id = follow_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getUser_id2() {
+        return user_id2;
+    }
+
+    public void setUser_id2(String user_id2) {
+        this.user_id2 = user_id2;
+    }
+
+    public String getIntime() {
+        return intime;
+    }
+
+    public void setIntime(String intime) {
+        this.intime = intime;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getHx_username() {
+        return hx_username;
+    }
+
+    public void setHx_username(String hx_username) {
+        this.hx_username = hx_username;
+    }
+
+    public String getHx_password() {
+        return hx_password;
+    }
+
+    public void setHx_password(String hx_password) {
+        this.hx_password = hx_password;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Object getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(Object autograph) {
+        this.autograph = autograph;
+    }
+}

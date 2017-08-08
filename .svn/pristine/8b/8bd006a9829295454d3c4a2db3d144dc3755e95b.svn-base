@@ -1,0 +1,74 @@
+package tts.project.livek.ui.widget;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.dou361.baseutils.utils.UIUtils;
+import com.hyphenate.easeui.widget.EaseImageView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tts.project.livek.R;
+
+import static tts.project.livek.R.id.gift_image;
+
+@RemoteViews.RemoteView
+public class LiveLeftGiftView extends RelativeLayout {
+    @BindView(R.id.avatar)
+    EaseImageView avatar;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(gift_image)
+    ImageView giftImage;
+    @BindView(R.id.gift_name)
+    TextView gift_name;
+    @BindView(R.id.gift_count)
+    TextView gift_count;
+
+    public LiveLeftGiftView(Context context) {
+        super(context);
+        init(context, null);
+    }
+
+    public LiveLeftGiftView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs);
+
+    }
+
+    public LiveLeftGiftView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        LayoutInflater.from(context).inflate(R.layout.live_widget_left_gift, this);
+        ButterKnife.bind(this);
+    }
+
+    public void setName(String name){
+        this.name.setText(name);
+    }
+    public void setGift_name(String name){
+        this.gift_name.setText(name);
+    }
+    public void setGift_count(String name){
+        this.gift_count.setText(name);
+    }
+
+    public void setAvatar(String avatar){
+        Glide.with(UIUtils.getContext()).load(avatar).into(this.avatar);
+    }
+    public void setGiftImage(String avatar){
+        Glide.with(UIUtils.getContext()).load(avatar).into(this.giftImage);
+    }
+
+    public ImageView getGiftImageView(){
+        return giftImage;
+    }
+}

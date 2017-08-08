@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.CouponDao">
+	<select id="getOneCoupon" parameterType="couponBean" resultType="couponBean">
+		select * from tst_coupon
+		where coupon_id=#{coupon_id} and is_delete='0' and end_time > now()
+	</select>
+
+	<select id="getReceiceCoupons" parameterType="couponBean" resultType="couponBean">
+		select distinct a.*
+		<if test=' member_id != null and member_id != "" '>
+			,b.member_id 		
+		</if>
+		from tst_coupon as a
+		<if test=' member_id != null and member_id != "" '>
+			<if test=' is_repeat_take == "1" '>
+				left join tst_member_coupon as b on a.coupon_id=b.coupon_id and b.member_id=#{member_id}
+				and coupon_state='not_used'	
+			</if>
+			
+			<if test=' is_repeat_take != "1" '>
+				left join tst_member_coupon as b on a.coupon_id=b.coupon_id and b.member_id=#{member_id}			
+			</if>
+		</if>
+		where a.is_delete='0' and a.end_time > now() and coupon_postion="coupon"
+		
+		<if test=' is_save_take != "1" '>
+			<if test=' member_id != null and member_id != "" '>
+				and b.member_coupon_id is null
+			</if>
+		</if>	
+		
+		<if test=' merchants_id != null and merchants_id != "" '>
+			and a.merchants_id = #{merchants_id}
+		</if>
+		
+	</select>
+
+	<insert id="memberReceiveCoupon" parameterType="couponBean">
+		insert into tst_member_coupon
+		(member_id,coupon_id,create_time,coupon_state,get_way,start_time,end_time)
+		values
+		(#{member_id},#{coupon_id},now(),"not_used","receive",#{start_time},#{end_time})
+	</insert>
+	
+	<select id="getCouponByMemberIdAndCouponId" parameterType="couponBean" resultType="couponBean">
+		select * from tst_member_coupon
+		where member_id=#{member_id} and coupon_id=#{coupon_id} and is_delete='0'
+		and coupon_state='not_used'
+	</select>
+	
+	<select id="getCoupons" parameterType="couponBean" resultType="couponBean">
+		select a.*,b.coupon_name,b.coupon_desc,
+		b.coupon_price,b.coupon_full_price,b.coupon_type,b.coupon_img,b.merchants_id,b.coupon_way,c.merchants_name
+		from tst_member_coupon as a
+		inner join tst_coupon as b 
+		on a.coupon_id=b.coupon_id and b.is_delete='0'
+		left join tst_merchants as c 
+		on b.merchants_id=c.merchants_id
+		where a.member_id=#{member_id} and a.is_delete='0'
+		
+		<if test=' coupon_state != null and coupon_state != "" and coupon_state == "expired" '>
+			and now() >= a.end_time and a.coupon_state = 'not_used'
+		</if>
+		
+		<if test=' coupon_state != null and coupon_state != "" and coupon_state == "not_used,expired" '>
+			and (now() >= a.end_time or a.coupon_state='not_used')
+		</if>
+		
+		<if test=' coupon_state != null and coupon_state != "" and coupon_state == "expired,not_used" '>
+			and (now() >= a.end_time or a.coupon_state='not_used')
+		</if>
+		<if test=' coupon_state != null and coupon_state != "" and coupon_state == "already_used" '>
+			and a.coupon_state='already_used'
+		</if>
+		<if test=' coupon_state != null and coupon_state != "" and coupon_state == "not_used" '>
+			and a.end_time >= now() and a.coupon_state = 'not_used'
+		</if>		
+	</select>
+		
+	<select id="getCouponsCount" parameterType="couponBean" resultType="Map">
+		select (case when sum(case when coupon_state='already_used' then 1 else 0 end) 
+		is null then 0 else sum(case when coupon_state='already_used' then 1 else 0 end) end)
+		as already_used_count,
+		(case when sum(case when 
+		coupon_state='not_used' and a.end_time >= now() then 1 else 0 end) 
+		is null then 0 else sum(case when coupon_state='not_used' and a.end_time >= now()
+		then 1 else 0 end) end)
+		as not_used_count,
+		(case when sum(case when 
+		coupon_state='not_used' and now() >= a.end_time then 1 else 0 end) 
+		is null then 0 else sum(case when coupon_state='not_used' and now()>= a.end_time
+		then 1 else 0 end) end)
+		as expired_count
+		from tst_member_coupon as a
+		inner join tst_coupon as b 
+		on a.coupon_id=b.coupon_id and b.is_delete='0'
+		where a.member_id=#{member_id} and a.is_delete='0'
+	</select>
+	
+	<update id="updateCouponState" parameterType="couponBean" >
+		update tst_member_coupon
+		set coupon_state=#{coupon_state}
+		where member_coupon_id=#{member_coupon_id}
+	</update>
+	
+	<select id="getCouponByMemberCouponId" parameterType="couponBean" resultType="couponBean">
+		select a.member_coupon_id,b.* from tst_member_coupon as a 
+		inner join tst_coupon as b on a.coupon_id=b.coupon_id and b.is_delete='0'
+		where a.is_delete='0' and a.coupon_state='not_used'
+		and a.member_coupon_id=#{member_coupon_id}
+		and now()>a.start_time and a.end_time>now()
+	</select>
+</mapper>

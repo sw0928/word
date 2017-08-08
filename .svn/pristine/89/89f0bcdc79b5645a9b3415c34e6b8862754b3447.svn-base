@@ -1,0 +1,11 @@
+/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/build/intermediates/ndk/debug/obj/local/x86/objs/rnupdate//Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bspatch.o: \
+ /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bspatch.c \
+ /Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bspatch.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-x86/usr/include/stdint.h \
+ /Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-x86/usr/include/machine/wchar_limits.h
+
+/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update/android/src/main/jni/bspatch.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-x86/usr/include/stdint.h:
+
+/Users/shenjiabo/Documents/install/android-ndk-r10e/platforms/android-21/arch-x86/usr/include/machine/wchar_limits.h:

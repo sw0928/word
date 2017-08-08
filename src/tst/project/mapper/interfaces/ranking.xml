@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.RankingDao">	
+	<select id="getHotActivitys" parameterType="activityBean" resultType="activityBean">
+		select * from tst_activity
+		where is_delete='0' and is_hot='1'
+	</select>
+	
+	<select id="getSalesMerchantsRanking" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.*,(select count(*) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as goods_total_num,
+		(select sum(year_sales) from tst_goods
+		where merchants_id=a.merchants_id and goods_type='2'
+		and goods_state='1' and is_delete='0') as year_sales  
+		
+		from tst_merchants as a
+		where a.is_delete='0' and a.merchants_state='1'
+		<if test=" label_ids != null and label_ids != '' ">
+			and FIND_IN_SET(#{label_ids},a.label_ids)
+		</if>
+		order by a.sales_total desc
+	</select>
+	
+	<select id="getSalesMerchantsRankingLabel" parameterType="MerchantsLabelBean" resultType="MerchantsLabelBean">
+		select * from tst_merchants_label
+		where is_delete='0' 
+		and is_sales_ranking='1'
+	</select>
+	
+	<select id="getSalesRanking" parameterType="goodsBean" resultType="goodsBean">
+	select * from (	
+		select *
+		from (	
+		
+		select DISTINCT a.* from tst_goods as a
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+
+		order by a.year_sales desc
+	</select>
+	
+	<select id="getSalesRankingClass" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='1' and is_delete='0'
+		and is_sales_ranking='1'
+	</select>
+	<select id="getPriceCutsPCRanking" parameterType="goodsBean" resultType="goodsBean">
+		select * from (	
+			select *
+			from (			
+		select DISTINCT a.*,(convert(goods_origin_price,double)-convert(goods_pc_price,double)) as price_cut from tst_goods as a
+		
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid} ,'%')		
+		</if>
+		
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+			
+		order by a.price_cut desc
+	</select>
+	
+	<select id="getPriceCutsRanking" parameterType="goodsBean" resultType="goodsBean">
+		select * from (	
+			select *
+			from (			
+		select DISTINCT a.*,(convert(goods_origin_price,double)-convert(goods_now_price,double)) as price_cut from tst_goods as a
+		
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid} ,'%')		
+		</if>
+		
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+			
+		order by a.price_cut desc
+	</select>
+	
+	<select id="getPriceCutsRankingClass" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='1' and is_delete='0'
+		and is_price_cut_ranking='1'
+	</select>
+	
+	<select id="getDiscountRankingClass" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='1' and is_delete='0'
+		and is_discount_ranking='1'
+	</select>
+	
+	<select id="getDiscountRanking" parameterType="goodsBean" resultType="goodsBean">
+	select * from (	
+		select *
+		from (	
+		
+		select DISTINCT a.* from tst_goods as a
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' activity_id != null and activity_id != "" '>
+			inner join tst_activity_goods  as c on a.goods_id=c.goods_id
+			and FIND_IN_SET(c.activity_id,#{activity_id}) and c.is_delete='0'
+		</if>
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		where a.is_delete='0' and a.goods_state='1' and a.goods_type='2'
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+			
+		order by a.discount_value asc
+	</select>	
+</mapper>

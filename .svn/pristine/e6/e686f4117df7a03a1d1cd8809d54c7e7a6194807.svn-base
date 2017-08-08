@@ -1,0 +1,158 @@
+package tts.project.livek.ui.activity;
+
+import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.bean.BarBean;
+import tts.project.livek.R;
+import tts.project.livek.utils.ContentUtils;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.ToastUtils;
+
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+    public static final int DATA = 0;
+    public static final int GET_CODE=1;
+    private EditText code;
+    private EditText phone;
+    private EditText pwd;
+    private EditText reconfirm;
+    private String phonenum;
+    private String password;
+    private String repassword;
+    private String mycode;
+    private TextView getcode;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_register1);
+        findAllView();
+        initData();
+        setTitle(new BarBean().setMsg("注册"));
+    }
+
+    private void initData() {
+    }
+
+    @Override
+    public boolean openSliding() {
+        return false;
+    }
+
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index) {
+            case DATA:
+//                phone	int	Y		手机号
+//                password	string	Y		密码（6-20位字母或数字或字母与数字组合）
+//                yzm	int	Y		短信验证码
+//                confirm_password	string	Y		确认密码
+                map.put("phone", phonenum);
+                map.put("password", password);
+                map.put("yzm", mycode);
+                getDataWithPost(DATA, Host.hostUrl + "&c=Login&a=register", map);
+                break;
+            case GET_CODE:
+                map.put("mobile", phonenum);
+                map.put("type", "1");
+                getDataWithPost(GET_CODE, Host.hostUrl + "&c=Login&a=sendSMS", map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index) {
+            case DATA:
+                Logger.e(response);
+                // 注册成功
+                ToastUtils.show(this, "注册成功");
+                finish();
+                break;
+            case GET_CODE:
+                getcode.setClickable(true);
+                Toast.makeText(this,"已发送",Toast.LENGTH_SHORT).show();
+//                ToastUtils.show(this,"已发送");
+                break;
+        }
+    }
+
+    private void findAllView() {
+        CheckBox checkBox = (CheckBox) findViewById(R.id.register_activity_checkbox);
+        getcode = (TextView) findViewById(R.id.register_activity_get_code);
+        TextView register = (TextView) findViewById(R.id.register_activity_register);
+        TextView href = (TextView) findViewById(R.id.register_activity_href);
+        code = (EditText) findViewById(R.id.register_activity_code);
+        phone = (EditText) findViewById(R.id.register_activity_phone);
+        pwd = (EditText) findViewById(R.id.register_activity_pwd);
+        reconfirm = (EditText) findViewById(R.id.register_activity_reconfirm_pwd);
+        register.setOnClickListener(this);
+        getcode.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.register_activity_register:
+                phonenum = phone.getText().toString().trim();
+                if (TextUtils.isEmpty(phonenum)) {
+                    ToastUtils.show(this, "手机号不能为空");
+                    return;
+                }
+                password = pwd.getText().toString().trim();
+                if (TextUtils.isEmpty(password)) {
+                    ToastUtils.show(this, "密码不能为空");
+                    return;
+                } else {
+                    if (!ContentUtils.isLetterDigit(password)) {
+                        ToastUtils.show(this, "密码须为字母和数字的混合");
+                        return;
+                    }
+                }
+                repassword = reconfirm.getText().toString().trim();
+                if (TextUtils.isEmpty(repassword)) {
+                    ToastUtils.show(this, "确认密码不能为空");
+                    return;
+                } else {
+                    if (!repassword.equals(password)) {
+                        ToastUtils.show(this, "两次输入密码不一致");
+                        return;
+                    }
+                }
+
+
+                mycode = code.getText().toString().trim();
+                if (TextUtils.isEmpty(mycode)) {
+                    ToastUtils.show(this, "验证码不能为空");
+                    return;
+                }
+                startRequestData(DATA);
+                break;
+            case R.id.register_activity_get_code:
+                phonenum = phone.getText().toString().trim();
+                if (TextUtils.isEmpty(phonenum)) {
+                    ToastUtils.show(this, "手机号不能为空");
+                    return;
+                }
+                getcode.setClickable(false);
+                startRequestData(GET_CODE);
+                break;
+        }
+
+    }
+
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+}

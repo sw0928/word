@@ -1,0 +1,783 @@
+package tts.project.livek.ui.activity;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.media.AudioManager;
+import android.opengl.GLSurfaceView;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.dou361.customui.ui.AlertView;
+import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.widget.EaseAlertDialog;
+import com.hyphenate.easeui.widget.EaseImageView;
+import com.qiniu.pili.droid.streaming.CameraStreamingSetting;
+import com.qiniu.pili.droid.streaming.MediaStreamingManager;
+import com.qiniu.pili.droid.streaming.StreamingProfile;
+import com.qiniu.pili.droid.streaming.StreamingSessionListener;
+import com.qiniu.pili.droid.streaming.StreamingState;
+import com.qiniu.pili.droid.streaming.StreamingStateChangedListener;
+import com.qiniu.pili.droid.streaming.widget.AspectFrameLayout;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import tts.moudle.api.Host;
+import tts.moudle.api.activity.CustomPictureSelectorView;
+import tts.moudle.api.bean.ImgBean;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.HomeBean;
+import tts.project.livek.bean.OverBean;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.bean.WangHongBean;
+import tts.project.livek.module.TestRoomLiveRepository;
+import tts.project.livek.ui.adapter.RoomPanlAdapter;
+import tts.project.livek.ui.config.StatusConfig;
+import tts.project.livek.ui.fragment.RoomPanlFragment;
+import tts.project.livek.ui.listener.OnLiveListener;
+import tts.project.livek.utils.BitmapUtils;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+public class StartLiveActivity extends BaseActivity implements StreamingStateChangedListener, StreamingSessionListener {
+    public static final int READ_CONTACTS_REQUEST_CODE = 1;
+    public static final int START_LIVE = 2;
+    public static final int END_LIVE = 3;
+    public static final int OVER_DATA = 4;
+    public static final int DELETE_VIDEO = 5;
+    public static final int SAVE_VIDEO = 6;
+    private String url = "http://yomi.tstmobile.com/index.php?m=home&c=public&a=index";
+
+    @BindView(R.id.cameraPreview_afl)
+    AspectFrameLayout afl;
+    @BindView(R.id.cameraPreview_surfaceView)
+    GLSurfaceView cameraPreviewFrameView;
+    @BindView(R.id.start_container)
+    RelativeLayout startContainer;
+    @BindView(R.id.countdown_txtv)
+    TextView countdownView;
+    @BindView(R.id.tv_stop_username)
+    TextView tv_stop_username;
+    @BindView(R.id.eiv_stop_avatar)
+    EaseImageView eiv_stop_avatar;
+    @BindView(R.id.finish_frame)
+    View liveEndLayout;
+    @BindView(R.id.cover_image)
+    ImageView coverImage;
+    @BindView(R.id.choose_img)
+    ImageView choose_img;
+    @BindView(R.id.vp_panl)
+    ViewPager vp_panl;
+    @BindView(R.id.et_title)
+    EditText et_title;
+    @BindView(R.id.watch_count)
+    TextView watch_count;
+    @BindView(R.id.mibao)
+    TextView mibao;
+    @BindView(R.id.delete_video)
+    TextView delete_video;
+    @BindView(R.id.pengyouquan)
+    ImageView pengyouquan;
+    @BindView(R.id.weixin)
+    ImageView weixin;
+    @BindView(R.id.qq)
+    ImageView qq;
+    public static final int MSG_UPDATE_COUNTDOWN = 1;
+    public static final int COUNTDOWN_DELAY = 1000;
+    public static final int COUNTDOWN_START_INDEX = 3;
+    public static final int COUNTDOWN_END_INDEX = 1;
+    private int currentTime = COUNTDOWN_START_INDEX;
+//    CountDownTimer
+    private Timer timer = new Timer();
+    private TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    handleUpdateCountdown(currentTime);
+                    currentTime--;
+                    if (currentTime == 0) {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    }
+                }
+            });
+        }
+    };
+    boolean isStarted;
+    RoomPanlFragment fragment;
+    private String liveId;
+    private String roomId;
+    private String anchorId;
+    private StreamingProfile mProfile;
+    public MediaStreamingManager mMediaStreamingManager;
+    private JSONObject mJSONObject;
+    public CameraStreamingSetting setting;
+    private Bitmap bitmap;
+    private String path;
+    private UserBean userBean;
+    private Bundle mBundle;
+    private HomeBean.WangHongListBean wangHongListBean;
+    private RoomPanlAdapter adapter;
+    private WangHongBean wangHongBean;
+    private OverBean overBean;
+
+    /**
+     * base相关
+     *
+     * @return
+     */
+    @Override
+    public boolean openSliding() {
+        return false;
+    }
+
+    /**
+     * 初始化view
+     */
+    @Override
+    protected void initView() {
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        setContentView(R.layout.activity_start_live);
+        adapter = new RoomPanlAdapter(getSupportFragmentManager());
+//        adapter.addFragment(new TransparentFragment());
+        fragment = new RoomPanlFragment();
+        mBundle = new Bundle();
+        wangHongListBean = new HomeBean.WangHongListBean();
+        liveId = TestRoomLiveRepository.getLiveRoomId(EMClient.getInstance().getCurrentUser());
+        roomId = TestRoomLiveRepository.getChatRoomId(EMClient.getInstance().getCurrentUser());
+        anchorId = EMClient.getInstance().getCurrentUser();
+        wangHongListBean.setId(userBean.getId());
+        wangHongListBean.setHx_username(userBean.getHx_username());
+        wangHongListBean.setImg(userBean.getImg());
+        fragment.setOnLiveListener(new OnLiveListener() {
+            @Override
+            public void onCamreClick(View view) {
+                /**
+                 * 切换摄像头
+                 */
+                mMediaStreamingManager.switchCamera();
+            }
+
+            @Override
+            public void onLightClick(View view) {
+                /**
+                 * 打开或关闭闪关灯
+                 */
+                boolean succeed = mMediaStreamingManager.turnLightOff();
+                if (succeed) {
+                    view.setSelected(!view.isSelected());
+                }
+            }
+
+            @Override
+            public void onVoiceClick(View view) {
+                /**
+                 * 打开或关闭声音
+                 */
+                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager.isMicrophoneMute()) {
+                    audioManager.setMicrophoneMute(false);
+                    view.setSelected(false);
+                } else {
+                    audioManager.setMicrophoneMute(true);
+                    view.setSelected(true);
+                }
+            }
+        });
+        initEnv();
+    }
+
+    /**
+     * 初始化推流参数  监听事件
+     */
+    public void initEnv() {
+        StreamingProfile.AudioProfile aProfile = new StreamingProfile.AudioProfile(44100, 96 * 1024);
+        StreamingProfile.VideoProfile vProfile = new StreamingProfile.VideoProfile(30, 1000 * 1024, 48);
+        StreamingProfile.AVProfile avProfile = new StreamingProfile.AVProfile(vProfile, aProfile);
+
+        mProfile = new StreamingProfile();
+        mProfile.setVideoQuality(StreamingProfile.VIDEO_QUALITY_HIGH1)
+                .setAudioQuality(StreamingProfile.AUDIO_QUALITY_MEDIUM2)
+                .setEncodingSizeLevel(StreamingProfile.VIDEO_ENCODING_HEIGHT_480)
+                .setEncoderRCMode(StreamingProfile.EncoderRCModes.QUALITY_PRIORITY)
+                .setAVProfile(avProfile)
+                .setAdaptiveBitrateEnable(true)
+                .setFpsControllerEnable(true)
+                .setStreamStatusConfig(new StreamingProfile.StreamStatusConfig(3))
+                .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
+        setting = new CameraStreamingSetting();
+        setting.setContinuousFocusModeEnabled(true)
+                .setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT) // 前置摄像头
+                .setContinuousFocusModeEnabled(true) // 自动对焦
+                .setBuiltInFaceBeautyEnabled(true)
+                .setFocusMode(CameraStreamingSetting.FOCUS_MODE_CONTINUOUS_VIDEO)//对焦频率
+                .setResetTouchFocusDelayInMs(3000)//手动对焦后恢复自动对焦时间
+                .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.MEDIUM)
+                .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9)
+                .setFaceBeautySetting(new CameraStreamingSetting.FaceBeautySetting(1.0f, 1.0f, 0.8f))
+                .setVideoFilter(CameraStreamingSetting.VIDEO_FILTER_TYPE.VIDEO_FILTER_BEAUTY);
+        ;
+        afl.setShowMode(AspectFrameLayout.SHOW_MODE.FULL);
+        mMediaStreamingManager = new MediaStreamingManager(mContext, afl, cameraPreviewFrameView);  // soft codec
+        mMediaStreamingManager.prepare(setting, mProfile);
+        mMediaStreamingManager.setStreamingStateListener(this);
+        mMediaStreamingManager.setStreamingSessionListener(this);
+//        mMediaStreamingManager.setSurfaceTextureCallback(this);
+////        mMediaStreamingManager.setNativeLoggingEnabled(false);
+//        mMediaStreamingManager.setStreamStatusCallback(this);
+//        mMediaStreamingManager.setStreamingPreviewCallback(this);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 退出直播间关掉直播流
+     */
+    @Override
+    public void onBackPressed() {
+        if (mMediaStreamingManager != null) {
+            mMediaStreamingManager.stopStreaming();
+        }
+        super.onBackPressed();
+    }
+
+    /**
+     * 点击退出直播间的弹框
+     */
+    private void showAlertDialog() {
+        new AlertView("是否关闭直播间？", null, null, null, new String[]{"是", "否"}, mContext, AlertView.Style.Alert, new AlertView.OnItemClickListener() {
+            @Override
+            public void onItemClick(Object o, int position) {
+                if (position == 0) {
+                    startRequestData(OVER_DATA);
+                    /**
+                     * 关闭直播显示直播成果
+                     */
+                    if (mMediaStreamingManager != null) {
+                        mMediaStreamingManager.stopStreaming();
+                    }
+                    if (!isStarted) {
+                        onBackPressed();
+                        return;
+                    }
+                    showConfirmCloseLayout();
+                }
+            }
+        }).setCancelable(true)
+                .show();
+    }
+
+    /**
+     * 6.0权限处理回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case READ_CONTACTS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // TODO 用户已经授予了权限
+                    startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+                } else {
+                    // TODO 用户拒绝授予权限
+                    ToastUtils.show(this, "获取权限失败");
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * 获取封面回调
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1001:
+                if (resultCode == RESULT_OK) {
+                    if (((List<ImgBean>) data.getSerializableExtra("imgBeans")).size() > 0) {
+                        ImgBean imgBean = ((List<ImgBean>) data.getSerializableExtra("imgBeans")).get(0);
+                        if (imgBean != null) {
+                            bitmap = BitmapFactory.decodeFile(imgBean.getPath());
+                            choose_img.setImageBitmap(bitmap);
+                            path = imgBean.getPath();
+                        }
+                    }
+
+
+                }
+                break;
+        }
+    }
+
+    /**
+     * 请求网络
+     *
+     * @param index
+     */
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        HashMap<String, String> map = new HashMap<>();
+        List<PostFormBuilder.FileInput> files = new ArrayList<>();
+        switch (index) {
+            case START_LIVE:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                String title = et_title.getText().toString();
+                if (TextUtils.isEmpty(title)) {
+                    // 如果是空的话
+                    map.put("title", "一起看直播");
+                } else {
+                    map.put("title", title);
+                }
+                if (TextUtils.isEmpty(path)) {
+                    ToastUtils.show(this, "请选择合适的封面");
+                    return;
+                }
+
+//                getDataWithPost(START_LIVE, Host.hostUrl + "&c=Index&a=start_live", map);
+                File scal = BitmapUtils.scal(URI.create(path));
+                files.add(new PostFormBuilder.FileInput("1", "1.jpg", scal));
+                uploadFile(START_LIVE, Host.hostUrl + "&c=Index&a=start_live", map, files);
+                break;
+            case END_LIVE:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                getDataWithPost(END_LIVE, Host.hostUrl + "&c=Index&a=end_live", map);
+                break;
+            case OVER_DATA:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("anchor_id", userBean.getUser_id());
+                getDataWithPost(OVER_DATA, Host.hostUrl + "&c=Index&a=end_live", map);
+                break;
+            case DELETE_VIDEO:
+                // 1. 表示删除
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("is_keep", "1");
+                getDataWithPost(DELETE_VIDEO, Host.hostUrl + "&c=Index&a=record_live", map);
+                break;
+            case SAVE_VIDEO:
+                // 1除外. 表保存
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                map.put("is_keep", "0");
+                getDataWithPost(SAVE_VIDEO, Host.hostUrl + "&c=Index&a=record_live", map);
+                break;
+        }
+    }
+
+    /**
+     * 网络请求成功结果
+     *
+     * @param index
+     * @param response
+     */
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index) {
+            case START_LIVE:
+                wangHongBean = new Gson().fromJson(response, WangHongBean.class);
+                wangHongListBean.setRoom_id(wangHongBean.getRoom_id());
+                wangHongListBean.setUser_id(userBean.getUser_id());
+                wangHongListBean.setId(userBean.getId());
+                mBundle.putSerializable(StatusConfig.LiveRoom, wangHongListBean);
+                mBundle.putInt(StatusConfig.ROOM_STYLE, StatusConfig.ROOM_STYLE_LIVE);
+                fragment.setArguments(mBundle);
+                adapter.addFragment(fragment);
+                vp_panl.setAdapter(adapter);
+                vp_panl.setCurrentItem(adapter.getCount() - 1);
+                try {
+                    mProfile.setPublishUrl(wangHongBean.getPush_flow_address());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                mMediaStreamingManager.setStreamingProfile(mProfile);
+                //这里没有打开只是简单测试功能没有去推流的
+                mMediaStreamingManager.startStreaming();
+                isStarted = true;
+                if (fragment != null) {
+                    fragment.joinChatRoom();
+//                    fragment.addPeriscope();
+                }
+                break;
+            case END_LIVE:
+                break;
+            case OVER_DATA:
+                overBean = new Gson().fromJson(response, OverBean.class);
+                watch_count.setText(overBean.getWatch_nums());
+                mibao.setText(overBean.getCount_u());
+                break;
+            case SAVE_VIDEO:
+                Toast.makeText(this, "录制成功", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+                onBackPressed();
+                break;
+            case DELETE_VIDEO:
+                Toast.makeText(this, "删除录制成功", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+                onBackPressed();
+                break;
+        }
+    }
+
+    /**
+     * 网络请求失败结果
+     *
+     * @param index
+     * @param response
+     */
+    @Override
+    protected void doFailed(int what, int index, String response) {
+        super.doFailed(what, index, response);
+        switch (index) {
+            case START_LIVE:
+                ToastUtils.show(this, "开启直播失败，请重试");
+                break;
+            case SAVE_VIDEO:
+                ToastUtils.show(this, "录制失败");
+                startActivity(new Intent(this, MainActivity.class));
+                onBackPressed();
+                break;
+            case DELETE_VIDEO:
+                ToastUtils.show(this, "删除失败");
+                startActivity(new Intent(this, MainActivity.class));
+                onBackPressed();
+                break;
+        }
+    }
+
+    /**
+     * 点击事件
+     *
+     * @param v
+     */
+    @OnClick({R.id.live_close_confirm, R.id.btn_start, R.id.btn_close, R.id.choose_img})
+    public void onLiveClick(View v) {
+        switch (v.getId()) {
+            case R.id.choose_img:
+                //  判断照相权限是否有
+                if (Build.VERSION.SDK_INT >= 23) {
+                    // 如果是大于6.0
+                    // 如果权限没有被授予
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        // 申请权限
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, READ_CONTACTS_REQUEST_CODE);
+                    } else {
+                        // TODO 权限已经被授予
+                        startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+                    }
+                } else {
+                    // 如果小于6.0
+                    startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+
+                }
+                break;
+            case R.id.live_close_confirm:
+                startRequestData(SAVE_VIDEO);
+                break;
+            case R.id.btn_start:
+                /**
+                 * 开始直播
+                 */
+                if (liveId == null) {
+                    new EaseAlertDialog(this, "只有存在的liveId才能开启直播").show();
+                    return;
+                }
+                if (TextUtils.isEmpty(path)) {
+                    ToastUtils.show(StartLiveActivity.this, "请先选择一张合适的封面");
+                    return;
+                }
+                startContainer.setVisibility(View.INVISIBLE);
+                startRequestData(START_LIVE);
+                timer.schedule(task, 0, 1200);
+                break;
+            case R.id.btn_close:
+                showAlertDialog();
+                break;
+        }
+    }
+
+    /**
+     * 友盟分享回调监听
+     */
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+//            Log.d("plat","platform"+platform);
+            Toast.makeText(StartLiveActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(StartLiveActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+            if (t != null) {
+                Logger.e("++++++++++++++:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(StartLiveActivity.this, "分享取消", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    /**
+     * 如果确定退出直播间，显示直播结果界面
+     */
+    private void showConfirmCloseLayout() {
+        qq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(StartLiveActivity.this).setPlatform(SHARE_MEDIA.QQ)
+                        .withTargetUrl(url).withTitle("【推荐】 《幽秘》").withText(userBean.getUsername() + "请你加入\"幽秘\"APP")
+                        .setCallback(umShareListener)
+                        .share();
+            }
+        });
+        pengyouquan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(StartLiveActivity.this).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                        .withTargetUrl(url).withTitle("【推荐】 《幽秘》").withText(userBean.getUsername() + "请你加入\"幽秘\"APP")
+                        .setCallback(umShareListener)
+                        .share();
+            }
+        });
+        weixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(StartLiveActivity.this).setPlatform(SHARE_MEDIA.WEIXIN)
+                        .withTargetUrl(url).withTitle("【推荐】 《幽秘》").withText(userBean.getUsername() + "请你加入\"幽秘\"APP")
+                        .setCallback(umShareListener)
+                        .share();
+            }
+        });
+        //显示封面
+        liveEndLayout.setVisibility(View.VISIBLE);
+        Glide.with(mContext)
+                .load(userBean.getImg())
+                .placeholder(R.color.placeholder)
+                .into(eiv_stop_avatar);
+        if (userBean.getUsername() != null) {
+            tv_stop_username.setText(userBean.getUsername().toString());
+        } else {
+            tv_stop_username.setText(userBean.getHx_username());
+        }
+
+        delete_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRequestData(DELETE_VIDEO);
+            }
+        });
+    }
+
+    /**
+     * 根据传递进来的数字执行缩放动画
+     *
+     * @param count
+     */
+    public void handleUpdateCountdown(final int count) {
+        countdownView.setVisibility(View.VISIBLE);
+        countdownView.setText(count + "");
+        AnimationSet aset_3 = new AnimationSet(true);
+        ScaleAnimation aa_3 = new ScaleAnimation(1, 0.1f, 1, 0.1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        aa_3.setDuration(1200);
+        aset_3.addAnimation(aa_3);
+        countdownView.startAnimation(aset_3);
+
+        aa_3.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                if (count == 1) {
+                    countdownView.setVisibility(View.INVISIBLE);
+                    Toast.makeText(StartLiveActivity.this, "开启直播", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+//        if (countdownView != null) {
+//            countdownView.setText(count+"");
+//            ScaleAnimation scaleAnimation =
+//                    new ScaleAnimation(1.0f, 0f, 1.0f, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+//                            Animation.RELATIVE_TO_SELF, 0.5f);
+//            scaleAnimation.setDuration(COUNTDOWN_DELAY);
+//            scaleAnimation.setFillAfter(true);
+//            countdownView.startAnimation(scaleAnimation);
+//            scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    countdownView.setVisibility(View.GONE);
+//                    countdownView.clearAnimation();
+//                    if (count == COUNTDOWN_END_INDEX && mMediaStreamingManager != null ) {
+//                        if (timer!=null){
+//                            timer.cancel();
+//                        }
+//                        try {
+//                            UIUtils.showToastCenterShort("直播开始！");
+//                            if (fragment != null) {
+//                                fragment.joinChatRoom();
+//                                fragment.addPeriscope();
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            UIUtils.showToastCenterShort("推流地址解析失败！");
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//                    countdownView.setVisibility(View.VISIBLE);
+//                }
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//                }
+//            });
+//        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mMediaStreamingManager != null) {
+            mMediaStreamingManager.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mMediaStreamingManager != null) {
+            mMediaStreamingManager.resume();
+        }
+        if (fragment != null) {
+            fragment.onResume();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (fragment != null) {
+            fragment.onStop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // 结束直播的时候调用接口，结束直播
+        Toast.makeText(this,"结束直播",Toast.LENGTH_SHORT).show();
+        startRequestData(END_LIVE);
+        if (fragment != null) {
+            fragment.destroy();
+        }
+        super.onDestroy();
+        if (mMediaStreamingManager != null) {
+            mMediaStreamingManager.destroy();
+        }
+    }
+
+    // 当前直播的状态改变a
+    @Override
+    public void onStateChanged(StreamingState streamingState, Object o) {
+//        Looper.prepare();
+       if (streamingState==StreamingState.READY){
+       }else if (streamingState==StreamingState.DISCONNECTED){
+           // 七牛推流端掉线
+//           Logger.e("");
+           Toast.makeText(StartLiveActivity.this,"正在尝试重新连接000",Toast.LENGTH_SHORT).show();
+//           mMediaStreamingManager.startStreaming();
+       }else if (streamingState==StreamingState.IOERROR){
+           Toast.makeText(StartLiveActivity.this,"正在尝试重新连接11111",Toast.LENGTH_SHORT).show();
+//           mMediaStreamingManager.startStreaming();
+       }
+    }
+
+    // 实现setSessionListener
+    @Override
+    public boolean onRecordAudioFailedHandled(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean onRestartStreamingHandled(int i) {
+        // 当掉线之后该方法会被回调，重新刷流
+        Logger.e(i+"");
+        Toast.makeText(StartLiveActivity.this,"正在尝试重新连接3333",Toast.LENGTH_SHORT).show();
+//        mMediaStreamingManager.startStreaming();
+        return false;
+    }
+
+    @Override
+    public Camera.Size onPreviewSizeSelected(List<Camera.Size> list) {
+        return null;
+    }
+}

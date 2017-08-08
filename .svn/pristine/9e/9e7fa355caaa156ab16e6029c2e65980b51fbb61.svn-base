@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/toolbar_item" />
+
+    <GridView
+        android:id="@+id/pictureList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:background="@color/white"
+        android:horizontalSpacing="@dimen/x5"
+        android:numColumns="3"
+        android:verticalSpacing="@dimen/y5" />
+
+    <RelativeLayout
+        android:id="@+id/RlAllPicture"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"
+        android:onClick="doClick">
+
+        <TextView
+            android:id="@+id/id_choose_dir"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:text="下一步"
+            android:textColor="@color/RGB255_255_255"
+            android:textSize="@dimen/y32" />
+
+
+    </RelativeLayout>
+</RelativeLayout>

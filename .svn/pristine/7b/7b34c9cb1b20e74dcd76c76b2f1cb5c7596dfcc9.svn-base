@@ -1,0 +1,113 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-native-wechat@^1.5.2",
+        "scope": null,
+        "escapedName": "react-native-wechat",
+        "name": "react-native-wechat",
+        "rawSpec": "^1.5.2",
+        "spec": ">=1.5.2 <2.0.0",
+        "type": "range"
+      },
+      "/Users/shenjiabo/Documents/rnspace/Indiana"
+    ]
+  ],
+  "_cnpm_publish_time": 1469117723030,
+  "_from": "react-native-wechat@>=1.5.2 <2.0.0",
+  "_id": "react-native-wechat@1.5.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-wechat",
+  "_nodeVersion": "5.6.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/react-native-wechat-1.5.2.tgz_1469117718543_0.8726853793486953"
+  },
+  "_npmUser": {
+    "name": "yorkie",
+    "email": "yorkiefixer@gmail.com"
+  },
+  "_npmVersion": "3.3.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-wechat@^1.5.2",
+    "scope": null,
+    "escapedName": "react-native-wechat",
+    "name": "react-native-wechat",
+    "rawSpec": "^1.5.2",
+    "spec": ">=1.5.2 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/react-native-wechat/download/react-native-wechat-1.5.2.tgz",
+  "_shasum": "93c9170e609996da98ce255c85792a7cfb475081",
+  "_shrinkwrap": null,
+  "_spec": "react-native-wechat@^1.5.2",
+  "_where": "/Users/shenjiabo/Documents/rnspace/Indiana",
+  "author": {
+    "name": "Yorkie Liu",
+    "email": "yorkiefixer@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/weflex/react-native-wechat/issues"
+  },
+  "contributors": [
+    {
+      "name": "Yorkie Liu",
+      "email": "yorkiefixer@gmail.com"
+    },
+    {
+      "name": "Deng Yun",
+      "email": "tdzl2003@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "es6-promisify": "3.0.0",
+    "events": "1.0.2"
+  },
+  "description": "react-native library for wechat app",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "93c9170e609996da98ce255c85792a7cfb475081",
+    "size": 6736992,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/react-native-wechat/download/react-native-wechat-1.5.2.tgz"
+  },
+  "gitHead": "52b76c057b3054381f869c0ca2c870ac976a862c",
+  "homepage": "https://github.com/weflex/react-native-wechat#readme",
+  "keywords": [
+    "wechat",
+    "react",
+    "react-native",
+    "react-component",
+    "ios"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "yorkie",
+      "email": "yorkiefixer@gmail.com"
+    }
+  ],
+  "name": "react-native-wechat",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.29"
+  },
+  "publish_time": 1469117723030,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/weflex/react-native-wechat.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.5.2"
+}

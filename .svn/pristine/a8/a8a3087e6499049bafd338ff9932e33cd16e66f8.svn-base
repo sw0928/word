@@ -1,0 +1,91 @@
+package tts.project.livek.bean;
+
+import java.io.Serializable;
+
+public class LiveRoom implements Serializable {
+
+    /**
+     * 直播id
+     */
+    private String id;
+    /**
+     * 名称
+     */
+    private String name;
+    /**
+     * 观看人数
+     */
+    private int audienceNum;
+    /**
+     * 头像
+     */
+    private int avatar;
+    /**
+     * 封面
+     */
+    private int cover;
+    /**
+     * 聊天室id
+     */
+    private String chatroomId;
+    /**
+     * 主播id
+     */
+    private String anchorId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAudienceNum() {
+        return audienceNum;
+    }
+
+    public void setAudienceNum(int audienceNum) {
+        this.audienceNum = audienceNum;
+    }
+
+    public int getCover() {
+        return cover;
+    }
+
+    public void setCover(int cover) {
+        this.cover = cover;
+    }
+
+    public String getChatroomId() {
+        return chatroomId;
+    }
+
+    public void setChatroomId(String chatroomId) {
+        this.chatroomId = chatroomId;
+    }
+
+    public String getAnchorId() {
+        return anchorId;
+    }
+
+    public void setAnchorId(String anchorId) {
+        this.anchorId = anchorId;
+    }
+
+    public int getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
+    }
+}

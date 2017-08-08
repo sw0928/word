@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/parentview"
+    android:background="#a4000000"
+    android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/gift_viewpager"
+        android:layout_marginBottom="@dimen/y100"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y500"
+        android:layout_alignParentBottom="true"
+         />
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/y130"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:id="@+id/ll_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></LinearLayout>
+    <RelativeLayout
+        android:layout_marginBottom="@dimen/x40"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y60"
+        android:id="@+id/relativeLayout">
+        <TextView
+            android:layout_marginLeft="@dimen/x40"
+            android:id="@+id/charge"
+            android:textSize="@dimen/y35"
+            android:layout_width="@dimen/x350"
+            android:layout_height="wrap_content"
+            android:text="充值:"
+            android:textColor="#cd1939"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x140"
+            android:id="@+id/dimends_count"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/beans_icon"
+            android:layout_marginLeft="@dimen/x20"
+            android:src="@drawable/beans"
+            android:layout_toRightOf="@+id/dimends_count"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x40" />
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/beans_icon"
+            android:layout_marginLeft="@dimen/x40"
+            android:textSize="@dimen/y40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:textColor="#cd1939"
+            />
+        <!--<TextView-->
+            <!--android:id="@+id/charge"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginLeft="@dimen/x20"-->
+            <!--android:text="充值"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/y40"-->
+            <!--android:layout_width="@dimen/x300"-->
+            <!--android:layout_height="wrap_content" />-->
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/send_gift"
+            android:background="@drawable/send_bg"
+            android:layout_marginRight="@dimen/x40"
+            android:layout_alignParentRight="true"
+            android:text="发送"
+            android:gravity="center"
+            android:textColor="#32a430"
+            android:textSize="@dimen/y30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

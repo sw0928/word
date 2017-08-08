@@ -1,0 +1,252 @@
+package tts.project.livek.bean;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Created by lenove on 2016/12/23.
+ */
+
+public class LuZhiBean implements Serializable{
+
+
+    /**
+     * list : [{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482480516/0_1482480765.m3u8","room_id":"278810881075184144","pay_number":"0","live_id":"7","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482482422/0_1482490220.m3u8","room_id":"278819064875319832","pay_number":"0","live_id":"8","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482482422/0_1482490223.m3u8","room_id":"278819064875319832","pay_number":"0","live_id":"9","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482502040/0_1482503857.m3u8","room_id":"278903322344161820","pay_number":"0","live_id":"10","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482502040/0_1482503865.m3u8","room_id":"278903322344161820","pay_number":"0","live_id":"11","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482512990/0_1482513659.m3u8","room_id":"278950355352420888","pay_number":"0","live_id":"18","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482516503/0_1482518057.m3u8","room_id":"278965442360377872","pay_number":"0","live_id":"19","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482520166/0_1482520347.m3u8","room_id":"278981174926246412","pay_number":"0","live_id":"20","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482550189/0_1482550709.m3u8","room_id":"279110121424945688","pay_number":"0","live_id":"21","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"},{"user_id":"3","play_address":"http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482553889/0_1482554100.m3u8","room_id":"279126012661334556","pay_number":"0","live_id":"22","play_img":"http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg","token":"585e067a8e1f2","phone":"13761853396","img":"/Uploads/image/touxiang/585b9f4a349f1.jpg","sex":"2","username":"fhnn","autograph":"安我呢","id":"84058043","hx_username":"kehrqtcb7czf","hx_password":"123456","nums":"100","zan":"56","money":"2222","u_money":"9272","url":"http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==","state":"2"}]
+     * page : 2
+     */
+
+    private int page;
+    /**
+     * user_id : 3
+     * play_address : http://oc3pwoyhb.bkt.clouddn.com/recordings/z1.vxiu1.php-sdk-test1482480516/0_1482480765.m3u8
+     * room_id : 278810881075184144
+     * pay_number : 0
+     * live_id : 7
+     * play_img : http://yomi.tstmobile.com//Uploads/image/touxiang/585b9f4a349f1.jpg
+     * token : 585e067a8e1f2
+     * phone : 13761853396
+     * img : /Uploads/image/touxiang/585b9f4a349f1.jpg
+     * sex : 2
+     * username : fhnn
+     * autograph : 安我呢
+     * id : 84058043
+     * hx_username : kehrqtcb7czf
+     * hx_password : 123456
+     * nums : 100
+     * zan : 56
+     * money : 2222
+     * u_money : 9272
+     * url : http://yomi.tstmobile.com//index.php?m=Home&c=Public&a=index&uid=Mw==
+     * state : 2
+     */
+
+    private List<ListBean> list;
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public List<ListBean> getList() {
+        return list;
+    }
+
+    public void setList(List<ListBean> list) {
+        this.list = list;
+    }
+
+    public static class ListBean implements Serializable{
+        private String user_id;
+        private String play_address;
+        private String room_id;
+        private String pay_number;
+        private String live_id;
+        private String play_img;
+        private String token;
+        private String phone;
+        private String img;
+        private String sex;
+        private String username;
+        private String autograph;
+        private String id;
+        private String hx_username;
+        private String hx_password;
+        private String nums;
+        private String zan;
+        private String money;
+        private String u_money;
+        private String url;
+        private String state;
+
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+
+        public String getPlay_address() {
+            return play_address;
+        }
+
+        public void setPlay_address(String play_address) {
+            this.play_address = play_address;
+        }
+
+        public String getRoom_id() {
+            return room_id;
+        }
+
+        public void setRoom_id(String room_id) {
+            this.room_id = room_id;
+        }
+
+        public String getPay_number() {
+            return pay_number;
+        }
+
+        public void setPay_number(String pay_number) {
+            this.pay_number = pay_number;
+        }
+
+        public String getLive_id() {
+            return live_id;
+        }
+
+        public void setLive_id(String live_id) {
+            this.live_id = live_id;
+        }
+
+        public String getPlay_img() {
+            return play_img;
+        }
+
+        public void setPlay_img(String play_img) {
+            this.play_img = play_img;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getAutograph() {
+            return autograph;
+        }
+
+        public void setAutograph(String autograph) {
+            this.autograph = autograph;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getHx_username() {
+            return hx_username;
+        }
+
+        public void setHx_username(String hx_username) {
+            this.hx_username = hx_username;
+        }
+
+        public String getHx_password() {
+            return hx_password;
+        }
+
+        public void setHx_password(String hx_password) {
+            this.hx_password = hx_password;
+        }
+
+        public String getNums() {
+            return nums;
+        }
+
+        public void setNums(String nums) {
+            this.nums = nums;
+        }
+
+        public String getZan() {
+            return zan;
+        }
+
+        public void setZan(String zan) {
+            this.zan = zan;
+        }
+
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getU_money() {
+            return u_money;
+        }
+
+        public void setU_money(String u_money) {
+            this.u_money = u_money;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+    }
+}

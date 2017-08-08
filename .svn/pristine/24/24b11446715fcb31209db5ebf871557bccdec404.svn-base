@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.AdviceDao">
+	<insert id="insertAdvice" parameterType="adviceBean" useGeneratedKeys="true" keyProperty="advice_id">
+		insert into tst_advice
+		(advice_title,advice_desc,member_id,create_time,advice_type,advice_name,advice_mobile,advice_assessment)
+		values
+		(#{advice_title},#{advice_desc},#{member_id},now(),#{advice_type},#{advice_name},#{advice_mobile},#{advice_assessment})
+	</insert>
+	
+	<insert id="insertAdviceImg" parameterType="adviceImgBean">
+		insert into tst_advice_img
+		(advice_id,advice_img,create_time)
+		values
+		(#{advice_id},#{advice_img},now())
+	</insert>
+</mapper>

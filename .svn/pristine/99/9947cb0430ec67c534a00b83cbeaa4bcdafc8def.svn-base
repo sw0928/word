@@ -1,0 +1,406 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dou361.baseutils.utils.UIUtils;
+import com.dou361.customui.ui.AlertView;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.pili.pldroid.player.AVOptions;
+import com.pili.pldroid.player.PLMediaPlayer;
+import com.pili.pldroid.player.widget.PLVideoTextureView;
+import com.pili.pldroid.player.widget.PLVideoView;
+import com.umeng.socialize.UMShareAPI;
+
+import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import tts.moudle.api.Host;
+import tts.project.livek.R;
+import tts.project.livek.bean.HomeBean;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.ui.adapter.RoomPanlAdapter;
+import tts.project.livek.ui.config.StatusConfig;
+import tts.project.livek.ui.fragment.RoomPanlFragment;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+import static tts.project.livek.ui.activity.StartLiveActivity.END_LIVE;
+
+public class PlayerLiveActivity extends BaseActivity implements PLMediaPlayer.OnPreparedListener, PLMediaPlayer.OnInfoListener, PLMediaPlayer.OnCompletionListener, PLMediaPlayer.OnVideoSizeChangedListener, PLMediaPlayer.OnErrorListener {
+
+    public static final int ENTER_LIVE_ROOM = 0;
+    @BindView(R.id.plv_player)
+    PLVideoTextureView mVideoView;
+    @BindView(R.id.loading_layout)
+    RelativeLayout loadingLayout;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.cover_image)
+    ImageView coverView;
+    @BindView(R.id.loading_text)
+    TextView loadingText;
+    @BindView(R.id.parentview)
+    RelativeLayout parentview;
+
+    @BindView(R.id.vp_panl)
+    ViewPager vp_panl;
+    RoomPanlFragment fragment;
+    private UserBean userBean;
+    private HomeBean.WangHongListBean liveRoom;
+    private Bundle mBundle;
+    private RoomPanlAdapter adapter;
+    private PopupWindow pop;
+    private PopupWindow pop1;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
+
+    @Override
+    public boolean openSliding() {
+        return false;
+    }
+
+    @Override
+    protected void initView() {
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        setContentView(R.layout.activity_player_live);
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        liveRoom = (HomeBean.WangHongListBean) getIntent().getSerializableExtra(StatusConfig.LiveRoom);
+        startRequestData(ENTER_LIVE_ROOM);
+        Glide.with(this).load(liveRoom.getPlay_img()).diskCacheStrategy(DiskCacheStrategy.ALL).into(coverView);
+        adapter = new RoomPanlAdapter(getSupportFragmentManager());
+//        adapter.addFragment(new TransparentFragment());
+        fragment = new RoomPanlFragment();
+        mBundle = new Bundle();
+        mBundle.putSerializable(StatusConfig.LiveRoom, liveRoom);
+        mBundle.putInt(StatusConfig.ROOM_STYLE, StatusConfig.ROOM_STYLE_PLAYER);
+        fragment.setArguments(mBundle);
+        adapter.addFragment(fragment);
+        // viewpager 设置adapter
+        vp_panl.setAdapter(adapter);
+        vp_panl.setCurrentItem(adapter.getCount() - 1);
+        mVideoView.setBufferingIndicator(loadingLayout);
+        mVideoView.setOnPreparedListener(this);
+        mVideoView.setOnInfoListener(this);
+        mVideoView.setOnCompletionListener(this);
+        mVideoView.setOnVideoSizeChangedListener(this);
+        mVideoView.setOnErrorListener(this);
+        mVideoView.setDisplayAspectRatio(PLVideoView.ASPECT_RATIO_PAVED_PARENT);
+        mVideoView.setMirror(true);
+        initAvOptions();
+        //真实情况下使用注释的方式
+//        mVideoView.setVideoPath(SystemConfig.ucloud_player_url + liveId);
+        //临时固定地址使用
+        mVideoView.setVideoPath(liveRoom.getPlay_address());
+        mVideoView.start();
+        Init();
+    }
+
+    private void initAvOptions() {
+        AVOptions options = new AVOptions();
+
+// 解码方式，codec＝1，硬解; codec=0, 软解
+// 默认值是：0
+//        options.setInteger(AVOptions.KEY_MEDIACODEC, codec);
+
+// 准备超时时间，包括创建资源、建立连接、请求码流等，单位是 ms
+// 默认值是：无
+        options.setInteger(AVOptions.KEY_PREPARE_TIMEOUT, 5 * 1000);
+
+// 读取视频流超时时间，单位是 ms
+// 默认值是：10 * 1000
+        options.setInteger(AVOptions.KEY_GET_AV_FRAME_TIMEOUT, 5 * 1000);
+
+// 当前播放的是否为在线直播，如果是，则底层会有一些播放优化
+// 默认值是：0
+        options.setInteger(AVOptions.KEY_LIVE_STREAMING, 1);
+
+// 是否开启"延时优化"，只在在线直播流中有效
+// 默认值是：0
+        options.setInteger(AVOptions.KEY_DELAY_OPTIMIZATION, 1);
+
+// 默认的缓存大小，单位是 ms
+// 默认值是：2000
+//        options.setInteger(AVOptions.KEY_CACHE_BUFFER_DURATION, 2000);
+
+// 最大的缓存大小，单位是 ms
+// 默认值是：4000
+//        options.setInteger(AVOptions.KEY_MAX_CACHE_BUFFER_DURATION, 4000);
+
+// 是否自动启动播放，如果设置为 1，则在调用 `prepareAsync` 或者 `setVideoPath` 之后自动启动播放，无需调用 `start()`
+// 默认值是：1
+//        options.setInteger(AVOptions.KEY_START_ON_PREPARED, 1);
+
+// 请在开始播放之前配置
+        mVideoView.setAVOptions(options);
+
+    }
+
+
+    public void Init() {
+        pop1 = new PopupWindow(this);
+        View view = View.inflate(this, R.layout.activity_live_over, null);
+        pop1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        pop1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        pop1.setBackgroundDrawable(new BitmapDrawable());
+        pop1.setFocusable(true);
+        pop1.setOutsideTouchable(true);
+        pop1.setContentView(view);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        HashMap<String, String> map = new HashMap<>();
+        switch (index) {
+            case END_LIVE:
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                getDataWithPost(END_LIVE, Host.hostUrl + "&c=Index&a=end_live", map);
+                break;
+            case ENTER_LIVE_ROOM:
+                map.put("user_id", userBean.getUser_id());
+                map.put("user_id2", liveRoom.getUser_id());
+                getDataWithPost(ENTER_LIVE_ROOM, Host.hostUrl + "&c=Index&a=into_live", map);
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index) {
+            case END_LIVE:
+//                "data": "1"          //1：未关注  2：已关
+                if (response.equals("1")) {
+                    // 未关注
+                    mBundle.putBoolean(Constant.IS_GUANZHU, false);
+                } else {
+                    // 已关注
+                    mBundle.putBoolean(Constant.IS_GUANZHU, true);
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (fragment != null) {
+            fragment.onResume();
+        }
+        if (mVideoView != null) {
+            mVideoView.start();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        if (fragment != null) {
+            fragment.onStop();
+        }
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (fragment != null) {
+            fragment.destroy();
+        }
+        super.onDestroy();
+        if (mVideoView != null) {
+            mVideoView.stopPlayback();
+        }
+    }
+
+    @Override
+    public boolean onError(PLMediaPlayer plMediaPlayer, int errorCode) {
+        switch (errorCode) {
+            case PLMediaPlayer.ERROR_CODE_INVALID_URI:
+                UIUtils.showToastCenterShort("Invalid URL !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_404_NOT_FOUND:
+                UIUtils.showToastCenterShort("404 resource not found !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_CONNECTION_REFUSED:
+                UIUtils.showToastCenterShort("Connection refused !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_CONNECTION_TIMEOUT:
+                UIUtils.showToastCenterShort("Connection timeout !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_EMPTY_PLAYLIST:
+                UIUtils.showToastCenterShort("Empty playlist !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_STREAM_DISCONNECTED:
+                UIUtils.showToastCenterShort("Stream disconnected !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_IO_ERROR:
+                UIUtils.showToastCenterShort("主播尚未开播!");
+                loadingText.setText("主播尚未开播");
+                progressBar.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(this, LiveOverActivity.class);
+                intent.putExtra(Constant.WANG_HONG_ID, liveRoom.getUser_id());
+                startActivity(intent);
+                onBackPressed();
+                break;
+            case PLMediaPlayer.ERROR_CODE_UNAUTHORIZED:
+                UIUtils.showToastCenterShort("Unauthorized Error !");
+                break;
+            case PLMediaPlayer.ERROR_CODE_PREPARE_TIMEOUT:
+                UIUtils.showToastCenterShort("链接超时");
+                break;
+            case PLMediaPlayer.ERROR_CODE_READ_FRAME_TIMEOUT:
+                // 主播已经结束
+                ToastUtils.show(this, "直播已结束");
+                fragment.cancelPop();
+                Intent intent1 = new Intent(this, LiveOverActivity.class);
+                intent1.putExtra(Constant.WANG_HONG_ID, liveRoom.getUser_id());
+                startActivity(intent1);
+                onBackPressed();
+//                pop1.showAtLocation(parentview, Gravity.BOTTOM,0,0);
+                break;
+            case PLMediaPlayer.MEDIA_ERROR_UNKNOWN:
+            default:
+                UIUtils.showToastCenterShort("unknown error !");
+                break;
+        }
+        // Todo pls handle the error status here, retry or call finish()
+//        finish();
+        // If you want to retry, do like this:
+        // mVideoView.setVideoPath(mVideoPath);
+        // mVideoView.start();
+        // Return true means the error has been handled
+        // If return false, then `onCompletion` will be called
+        return true;
+    }
+
+    @Override
+    public void onPrepared(PLMediaPlayer plMediaPlayer) {
+
+    }
+
+    @Override
+    public boolean onInfo(PLMediaPlayer mp, int what, int extra) {
+        switch (what) {
+            case PLMediaPlayer.MEDIA_INFO_BUFFERING_START:
+                /**开始缓冲*/
+                break;
+            case PLMediaPlayer.MEDIA_INFO_BUFFERING_END:
+                /**停止缓冲*/
+                break;
+            case PLMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
+                /**第一帧音频已成功播放*/
+                break;
+            case PLMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                /**第一帧视频已成功渲染*/
+                fragment.joinChatRoom();
+//                fragment.addPeriscope();
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onCompletion(PLMediaPlayer plMediaPlayer) {
+        UIUtils.showToastCenterShort("Play Completed !");
+        finish();
+    }
+
+    @Override
+    public void onVideoSizeChanged(PLMediaPlayer plMediaPlayer, int i, int i1) {
+    }
+
+    @OnClick({R.id.btn_close})
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_close) {
+            onBackPressed();
+//            showAlertDialog();
+        }
+    }
+
+    /**
+     * 弹出提示框
+     */
+    private void showAlertDialog() {
+        new AlertView("是否关闭直播间？", null, null, null, new String[]{"是", "否"}, mContext, AlertView.Style.Alert, new AlertView.OnItemClickListener() {
+            @Override
+            public void onItemClick(Object o, int position) {
+                if (position == 0) {
+                    onBackPressed();
+                }
+            }
+        }).setCancelable(true)
+                .show();
+    }
+
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//
+//    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("PlayerLive Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+}

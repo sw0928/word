@@ -1,0 +1,93 @@
+<resources>
+
+
+    <style name="AppTheme" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="MyDialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="chat_content_date_style">
+        <item name="android:minHeight">50dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">#bfbfbf</item>
+    </style>
+
+
+
+
+    <!-- 固定自身大小 -->
+    <style name="layout_wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- 全屏幕拉伸 -->
+    <style name="layout_full">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!-- 纵向全屏分布 -->
+    <style name="layout_full_vertical" parent="layout_full">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+
+    <!-- 宽全屏、高自身大小 -->
+    <style name="width_full">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="button_style" parent="width_full">
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">@dimen/ten_dimen</item>
+        <item name="android:background">@drawable/button</item>
+    </style>
+
+    <style name="view_width_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/x1</item>
+        <item name="android:background">@color/RGB136_136_136</item>
+    </style>
+
+    <style name="view_height_style">
+        <item name="android:layout_width">@dimen/y1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/RGB136_136_136</item>
+    </style>
+    <!-- 圆形ImageView -->
+    <style name="circleImageViewStyle">
+        <item name="tts_borderthickness">10dp</item>
+        <item name="tts_border_outside_color">@android:color/white</item>
+        <item name="tts_border_inside_color">@android:color/white</item>
+    </style>
+</resources>

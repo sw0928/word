@@ -1,0 +1,16 @@
+package tts.project.livek.utils;
+
+import android.util.Log;
+
+/**
+ * Created by lenove on 2016/9/2.
+ */
+public class Logger {
+    private static final boolean isShowLog=true;
+    public static void e(String msg){
+        if (isShowLog){
+            Log.e("tag",msg);
+        }
+    }
+
+}

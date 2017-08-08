@@ -1,0 +1,42 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/26.
+ */
+
+public class PlayerLiveOverBean {
+
+    /**
+     * watch_nums : 129
+     * count_u : 0
+     * is_follow : 1
+     */
+
+    private String watch_nums;
+    private String count_u;
+    private int is_follow;
+
+    public String getWatch_nums() {
+        return watch_nums;
+    }
+
+    public void setWatch_nums(String watch_nums) {
+        this.watch_nums = watch_nums;
+    }
+
+    public String getCount_u() {
+        return count_u;
+    }
+
+    public void setCount_u(String count_u) {
+        this.count_u = count_u;
+    }
+
+    public int getIs_follow() {
+        return is_follow;
+    }
+
+    public void setIs_follow(int is_follow) {
+        this.is_follow = is_follow;
+    }
+}

@@ -1,0 +1,32 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/24.
+ */
+
+public class SongLiResult {
+
+    /**
+     * count_u : 6400
+     * money : 2172
+     */
+
+    private String count_u;
+    private int money;
+
+    public String getCount_u() {
+        return count_u;
+    }
+
+    public void setCount_u(String count_u) {
+        this.count_u = count_u;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+}

@@ -1,0 +1,120 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/28.
+ */
+
+public class HxDetailBean2 {
+
+
+    /**
+     * status : ok
+     * data : {"user_id":"7","username":"guj","img":"http://yomi.tstmobile.com//Uploads/image/touxiang/5860cb792f056.jpg","sex":"1","hx_username":"pv6rsavch1os","id":"38196125","my_follow":"9","follow_my":"4"}
+     */
+
+    private String status;
+    /**
+     * user_id : 7
+     * username : guj
+     * img : http://yomi.tstmobile.com//Uploads/image/touxiang/5860cb792f056.jpg
+     * sex : 1
+     * hx_username : pv6rsavch1os
+     * id : 38196125
+     * my_follow : 9
+     * follow_my : 4
+     */
+
+    private DataBean data;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public DataBean getData() {
+        return data;
+    }
+
+    public void setData(DataBean data) {
+        this.data = data;
+    }
+
+    public static class DataBean {
+        private String user_id;
+        private String username;
+        private String img;
+        private String sex;
+        private String hx_username;
+        private String id;
+        private String my_follow;
+        private String follow_my;
+
+        public String getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(String user_id) {
+            this.user_id = user_id;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public String getHx_username() {
+            return hx_username;
+        }
+
+        public void setHx_username(String hx_username) {
+            this.hx_username = hx_username;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getMy_follow() {
+            return my_follow;
+        }
+
+        public void setMy_follow(String my_follow) {
+            this.my_follow = my_follow;
+        }
+
+        public String getFollow_my() {
+            return follow_my;
+        }
+
+        public void setFollow_my(String follow_my) {
+            this.follow_my = follow_my;
+        }
+    }
+}
+

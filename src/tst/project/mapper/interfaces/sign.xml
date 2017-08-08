@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.SignDao">
+	<select id="getMonthSigns" parameterType="signBean" resultType="signBean">
+		select * from tst_member_sign
+		where member_id=#{member_id} and create_time like concat('%',#{create_time},'%')
+		order by create_time asc
+	</select>
+	<insert id='insertSign' parameterType="signBean" keyProperty="sign_id" useGeneratedKeys="true">
+		insert into tst_member_sign
+		(member_id,create_time,sign_continuity_count_month,sign_total_count_month,sign_integral)
+		values
+		(#{member_id},#{create_time},#{sign_continuity_count_month},#{sign_total_count_month},#{sign_integral})
+	</insert>
+	
+	<select id="getMonthSignStatistics" parameterType="signBean" resultType="signStatisticsBean">
+			select sum(sign_integral) as sign_integral ,
+		Max(sign_total_count_month) as sign_total_count_month,
+		(select  sign_continuity_count_month from tst_member_sign
+		where member_id=108 and create_time like concat('%',#{create_time},'%') 
+		order by create_time desc limit 0,1) as sign_continuity_count_month from tst_member_sign
+		where member_id=#{member_id} and create_time like concat('%',#{create_time},'%')
+	</select>
+	<select id="getSignToday" parameterType="signBean" resultType="signBean">
+		select * from tst_member_sign
+		where member_id=#{member_id} and create_time=#{create_time}
+	</select>
+	
+	<select id="getSigns" parameterType="signBean" resultType="signBean">
+		select * from tst_member_sign
+		where member_id=#{member_id} 
+		order by create_time asc
+	</select>
+</mapper>

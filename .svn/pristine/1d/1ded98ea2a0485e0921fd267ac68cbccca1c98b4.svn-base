@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             xmlns:dou361="http://schemas.android.com/apk/res-auto">
+    <!--android:foreground="@drawable/grey_ripple"-->
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"/>
+    <!--<com.dou361.customui.ui.RatioLayout-->
+        <!--dou361:ratio="1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+    <!--</com.dou361.customui.ui.RatioLayout>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/live_gradient_bg"
+        android:gravity="bottom">
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:paddingBottom="5dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:text="Tom"
+            android:textColor="@color/placeholder"/>
+
+        <TextView
+            android:id="@+id/audience_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="5dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:text="1 person"
+            android:textColor="@color/placeholder"
+            />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

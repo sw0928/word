@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/root"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarNormal"
+        app:navigationIcon="@mipmap/ic_arrow_back"
+        app:titleTextColor="#fff"
+        >
+
+        <TextView
+            style="@style/TitleNormal"
+            android:gravity="center_horizontal"
+            android:text="个人中心"
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.dou361.customui.ui.RatioLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:ratio="1.78">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.hyphenate.easeui.widget.EaseImageView
+                    android:id="@+id/eiv_anchor"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/live_avatar_girl01"
+                    app:ease_border_color="#fff"
+                    app:ease_border_width="1dp"
+                    app:ease_shape_type="round"/>
+
+                <TextView
+                    android:id="@+id/tv_nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/eiv_anchor"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/global_margin_small"
+                    android:singleLine="true"
+                    android:text="live"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/global_text_size_big"/>
+            </RelativeLayout>
+        </com.dou361.customui.ui.RatioLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/global_height_mid"
+            android:layout_marginLeft="@dimen/global_margin_mid"
+            android:layout_marginRight="@dimen/global_margin_mid"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                android:text="昵称"
+                android:textSize="@dimen/global_text_size_mid"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgColor_divier"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/global_height_mid"
+            android:layout_marginLeft="@dimen/global_margin_mid"
+            android:layout_marginRight="@dimen/global_margin_mid"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                android:text="个性签名"
+                android:textSize="@dimen/global_text_size_mid"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgColor_divier"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/global_height_mid"
+            android:layout_marginLeft="@dimen/global_margin_mid"
+            android:layout_marginRight="@dimen/global_margin_mid"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                android:text="性别"
+                android:textSize="@dimen/global_text_size_mid"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgColor_divier"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/global_height_mid"
+            android:layout_marginLeft="@dimen/global_margin_mid"
+            android:layout_marginRight="@dimen/global_margin_mid"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:singleLine="true"
+                android:text="邮箱"
+                android:textSize="@dimen/global_text_size_mid"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bgColor_divier"/>
+    </LinearLayout>
+
+</LinearLayout>

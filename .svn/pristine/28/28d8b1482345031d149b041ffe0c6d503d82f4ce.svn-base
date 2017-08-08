@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="4dp"
+              android:orientation="vertical">
+
+    <!--礼物动画-->
+    <tts.project.livek.ui.widget.LiveLeftGiftView
+        android:id="@+id/left_gift_view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:visibility="invisible"/>
+
+    <!--礼物动画-->
+    <tts.project.livek.ui.widget.LiveLeftGiftView
+        android:id="@+id/left_gift_view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:visibility="invisible"/>
+</LinearLayout>

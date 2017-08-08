@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/comment_image"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:src="@drawable/liaotian"
+            />
+        <RelativeLayout
+            android:id="@+id/rl_present"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/present_image"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/liwu"
+            />
+        <ImageView
+            android:visibility="gone"
+
+            android:id="@+id/sorrow_img"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/up_sorrow"
+            />
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/screenshot_image"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_toLeftOf="@id/rl_present"
+            android:src="@drawable/fenxiang"/>
+
+        <FrameLayout
+            android:layout_marginRight="@dimen/x20"
+            android:layout_toLeftOf="@id/screenshot_image"
+            android:id="@+id/fl_chat"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:layout_centerVertical="true"
+            >
+
+            <ImageView
+                android:id="@+id/chat_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/sixin"
+                />
+
+            <ImageView
+                android:id="@+id/new_messages_warn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="6dp"
+                android:src="@mipmap/live_warn_messages"
+                android:visibility="invisible"
+                />
+        </FrameLayout>
+
+        <ImageView
+            android:layout_marginRight="@dimen/x20"
+            android:layout_toLeftOf="@id/fl_chat"
+            android:id="@+id/dian_zan"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:src="@drawable/dianzan"
+            />
+        <ImageButton
+            android:id="@+id/img_bt_switch_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/fl_chat"
+            android:background="@drawable/live_voice_selector"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/img_bt_switch_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/img_bt_switch_voice"
+            android:background="@drawable/live_light_switch_bg"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+</LinearLayout>

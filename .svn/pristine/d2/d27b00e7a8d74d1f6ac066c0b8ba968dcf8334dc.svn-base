@@ -1,0 +1,26 @@
+package tts.project.livek.ui.holder;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import tts.project.livek.R;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class SearchItemHolder extends BaseViewHolder<String> {
+    ImageView avatarView;
+    TextView usernameView;
+
+    public SearchItemHolder(Context mContext, OnItemClickRecyclerListener listener, View itemView) {
+        super(mContext, listener, itemView);
+        avatarView = (ImageView) itemView.findViewById(R.id.avatar);
+        usernameView = (TextView) itemView.findViewById(R.id.username);
+    }
+
+    @Override
+    public void refreshView() {
+        String username = (String) getData();
+        usernameView.setText(username + "");
+    }
+}

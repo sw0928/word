@@ -1,0 +1,79 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootview"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--房间标题栏-->
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/live_bar_room_title"/>
+        <tts.project.livek.ui.widget.VerticalSeek
+            android:thumb="@drawable/thumb_seekbar"
+            android:visibility="invisible"
+            android:layout_marginLeft="@dimen/x30"
+            android:id="@+id/beautyLevel_seekBar"
+            android:layout_width="@dimen/x70"
+            android:layout_centerVertical="true"
+            android:layout_height="@dimen/y600"
+            android:max="100"
+            android:progress="30"/>
+        <!--房间聊天布局-->
+        <tts.project.livek.ui.widget.RoomMessagesView
+            android:id="@+id/message_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y450"
+            android:layout_alignParentBottom="true"
+            android:visibility="visible"/>
+
+        <!--弹幕布局-->
+        <tts.project.livek.ui.widget.BarrageLayout
+            android:id="@+id/barrage_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/message_view"
+            android:layout_marginBottom="10dp"/>
+
+        <!--视频点赞布局-->
+        <tts.project.livek.ui.widget.PeriscopeLayout
+            android:id="@+id/periscope_layout"
+            android:layout_width="150dp"
+            android:layout_height="190dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="42dp"/>
+
+        <!--礼物布局-->
+        <tts.project.livek.ui.widget.GiftLayout
+            android:id="@+id/gift_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"/>
+
+        <!--底部操作面板-->
+        <include
+            android:id="@+id/bottom_bar"
+            layout="@layout/live_bar_room_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="visible"/>
+
+        <!--私聊面板-->
+        <RelativeLayout
+            android:id="@+id/message_container"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+
+</LinearLayout>
+

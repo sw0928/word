@@ -1,0 +1,33 @@
+package tts.project.livek.ui.activity;
+
+
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
+
+import com.dou361.baseutils.utils.SystemUtils;
+
+import butterknife.BindView;
+import tts.project.livek.R;
+
+public class AboutActivity extends BaseActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.tv_version_name)
+    TextView tv_version_name;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_about);
+
+        tv_version_name.setText(SystemUtils.getVersionName());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+}

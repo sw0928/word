@@ -1,0 +1,15 @@
+package tts.project.livek.ui.activity;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.HeadImageBean;
+import tts.project.livek.ui.config.StatusConfig;
+import tts.project.livek.ui.fragment.ChatFragment;
+
+public class ChatActivity extends BaseActivity {
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_chat);
+        HeadImageBean.ListBean  anchorBean = (HeadImageBean.ListBean ) getIntent().getSerializableExtra(StatusConfig.ARG_ANCHOR);
+        getSupportFragmentManager().beginTransaction().add(R.id.root, ChatFragment.newInstance(anchorBean, true)).commit();
+    }
+}

@@ -1,0 +1,113 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/19.
+ */
+
+public class HuanXinDetailsBean {
+
+    /**
+     * user_id : 1
+     * username : 残月
+     * img : http://fkdc1.tstmobile.com/public/admin/touxiang.png
+     *    "sex": "2",
+     "hx_username": "2f56r8gabafz",
+     "my_follow": "4",
+     "follow_my": "1"
+     */
+
+
+    private String is_follow;
+    private String ID;
+
+    public String getIs_follow() {
+        return is_follow;
+    }
+
+    public void setIs_follow(String is_follow) {
+        this.is_follow = is_follow;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    private String content;
+    private String sex;
+    private String follow_my;
+    private String my_follow;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getFollow_my() {
+        return follow_my;
+    }
+
+    public void setFollow_my(String follow_my) {
+        this.follow_my = follow_my;
+    }
+
+    public String getMy_follow() {
+        return my_follow;
+    }
+
+    public void setMy_follow(String my_follow) {
+        this.my_follow = my_follow;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    private String hx_username;
+
+    public String getHx_username() {
+        return hx_username;
+    }
+
+    public void setHx_username(String hx_username) {
+        this.hx_username = hx_username;
+    }
+
+    private String user_id;
+    private String username;
+    private String img;
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+}

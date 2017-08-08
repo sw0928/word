@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/id_dir_item_image"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/y200"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/photopick_pictures_selected"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/y200"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_toRightOf="@id/id_dir_item_image">
+
+        <TextView
+            android:id="@+id/id_dir_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="所有图片"
+            android:textSize="@dimen/y20" />
+
+        <TextView
+            android:id="@+id/id_dir_item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:textColor="#444"
+            android:textSize="@dimen/y16" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="@dimen/x18"
+        android:layout_height="@dimen/y28"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/x20"
+        android:background="@drawable/next" />
+</RelativeLayout>

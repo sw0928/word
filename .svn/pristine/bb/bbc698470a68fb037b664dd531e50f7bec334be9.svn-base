@@ -1,0 +1,16 @@
+package tts.project.livek.ui.adapter;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
+
+/**
+ * Created by lenove on 2016/12/22.
+ */
+
+public abstract class BaseRecycleViewAdapter<T>  extends BaseQuickAdapter<T,BaseViewHolder>{
+    public BaseRecycleViewAdapter(int layoutResId, List<T> data) {
+        super(layoutResId, data);
+    }
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.OthersDao">
+	<select id="getHtml" parameterType="htmlBean" resultType="htmlBean">
+		select * from tst_system_html
+		where is_delete='0' and html_id=#{html_code}
+	</select>
+	
+	<select id="getHtmls" parameterType="htmlBean" resultType="htmlBean">
+		select * from tst_system_html
+		where is_delete='0' and parent_id=#{parent_id}
+	</select>
+	
+	<select id="getHXSetting" parameterType="hxSettingBean" resultType="hxSettingBean">
+		select * from tst_system_huanxin
+		limit 0,1
+ 	</select>
+	
+	<select id="getQrcodeSetting" parameterType="qrcodeBean" resultType="qrcodeBean">
+		select * from tst_system_qrcode
+		where qrcode_type=#{qrcode_type}
+	</select>
+
+	<select id="getHtmlStyle" parameterType="htmlStyleBean" resultType="htmlStyleBean">
+		select * from tst_system_html_style 
+		where is_delete='0' and style_type=#{style_type}
+	</select>
+	<select id="getPingSetting" parameterType="pingSettingBean" resultType="pingSettingBean">
+		select * from tst_system_ping
+		where ping_type=#{ping_type}
+	</select>
+
+	<select id="getHost" parameterType="hostBean" resultType="hostBean">
+		select * from tst_host_url
+		where host_type=#{host_type}
+	</select>
+	
+	<select id="getWXSeting" parameterType="wxSetingBean" resultType="wxSetingBean">
+		select * from tst_system_weixin
+		where weixin_type=#{weixin_type}
+	</select>
+	<select id='getPercent' parameterType="percentBean" resultType="percentBean">
+		select * from tst_percent
+		where percent_type=#{percent_type}
+		and is_delete='0'
+	</select>
+	<select id='getPercents' parameterType="percentBean" resultType="percentBean">
+		select * from tst_percent
+		where
+		FIND_IN_SET(percent_type,#{percent_type})
+		and is_delete='0'
+	</select>
+	
+	<select id="getGroupSystemMsgs" resultType="msgBean">
+	   select "团购提醒" as msg_title,
+	   concat("团购商品'",d.goods_name,"'人数已满") as msg_desc,
+	   "group" as msg_type,
+	   a.group_buy_id as relation_id,
+	   a.create_time
+	   from tst_group_buy as a
+		inner join tst_group_buy_member as b
+		on a.member_group_buy_id=b.member_group_buy_id
+		inner join tst_group_buy_goods as c
+		on b.goods_group_buy_id=c.goods_group_buy_id
+		and CONVERT(b.group_buy_now_people,DOUBLE)>=CONVERT(c.group_buy_need_people,DOUBLE)
+		inner join tst_goods as d 
+		on c.goods_id=d.goods_id
+		where a.member_id=#{member_id} and a.group_buy_state='wait_send'
+	</select>
+	
+	<select id="getPreSystemMsgs" resultType="msgBean">
+	   select "预售提醒" as msg_title,
+	   concat("预售商品'",b.goods_name,"'已到发货时间") as msg_desc,
+	   "pre" as msg_type,
+	   a.order_id as relation_id,
+	   b.send_goods_time
+	   from tst_order as a
+	   inner join tst_order_goods as b
+	   on a.order_id=b.order_id and b.is_pre_sale='1'
+	   where a.member_id=#{member_id}
+	</select>
+</mapper>

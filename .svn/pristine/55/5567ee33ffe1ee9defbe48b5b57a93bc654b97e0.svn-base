@@ -1,0 +1,76 @@
+{
+  "name": "react-native-image-picker",
+  "description": "A React Native module that allows you to use native UI to select media from the device library or directly from the camera",
+  "version": "0.19.3",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcshilling/react-native-image-picker.git"
+  },
+  "nativePackage": true,
+  "author": {
+    "name": "Marc Shilling",
+    "url": "marcshilling"
+  },
+  "contributors": [
+    {
+      "name": "Matheus Santos",
+      "email": "vorj.dux@gmail.com"
+    },
+    {
+      "name": "Yoann Fuks",
+      "email": "yfuks@student.42.fr"
+    }
+  ],
+  "keywords": [
+    "react-native",
+    "react-native-image-picker",
+    "react",
+    "native",
+    "image",
+    "picker"
+  ],
+  "gitHead": "606782d7a6dee9aa42785ea703989b6adcc8871d",
+  "bugs": {
+    "url": "https://github.com/marcshilling/react-native-image-picker/issues"
+  },
+  "homepage": "https://github.com/marcshilling/react-native-image-picker#readme",
+  "_id": "react-native-image-picker@0.19.3",
+  "scripts": {},
+  "_shasum": "c978b6b9448da75bcbe40668acaedc3fd53acaf9",
+  "_from": "react-native-image-picker@latest",
+  "_npmVersion": "2.14.20",
+  "_nodeVersion": "4.4.1",
+  "_npmUser": {
+    "name": "yfuks",
+    "email": "yoannfuks@hotmail.fr"
+  },
+  "dist": {
+    "shasum": "c978b6b9448da75bcbe40668acaedc3fd53acaf9",
+    "size": 169189,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/react-native-image-picker/download/react-native-image-picker-0.19.3.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "marcshilling",
+      "email": "marcshilling@gmail.com"
+    },
+    {
+      "name": "vorjdux",
+      "email": "vorj.dux@gmail.com"
+    },
+    {
+      "name": "yfuks",
+      "email": "yoannfuks@hotmail.fr"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-native-image-picker-0.19.3.tgz_1465825568552_0.18218662543222308"
+  },
+  "directories": {},
+  "publish_time": 1465825571388,
+  "_cnpm_publish_time": 1465825571388,
+  "_resolved": "https://registry.npm.taobao.org/react-native-image-picker/download/react-native-image-picker-0.19.3.tgz"
+}

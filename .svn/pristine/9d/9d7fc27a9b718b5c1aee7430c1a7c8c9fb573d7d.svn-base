@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="tst.project.bean.goods.ShoppingCarMemberBean" alias="shoppingCarMemberBean" />
+		<typeAlias type="tst.project.bean.goods.ShoppingCarShareBean" alias="shoppingCarShareBean" />
+		<typeAlias type="tst.project.bean.wx.WXMenuBean" alias="wxMenuBean" />
+		<typeAlias type="tst.project.bean.order.OrderActivityBean" alias="orderActivityBean" />
+		<typeAlias type="tst.project.bean.activity.ExemptBean" alias="exemptBean" />
+		<typeAlias type="tst.project.bean.activity.HalfBean" alias="halfBean" />
+		<typeAlias type="tst.project.bean.goods.TimingGoodsBean" alias="timingGoodsBean" />
+		<typeAlias type="tst.project.bean.member.MessageBean" alias="messageBean" />
+		<typeAlias type="tst.project.bean.others.HtmlBean" alias="htmlBean" />
+		<typeAlias type="tst.project.bean.order.LogisticsDetailBean" alias="logisticsDetailBean" />
+		<typeAlias type="tst.project.bean.address.SinceBean" alias="sinceBean" />	
+		<typeAlias type="tst.project.bean.address.CityBean" alias="cityBean" />	
+		<typeAlias type="tst.project.bean.hx.HXSettingBean" alias="hxSettingBean" />	
+		<typeAlias type="tst.project.bean.merchants.TrustItemBean" alias="trustItemBean" />	
+		<typeAlias type="tst.project.bean.merchants.TrustBean" alias="trustBean" />	
+		<typeAlias type="tst.project.bean.member.BillBean" alias="billBean" />
+	
+		<typeAlias type="tst.project.bean.merchants.MerchantsDescImgBean" alias="merchantsDescImgBean" />
+		<typeAlias type="tst.project.bean.picture.PictureBean" alias="pictureBean" />
+		<typeAlias type="tst.project.bean.picture.PictureImgBean" alias="pictureImgBean" />
+		<typeAlias type="tst.project.bean.picture.PictureVoteBean" alias="pictureVoteBean" />
+		<typeAlias type="tst.project.bean.banner.ClassBannerBean" alias="classBannerBean" />
+	
+		<typeAlias type="tst.project.bean.order.OrderSWBean" alias="orderSWBean" />
+		<typeAlias type="tst.project.bean.member.IntegralBean" alias="integralBean" />
+		<typeAlias type="tst.project.bean.goods.TagBean" alias="goodsTagBean" />
+		<typeAlias type="tst.project.bean.order.InviseBean" alias="inviseBean" />
+		<typeAlias type="tst.project.bean.others.SearchBean" alias="hotSearchBean" />
+		<typeAlias type="tst.project.bean.others.QrcodeBean" alias="qrcodeBean" />
+		<typeAlias type="tst.project.bean.home.OthersBean" alias="homeOthersBean" />
+		<typeAlias type="tst.project.bean.information.InformationImgBean" alias="informationImgBean" />
+		<typeAlias type="tst.project.bean.order.OrderLineBean" alias="orderLineBean" />
+		<typeAlias type="tst.project.bean.order.LogisticsBean" alias="logisticsBean" />
+		<typeAlias type="tst.project.bean.order.OrderProfitBean" alias="orderProfitBean" />
+	
+		<typeAlias type="tst.project.bean.HostBean" alias="hostBean" />
+		<typeAlias type="tst.project.bean.order.PingSettingBean" alias="pingSettingBean" />
+		<typeAlias type="tst.project.bean.others.HtmlStyleBean" alias="htmlStyleBean" />
+	
+		<typeAlias type="tst.project.bean.goods.GoodsRelationClassBean" alias="goodsRelationClassBean" />
+		<typeAlias type="tst.project.bean.finance.ProfitBean" alias="profitBean" />
+		<typeAlias type="tst.project.bean.order.BusinessProfitBean" alias="businessProfitBean" />
+		<typeAlias type="tst.project.bean.goods.CardBean" alias="cardBean" />
+	
+		<typeAlias type="tst.project.bean.system.ListTypeBean" alias="listTypeBean" />
+		<typeAlias type="tst.project.bean.finance.CashApplyBean" alias="cashApplyBean" />
+
+		<typeAlias type="tst.project.bean.system.DetailBean" alias="detailBean" />
+	    <typeAlias type="tst.project.bean.system.ListBean" alias="listBean" />
+		<typeAlias type="tst.project.bean.system.MoudleBean" alias="moudleBean" />
+		<typeAlias type="tst.project.bean.system.RoleBean" alias="roleBean" />
+		<typeAlias type="tst.project.bean.merchants.MerchantsBean" alias="merchantsBean" />
+		<typeAlias type="tst.project.bean.merchants.MerchantsAccountBean" alias="merchantsAccountBean" />
+		<typeAlias type="tst.project.bean.merchants.MerchantsImgBean" alias="merchantsImgBean" />	
+		<typeAlias type="tst.project.bean.merchants.QualificationBean" alias="qualificationBean" />			
+		<typeAlias type="tst.project.bean.merchants.MerchantsLabelBean" alias="merchantsLabelBean" />
+		<typeAlias type="tst.project.bean.merchants.LabelQualificationBean" alias="labelQualificationBean" />
+		
+		<typeAlias type="tst.project.bean.goods.GoodsClassBean" alias="goodsClassBean" />
+		<typeAlias type="tst.project.bean.goods.StoreHouseBean" alias="storehouseBean" />
+		<typeAlias type="tst.project.bean.goods.GoodsBean" alias="goodsBean" />
+		<typeAlias type="tst.project.bean.goods.GoodsImgBean" alias="goodsImgBean" />
+		<typeAlias type="tst.project.bean.goods.GoodsParameterBean" alias="goodsParameterBean" />
+		<typeAlias type="tst.project.bean.goods.GoodsServiceBean" alias="goodsServiceBean" />
+		<typeAlias type="tst.project.bean.goods.BrandBean" alias="brandBean" />
+		<typeAlias type="tst.project.bean.goods.BrandPackageBean" alias="brandPackageBean" />
+		<typeAlias type="tst.project.bean.goods.BrandPackageImgBean" alias="brandPackageImgBean" />
+		<typeAlias type="tst.project.bean.goods.BrandPackageGoodsBean" alias="brandPackageGoodsBean" />
+		
+		<typeAlias type="tst.project.bean.banner.BannerBean" alias="bannerBean" />
+		<typeAlias type="tst.project.bean.goods.GoodsLabelBean" alias="goodsLabelBean" />
+		<typeAlias type="tst.project.bean.goods.ShoppingCarBean" alias="shoppingCarBean" />
+		<typeAlias type="tst.project.bean.goods.ShoppingCarMerchantsBean" alias="shoppingCarMerchantsBean" />
+		
+		<typeAlias type="tst.project.bean.others.CodeBean" alias="codeBean" />
+		<typeAlias type="tst.project.bean.member.MemberBean" alias="memberBean"/>
+		
+		<typeAlias type="tst.project.bean.address.RegionBean" alias="regionBean"/>
+		<typeAlias type="tst.project.bean.address.AddressBean" alias="addressBean"/>
+		<typeAlias type="tst.project.bean.collection.CollectionBean" alias="collectionBean"/>
+		<typeAlias type="tst.project.bean.member.CouponBean" alias="couponBean"/>
+		<typeAlias type="tst.project.bean.member.SignBean" alias="signBean"/>
+		<typeAlias type="tst.project.bean.member.SignStatisticsBean" alias="signStatisticsBean"/>
+		<typeAlias type="tst.project.bean.member.ShareBean" alias="shareBean"/>
+		<typeAlias type="tst.project.bean.member.BankBean" alias="bankBean"/>
+		
+		<typeAlias type="tst.project.bean.goods.BusinessGoodsBean" alias="businessGoodsBean"/>
+		<typeAlias type="tst.project.bean.goods.StandardBean" alias="standardBean"/>
+		
+		<typeAlias type="tst.project.bean.activity.GiftBean" alias="giftBean"/>
+		<typeAlias type="tst.project.bean.activity.ReduceBean" alias="reduceBean"/>
+		<typeAlias type="tst.project.bean.activity.ActivityBean" alias="activityBean"/>
+		<typeAlias type="tst.project.bean.activity.GiveBean" alias="giveBean"/>
+		<typeAlias type="tst.project.bean.activity.PromotionBean" alias="promotionBean"/>
+		<typeAlias type="tst.project.bean.activity.PromotionGoodsBean" alias="promotionGoodsBean"/>
+		<typeAlias type="tst.project.bean.activity.GroupBuyGoodsBean" alias="groupBuyGoodsBean"/>
+		<typeAlias type="tst.project.bean.activity.GroupBuyMemberBean" alias="groupBuyMemberBean"/>
+		<typeAlias type="tst.project.bean.activity.GroupBuyBean" alias="groupBuyBean"/>
+		
+		<typeAlias type="tst.project.bean.order.OrderBean" alias="orderBean"/>
+		<typeAlias type="tst.project.bean.order.OrderMerchantsBean" alias="orderMerchantsBean"/>
+		<typeAlias type="tst.project.bean.order.OrderGoodsBean" alias="orderGoodsBean"/>
+		<typeAlias type="tst.project.bean.order.OrderParameterBean" alias="orderParameterBean"/>
+		<typeAlias type="tst.project.bean.order.OrderServiceBean" alias="orderServiceBean"/>
+		<typeAlias type="tst.project.bean.order.AssessmentBean" alias="assessmentBean"/>
+		<typeAlias type="tst.project.bean.order.AssessmentImgBean" alias="assessmentImgBean"/>		
+		<typeAlias type="tst.project.bean.order.RefundImgBean" alias="refundImgBean"/>		
+		<typeAlias type="tst.project.bean.order.RefundBean" alias="refundBean"/>		
+		<typeAlias type="tst.project.bean.order.RefundReasonBean" alias="refundReasonBean"/>		
+		
+		<typeAlias type="tst.project.bean.recipe.RecipeBean" alias="recipeBean"/>		
+		<typeAlias type="tst.project.bean.recipe.RecipeImgBean" alias="recipeImgBean"/>		
+		<typeAlias type="tst.project.bean.recipe.RecipeFoodBean" alias="recipeFoodBean"/>		
+		
+		<typeAlias type="tst.project.bean.wx.WXSetingBean" alias="wxSetingBean"/>
+		<typeAlias type="tst.project.bean.others.VerificationBean" alias="verificationBean"/>		
+		<typeAlias type="tst.project.bean.others.AdviceBean" alias="adviceBean"/>		
+		<typeAlias type="tst.project.bean.others.AdviceImgBean" alias="adviceImgBean"/>		
+		<typeAlias type="tst.project.bean.others.MsgBean" alias="msgBean"/>
+		<typeAlias type="tst.project.bean.others.PercentBean" alias="percentBean"/>
+		<typeAlias type="tst.project.bean.home.LabelBean" alias="homeLabelBean"/>		
+		<typeAlias type="tst.project.bean.home.ActivityBean" alias="homeActivityBean"/>		
+		<typeAlias type="tst.project.bean.home.HomeGoodsBean" alias="homeGoodsBean"/>		
+		<typeAlias type="tst.project.bean.goods.SSPClassBean" alias="sspClassBean"/>
+		
+		<typeAlias type="tst.project.bean.distribution.DistributionBean" alias="distributionBean"/>
+		<typeAlias type="tst.project.bean.distribution.TotalDistributionBean" alias="totalDistributionBean"/>
+		
+		<typeAlias type="tst.project.bean.information.InformationBean" alias="informationBean"/>
+		<typeAlias type="tst.project.bean.activity.NewsBean" alias="newsBean"/>
+		<typeAlias type="tst.project.bean.activity.AlbumBean" alias="albumBean"/>
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="tst.project.page.MySqlPagingInterceptor">
+		</plugin>
+	</plugins>
+	<mappers>
+		<!-- controller -->
+		<mapper resource="tst/project/mapper/controller/system.xml" />	
+		<mapper resource="tst/project/mapper/controller/merchants.xml" />	
+		<mapper resource="tst/project/mapper/controller/goods.xml" />
+		<mapper resource="tst/project/mapper/controller/goods2.xml" />		
+		<mapper resource="tst/project/mapper/controller/banner.xml" />	
+		<mapper resource="tst/project/mapper/controller/activity.xml" />	
+		<mapper resource="tst/project/mapper/controller/order.xml" />	
+		<mapper resource="tst/project/mapper/controller/member.xml" />	
+		<mapper resource="tst/project/mapper/controller/shopping_car.xml" />	
+		<mapper resource="tst/project/mapper/controller/recipe.xml" />
+		<mapper resource="tst/project/mapper/controller/finance.xml" />
+		<mapper resource="tst/project/mapper/controller/others.xml" />	
+		<mapper resource="tst/project/mapper/controller/coupon.xml" />			
+		<mapper resource="tst/project/mapper/controller/assessment.xml" />
+		<mapper resource="tst/project/mapper/controller/distribution.xml" />
+		<mapper resource="tst/project/mapper/controller/information.xml" />
+		<mapper resource="tst/project/mapper/controller/sw.xml" />
+		<!-- interfaces -->
+		<mapper resource="tst/project/mapper/interfaces/picture.xml" />
+		<mapper resource="tst/project/mapper/interfaces/distribution.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/banner.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/goods2.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/goods.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/code.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/member.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/address.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/shopping_car.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/collection.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/coupon.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/activity.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/order.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/merchants.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/recipe.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/advice.xml" />
+		<mapper resource="tst/project/mapper/interfaces/hbr.xml" />	
+		<mapper resource="tst/project/mapper/interfaces/others.xml" />
+		<mapper resource="tst/project/mapper/interfaces/zssg.xml" />
+		<mapper resource="tst/project/mapper/interfaces/sign.xml" />
+		<mapper resource="tst/project/mapper/interfaces/integral_shop.xml" />
+		<mapper resource="tst/project/mapper/interfaces/information.xml" />
+		<mapper resource="tst/project/mapper/interfaces/sw.xml" />
+		<mapper resource="tst/project/mapper/interfaces/ranking.xml" />
+		<mapper resource="tst/project/mapper/interfaces/bank.xml" />
+	</mappers>
+</configuration>
+

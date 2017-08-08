@@ -1,0 +1,61 @@
+package tts.project.livek.ui.fragment;
+
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.dou361.baseutils.utils.UIUtils;
+
+import butterknife.BindView;
+import tts.project.livek.R;
+import tts.project.livek.module.TestRoomLiveRepository;
+import tts.project.livek.ui.adapter.HotAdapter;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+import tts.project.livek.ui.widget.GridMarginDecoration;
+
+public class HotLiveFragment extends BaseFragment implements OnItemClickRecyclerListener, SwipeRefreshLayout.OnRefreshListener {
+
+    @BindView(R.id.sfl_refresh)
+    SwipeRefreshLayout sfl_refresh;
+    @BindView(R.id.recycleview)
+    RecyclerView recyclerView;
+
+    @Override
+    public View initView(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_live_hot, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new GridMarginDecoration(6));
+        HotAdapter adapter = new HotAdapter(getActivity(), TestRoomLiveRepository.getLiveRoomList());
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+        sfl_refresh.setOnRefreshListener(this);
+
+    }
+
+    @Override
+    public void onItemClick(View view, int postion) {
+//        startActivity(PlayerLiveActivity.class, TestRoomLiveRepository.getLiveRoomList().get(postion));
+    }
+
+    @Override
+    public void onRefresh() {
+        sfl_refresh.setRefreshing(true);
+        UIUtils.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sfl_refresh.setRefreshing(false);
+            }
+        }, 1000);
+
+    }
+}

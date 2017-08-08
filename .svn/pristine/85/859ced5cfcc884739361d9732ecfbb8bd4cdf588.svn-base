@@ -1,0 +1,39 @@
+package tts.project.livek.ui.adapter;
+
+import android.view.View;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.AttentionBean;
+
+
+/**
+ * Created by wql on 2016/10/10.
+ */
+
+public class AttentionListAdapter2 extends BaseQuickAdapter<AttentionBean, BaseViewHolder> {
+    public AttentionListAdapter2(int layoutResId, List<AttentionBean> data) {
+        super(layoutResId, data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder baseViewHolder,AttentionBean goodsBean) {
+        Glide.with(mContext).load(goodsBean.getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) baseViewHolder.getView(R.id.item_attention_icon));
+        baseViewHolder.setText(R.id.item_attention_nickname, goodsBean.getUsername());
+        baseViewHolder.setText(R.id.item_attention_money,goodsBean.getAutograph().toString());
+        ImageView into=baseViewHolder.getView(R.id.item_attention_into);
+        into.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+}

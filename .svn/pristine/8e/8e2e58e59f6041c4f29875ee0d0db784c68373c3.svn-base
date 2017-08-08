@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:background="@color/activity_background"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include layout="@layout/toolbar_item" />
+    
+    <RelativeLayout
+        android:id="@+id/personal_activity_icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y140"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/touxiang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="头像"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+
+        <tts.moudle.api.widget.CircleImageView
+            android:id="@+id/personal_activity_my_icon"
+            android:scaleType="centerInside"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x60"
+             />
+        <ImageView
+            android:layout_width="@dimen/y16"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x32"
+            android:src="@drawable/tiaozhuan" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1" />
+
+    <RelativeLayout
+        android:id="@+id/rl_personal_id"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="ID"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+        <TextView
+            android:layout_marginRight="@dimen/x60"
+            android:layout_alignParentRight="true"
+            android:id="@+id/personal_activity_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/RGB_909090"
+            android:textSize="@dimen/y28" />
+        <!--<Button-->
+            <!--android:id="@+id/personal_activity_copy"-->
+            <!--android:layout_width="@dimen/y120"-->
+            <!--android:layout_height="@dimen/y60"-->
+            <!--android:background="@drawable/btn_weixiu_renzheng_bg"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="复制"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:src="@drawable/tiaozhuan" />-->
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1" />
+    <RelativeLayout
+        android:id="@+id/rl_personal_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/nicheng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="昵称"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+        <ImageView
+            android:layout_width="@dimen/y16"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x32"
+            android:src="@drawable/tiaozhuan" />
+        <TextView
+            android:gravity="right"
+            android:background="@null"
+            android:layout_marginRight="@dimen/x55"
+            android:layout_alignParentRight="true"
+            android:id="@+id/personal_activity_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/RGB_909090"
+            android:textSize="@dimen/y28" />
+        <!--<Button-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="@dimen/y120"-->
+            <!--android:layout_height="@dimen/y60"-->
+            <!--android:background="@drawable/btn_weixiu_renzheng_bg"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="复制"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:src="@drawable/tiaozhuan" />-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1" />
+    <RelativeLayout
+        android:id="@+id/personal_sex_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/xingbie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="性别"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+        <ImageView
+            android:layout_width="@dimen/y16"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x32"
+            android:src="@drawable/tiaozhuan" />
+        <TextView
+            android:gravity="right"
+            android:layout_marginRight="@dimen/x55"
+            android:layout_alignParentRight="true"
+            android:id="@+id/personal_activity_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="未设置"
+            android:textColor="@color/RGB_909090"
+            android:textSize="@dimen/y28" />
+        <!--<Button-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="@dimen/y120"-->
+            <!--android:layout_height="@dimen/y60"-->
+            <!--android:background="@drawable/btn_weixiu_renzheng_bg"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="复制"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:src="@drawable/tiaozhuan" />-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1" />
+    <RelativeLayout
+        android:id="@+id/personalactivity_location_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="生日"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+        <TextView
+            android:gravity="right"
+            android:layout_marginRight="@dimen/x55"
+            android:layout_alignParentRight="true"
+            android:id="@+id/personal_activity_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="未设置"
+            android:textColor="@color/RGB_909090"
+            android:textSize="@dimen/y28" />
+        <ImageView
+            android:layout_width="@dimen/y16"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x32"
+            android:layout_centerVertical="true"
+            android:src="@drawable/tiaozhuan" />
+        <!--<Button-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="@dimen/y120"-->
+            <!--android:layout_height="@dimen/y60"-->
+            <!--android:background="@drawable/btn_weixiu_renzheng_bg"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="复制"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x20"-->
+            <!--android:src="@drawable/tiaozhuan" />-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1" />
+    <RelativeLayout
+        android:id="@+id/personal_activity_rl_autograph"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/qianming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:text="签名"
+            android:textColor="@color/RGB_323232"
+            android:textSize="@dimen/y28" />
+        <TextView
+            android:gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x55"
+            android:maxLines="1"
+            android:maxLength="7"
+            android:id="@+id/personal_activity_autograph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/RGB_909090"
+            android:textSize="@dimen/y28" />
+
+        <ImageView
+            android:layout_width="@dimen/y16"
+            android:layout_height="@dimen/y28"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x32"
+            android:src="@drawable/tiaozhuan" />
+    </RelativeLayout>
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.RecipeDao">
+	<select id="getOneRecipeDetail" parameterType="recipeBean" resultType="recipeBean">
+		select * from tst_recipe
+		where is_delete='0' and recipe_id=#{recipe_id}
+	</select>
+	<select id="getRecipes" parameterType="recipeBean" resultType="recipeBean">
+		select * from tst_recipe
+		where is_delete='0'
+		<if test=' parent_id != null and parent_id != "" '>
+			and parent_id=#{parent_id}		
+		</if>
+		<if test=' parent_id == null or parent_id=="" '>
+			and parent_id != "-1"
+		</if>
+		order by sort asc
+	</select>
+	
+	<select id="getRecipeImgs" parameterType="recipeImgBean" resultType="recipeImgBean">
+		select * from tst_recipe_img
+		where recipe_id=#{recipe_id}
+		and is_delete='0'
+	</select>
+	
+	<select id="getRecipeFoods" parameterType="recipeFoodBean" resultType="recipeFoodBean">
+		select * from tst_recipe_food
+		where recipe_id=#{recipe_id}
+		and is_delete='0' and parent_id=#{parent_id}
+	</select>
+</mapper>

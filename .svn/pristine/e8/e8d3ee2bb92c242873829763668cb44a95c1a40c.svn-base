@@ -1,0 +1,154 @@
+package tts.project.livek.ui.dialog;
+
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.dou361.baseutils.utils.UIUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import tts.moudle.api.widget.CircleImageView;
+import tts.project.livek.R;
+import tts.project.livek.bean.HeadImageBean;
+import tts.project.livek.ui.config.StatusConfig;
+import tts.project.livek.ui.fragment.ChatFragment;
+import tts.project.livek.ui.listener.OnATUserListener;
+
+public class RoomUserDetailsDialog extends DialogFragment {
+
+    Unbinder unbinder;
+    @BindView(R.id.icon)
+    CircleImageView eiv_avatar;
+    @BindView(R.id.jubao)
+    TextView jubao;
+    @BindView(R.id.lahei)
+    TextView lahei;
+    @BindView(R.id.nickname)
+    TextView nickname;
+    @BindView(R.id.ID)
+    TextView ID;
+     @BindView(R.id.didian)
+    TextView didian;
+    @BindView(R.id.gongsi)
+    TextView gongsi;
+    @BindView(R.id.autograph)
+    TextView autograph;
+
+    @BindView(R.id.guanzhu_count)
+    TextView guanzhu_count;
+    @BindView(R.id.fans_count)
+    TextView fans_count;
+    @BindView(R.id.songli_count)
+    TextView songli_count;
+    @BindView(R.id.shouli_count)
+    TextView shouli_count;
+
+    @BindView(R.id.guanzhu)
+    TextView guanzhu;
+    @BindView(R.id.ai_te)
+    TextView ai_te;
+    @BindView(R.id.talk_private)
+    TextView talk_private;
+
+
+
+    private HeadImageBean.ListBean anchorBean;
+
+    public static RoomUserDetailsDialog newInstance(HeadImageBean.ListBean anchorBean) {
+        RoomUserDetailsDialog dialog = new RoomUserDetailsDialog();
+        Bundle args = new Bundle();
+        args.putSerializable(StatusConfig.ARG_ANCHOR, anchorBean);
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.others_detail_content, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getArguments() != null) {
+            anchorBean = (HeadImageBean.ListBean) getArguments().getSerializable(StatusConfig.ARG_ANCHOR);
+        }
+        if (anchorBean != null) {
+            nickname.setText(anchorBean.getUsername());
+            Glide.with(UIUtils.getContext())
+                    .load(anchorBean.getImg())
+                    .placeholder(R.drawable.ease_default_avatar)
+                    .into(eiv_avatar);
+        }
+        ai_te.setText("@TA");
+    }
+
+    @OnClick({R.id.talk_private, R.id.ai_te, R.id.guanzhu})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.talk_private:
+                ChatFragment fragment = ChatFragment.newInstance(anchorBean, false);
+                dismiss();
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.message_container, fragment).commit();
+                break;
+            case R.id.ai_te:
+//                if (dialogListener != null) {
+//                    dialogListener.onATClick(anchorBean.getName());
+//                }
+                break;
+            case R.id.guanzhu:
+                // 关注
+
+                break;
+        }
+    }
+
+    private OnATUserListener dialogListener;
+
+    public void setOnATUserListener(OnATUserListener dialogListener) {
+        this.dialogListener = dialogListener;
+    }
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
+        // Dialog dialog = new Dialog(getActivity());
+        Dialog dialog = new Dialog(getActivity(), R.style.room_user_details_dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
+        dialog.setContentView(R.layout.dialog_room_user_details);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        // 设置宽度为屏宽、靠近屏幕底部。
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(wlp);
+        return dialog;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+}

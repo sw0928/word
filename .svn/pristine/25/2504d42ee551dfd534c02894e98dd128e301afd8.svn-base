@@ -1,0 +1,5 @@
+package tts.project.livek.ui.listener;
+
+public interface OnATUserListener {
+    void onATClick(String username);
+}

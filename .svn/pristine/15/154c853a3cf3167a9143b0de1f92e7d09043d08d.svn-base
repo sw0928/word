@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.HBRDao">
+
+	<select id="getMemberByStore" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where stored_code=#{stored_code} and is_delete='0'
+	</select>
+	
+	<select id="getMemberStoredRecord" parameterType="billBean" resultType="billBean">
+		select order_actual_price as bill_price,
+		"stored_order_pay" as bill_type,create_time as bill_time
+		,"储值卡订单支付" as bill_remark from tst_order
+		where pay_way='stored' and member_id=#{member_id}
+		and FIND_IN_SET(order_state,'wait_send,wait_receive,wait_assessment,end')
+		union
+		select order_actual_price as bill_price,
+		"stored_recharge" as bill_type,create_time as bill_time
+		,"储值卡充值" as bill_remark from tst_order
+		where order_source_way='recharge' and member_id=#{member_id}
+		and FIND_IN_SET(order_state,'wait_send,wait_receive,wait_assessment,end')
+	</select>
+	
+	<update id="bindMemberStored" parameterType="memberBean" >
+		update tst_member
+		set stored_code=#{stored_code}
+		where member_id=#{member_id}
+	</update>
+
+	<insert id="insertMemberShare" parameterType="shareBean" keyProperty="member_share_id" useGeneratedKeys="true">
+		insert into tst_member_share
+		(goods_id,member_id,share_integral,create_time)
+		values
+		(#{goods_id},#{member_id},#{share_integral},now())
+	</insert>
+
+	<select id="getMemberShareByMemberIDAndGoodsID" parameterType="shareBean" resultType="shareBean">
+		select * from tst_member_share
+		where member_id=#{member_id} and goods_id=#{goods_id}
+	</select>
+	
+	<select id="getShareGoodss" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods where is_delete='0'
+		and goods_state='1' and is_share='1'
+	</select>
+	
+	<select id="getHomeGoods" parameterType="homeGoodsBean" resultType="homeGoodsBean">
+		select a.home_goods_id,a.parent_id,a.create_time
+		,a.is_delete,a.goods_img,a.sort,a.goods_name,b.goods_id
+		 from tst_home_goods as a
+		left join tst_goods as b 
+		on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		where a.parent_id=#{parent_id} and a.is_delete='0' 
+		order by a.sort asc
+	</select>
+	
+	<select id="getHomeClasss" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='1' and is_delete='0' and goods_state='1'
+		and parent_id='-1' and is_recommend='1'
+		order by sort asc
+	</select>
+	<select id="getHomeClasss2" parameterType="goodsClassBean" resultType="goodsClassBean">
+		select * from tst_goods_class
+		where is_delete='0' and class_state='1'
+		and parent_id='-1' and is_recommend='1'
+		order by sort asc
+	</select>
+	<select id="getHomeLabels" parameterType="homeLabelBean" resultType="homeLabelBean">
+		select * from tst_home_label
+		where is_delete='0'
+		order by sort asc
+	</select>
+	
+	<select id="getHomeActivitys" parameterType="homeActivityBean" resultType="homeActivityBean">
+		select * from tst_home_activity
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+</mapper>

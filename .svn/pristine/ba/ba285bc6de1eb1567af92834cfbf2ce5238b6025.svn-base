@@ -1,0 +1,54 @@
+package tts.project.livek.ui.dialog;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import tts.project.livek.R;
+
+public class ScreenshotDialog extends Dialog {
+
+    @BindView(R.id.imageview)
+    ImageView imageView;
+
+    private Bitmap bitmap;
+
+    public ScreenshotDialog(Context context, Bitmap bitmap) {
+        super(context);
+        this.bitmap = bitmap;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.dialog_screenshot);
+        ButterKnife.bind(this);
+        setCanceledOnTouchOutside(false);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    @OnClick({R.id.btn_share, R.id.btn_cancel})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_share:
+                break;
+            case R.id.btn_cancel:
+                if (bitmap != null) {
+                    bitmap.recycle();
+                    bitmap = null;
+                }
+                dismiss();
+                break;
+        }
+    }
+}

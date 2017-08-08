@@ -1,0 +1,206 @@
+package tts.project.livek.ui.activity;
+
+
+import android.app.Activity;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.pingplusplus.android.Pingpp;
+import com.pingplusplus.android.PingppLog;
+
+import java.util.HashMap;
+import java.util.List;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.ChargeListBean;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.ui.adapter.CharListviewAdapter;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+
+public class ChargeActivity extends BaseActivity implements View.OnClickListener {
+
+    public static final int DATA = 0;
+    public static final int PAY =1;
+    private TextView count;
+    private GridView gridView;
+    private ImageView wx_pay;
+    private ImageView alipay;
+    private ImageView charge_now;
+    private boolean isAlipay;
+    private UserBean userBean;
+    private List<ChargeListBean.ListBean> list;
+    private String dimend_count;
+    private LinearLayout parentview;
+    private String money;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.activity_charge);
+        money = getIntent().getStringExtra(Constant.MONEY);
+        dimend_count = getIntent().getStringExtra(Constant.DIMEND_COUNT);
+        findAllViews();
+//        MenuItemBean menuItemBean = new MenuItemBean();
+//        menuItemBean.setType("2");
+//        menuItemBean.setTitle("充值记录");
+//        addMenu(menuItemBean);
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+//         popUtils = new ProgressPopUtils(new PopupWindow(ChargeActivity.this),this);
+        startRequestData(DATA);
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+    }
+
+
+    private void findAllViews() {
+        count = (TextView) findViewById(R.id.count);
+        if (!TextUtils.isEmpty(money)){
+            count.setText(money);
+        }
+
+        if (!TextUtils.isEmpty(dimend_count)){
+            count.setText(dimend_count);
+        }
+        parentview = (LinearLayout) findViewById(R.id.activity_charge);
+        alipay = (ImageView) findViewById(R.id.alipay);
+        wx_pay = (ImageView) findViewById(R.id.wx_pay);
+        charge_now = (ImageView) findViewById(R.id.charge_now);
+        gridView = (GridView) findViewById(R.id.gridview);
+        charge_now.setOnClickListener(this);
+        wx_pay.setOnClickListener(this);
+        alipay.setOnClickListener(this);
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        HashMap<String, String> map = new HashMap<>();
+        switch (index) {
+            case DATA:
+                map.put("uid",userBean.getUser_id());
+                map.put("token",userBean.getToken());
+                getDataWithPost(DATA, Host.hostUrl+"&c=User&a=price_list",map);
+                break;
+            case PAY:
+//                uid	int	Y
+//                token	string	Y
+//                type	string	Y		支付方式，wx(微信)、alipay(支付宝)
+//                price_list_id	int	Y		价格列表id
+                map.put("uid",userBean.getUser_id());
+                map.put("token",userBean.getToken());
+                if (isAlipay){
+                    map.put("type","alipay");
+                }else{
+
+                    map.put("type","wx");
+                }
+                map.put("price_list_id",list.get(mPosition).getPrice_list_id());
+                getDataWithPost(PAY, Host.hostUrl+"&c=Pingxx&a=ping",map);
+                break;
+        }
+    }
+    private int mPosition=0;
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case DATA:
+                ChargeListBean chargeListBean = new Gson().fromJson(response, ChargeListBean.class);
+                 list = chargeListBean.getList();
+                list.get(0).setChecked(true);
+                final CharListviewAdapter adapter = new CharListviewAdapter(this.list, this);
+                gridView.setAdapter(adapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mPosition=position;
+                        for (int i = 0; i< ChargeActivity.this.list.size(); i++){
+                            if (i==position){
+                                ChargeActivity.this.list.get(i).setChecked(true);
+                            }else{
+                                ChargeActivity.this.list.get(i).setChecked(false);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                break;
+            case PAY:
+                // 支付成功
+//                ToastUtils.show(this,"支付成功");
+                PingppLog.DEBUG = true;
+                Pingpp.createPayment(ChargeActivity.this, response);
+                break;
+        }
+    }
+
+    @Override
+    protected void doFailed(int what, int index, String response) {
+        super.doFailed(what, index, response);
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //支付页面返回处理
+        if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getExtras().getString("pay_result");
+            /* 处理返回值
+             * "success" - 支付成功
+             * "fail"    - 支付失败
+             * "cancel"  - 取消支付
+             *
+             * "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+             */
+                if (result.equals("success")){
+                    // 支付成功
+                    setResult(RESULT_OK);
+                    finish();
+                }else if (result.equals("fail")){
+                    ToastUtils.show(this,"支付失败");
+                }else if (result.equals("cancel")){
+                    ToastUtils.show(this,"取消支付");
+                }else if (result.equals("invalid")){
+                    ToastUtils.show(this,"请先安装微信客户端");
+                }
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
+                Logger.e(result+errorMsg+extraMsg);
+            }
+        }
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.charge_now:
+                startRequestData(PAY);
+                break;
+            case R.id.alipay:
+                wx_pay.setImageResource(R.drawable.wx_normal);
+                alipay.setImageResource(R.drawable.alipay_select);
+                isAlipay=true;
+                break;
+            case R.id.wx_pay:
+                wx_pay.setImageResource(R.drawable.wx_select);
+                alipay.setImageResource(R.drawable.alipay_normal);
+                isAlipay=false;
+                break;
+        }
+    }
+}

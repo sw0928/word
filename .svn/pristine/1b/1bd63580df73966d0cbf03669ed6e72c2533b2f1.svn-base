@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <tts.moudle.api.widget.CircleImageView
+        android:id="@+id/wanghong_img"
+        android:layout_width="@dimen/x140"
+        android:layout_height="@dimen/x140"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y120" />
+
+    <TextView
+        android:id="@+id/wanghong_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y40"
+        android:text="冲田杏梨"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y35" />
+
+    <TextView
+        android:id="@+id/live_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y50"
+        android:text="直播已结束"
+        android:textColor="#cd1939"
+        android:textSize="@dimen/y45" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y90"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/watch_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="直播已结束"
+            android:textColor="#cd1939"
+            android:textSize="@dimen/y30" />
+
+        <TextView
+            android:id="@+id/midou_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="直播已结束"
+            android:textColor="#cd1939"
+            android:textSize="@dimen/y30" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="人看过"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y30" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="秘豆"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y30" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y60"
+        android:gravity="center"
+        android:text="分享至"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y28" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginRight="@dimen/x100"
+        android:layout_marginLeft="@dimen/x100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/pengyouquan"
+            android:layout_gravity="left"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:src="@drawable/pengyouquan" />
+
+        <ImageView
+            android:id="@+id/qq"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:src="@drawable/qq" />
+
+        <ImageView
+            android:id="@+id/weibo"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:src="@drawable/weibo" />
+
+        <ImageView
+            android:id="@+id/weixin"
+            android:layout_gravity="right"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:src="@drawable/weixin" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/back_to_home"
+        android:layout_marginTop="@dimen/y40"
+        android:background="@drawable/back_to_shouye"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="返回首页"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/y45"
+        />
+    <TextView
+        android:id="@+id/delete_video"
+        android:textSize="@dimen/y28"
+        android:layout_marginTop="@dimen/y70"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除视频"
+        android:layout_gravity="center_horizontal"
+        />
+</LinearLayout>

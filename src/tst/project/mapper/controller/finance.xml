@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.FinanceDao">
+
+	<select id="getCashApplys" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select * from tst_cash_apply
+		where merchants_id=#{merchants_id}
+		<if test=' merchants_account_id != null and merchants_account_id != 0 and merchants_account_id != -1 '>
+			and merchants_account_id=#{merchants_account_id}
+		</if>
+	</select>
+	
+	<insert id="applyCash" parameterType="cashApplyBean">
+		insert into tst_cash_apply
+		(merchants_id,cash_time,cash_price,brank_name,brank_code,brank_open_name,brank_open_usr
+		,brank_open_mobile,apply_state,create_time,cash_type,merchants_account_id)
+		values
+		(#{merchants_id},#{cash_time},#{cash_price},#{brank_name},#{brank_code},#{brank_open_name},#{brank_open_usr}
+		,#{brank_open_mobile},'wait_review',now(),#{cash_type},#{merchants_account_id})
+	</insert>
+	
+	<select id="getOneApply" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select * from tst_cash_apply
+		where cash_id=#{cash_id}
+	</select>
+
+	<update id="updateApplyState" parameterType="cashApplyBean">
+		update tst_cash_apply
+		set apply_state=#{apply_state}
+		where cash_id=#{cash_id}
+	</update>
+	
+	<select id="getAllCashApplys" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select a.*,b.merchants_name,
+		(case when a.apply_state='wait_review' then "等待审核"
+		when a.apply_state='accept' then "通过"
+		when a.apply_state='refuse' then "拒绝"
+		else "已打款" end) as apply_state_show
+		from tst_cash_apply as a
+		left join tst_merchants as b 
+		on a.merchants_id=b.merchants_id
+		where 1=1 
+		<if test=' merchants_id != null and merchants_id != "" '>
+			and b.merchants_id = #{merchants_id}
+		</if>
+		
+		<if test=' merchants_name != null and merchants_name != "" '>
+			and b.merchants_name like concat('%',#{merchants_name},'%')
+		</if>
+		
+		<if test=' apply_state != null and apply_state != "" '>
+			and #{apply_state} like  concat('%',a.apply_state,'%')  
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time >= #{start_time}
+		</if>
+		
+		<if test=' end_time != null and end_time != "" '>
+			and  #{end_time} >= a.create_time
+		</if>
+		order by a.create_time desc
+	</select>
+	
+	
+	<select id="getAllCashApplysMemberZSSG" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select a.*,b.user_name as merchants_name,
+		(case 
+		when a.apply_state='wait_review' then "等待审核"
+		when a.apply_state='accept' then "通过"
+		when a.apply_state='refuse' then "拒绝"
+		else "已打款" end) as apply_state_show
+		from tst_cash_apply as a
+		inner join ecs_users as b 
+		on a.merchants_id=b.user_id
+		where 1=1 and cash_type='member'
+		
+		<if test=' merchants_name != null and merchants_name != "" '>
+			and b.user_name like concat('%',#{user_name},'%')
+		</if>
+		
+		<if test=' apply_state != null and apply_state != "" '>
+			and #{apply_state} like  concat('%',a.apply_state,'%')  
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time >= #{start_time}
+		</if>
+		
+		<if test=' end_time != null and end_time != "" '>
+			and  #{end_time} >= a.create_time
+		</if>
+		
+		order by a.create_time desc
+	</select>
+	
+	
+	<select id="getAllCashApplysMember" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select a.*,b.nick_name as merchants_name,
+		(case 
+		when a.apply_state='wait_review' then "等待审核"
+		when a.apply_state='accept' then "通过"
+		when a.apply_state='refuse' then "拒绝"
+		else "已打款" end) as apply_state_show
+		from tst_cash_apply as a
+		inner join tst_member as b 
+		on a.merchants_id=b.member_id
+		where 1=1 and cash_type='member'
+		<if test=' merchants_name != null and merchants_name != "" '>
+			and b.nick_name like concat('%',#{merchants_name},'%')
+		</if>
+		
+		<if test=' apply_state != null and apply_state != "" '>
+			and #{apply_state} like  concat('%',a.apply_state,'%')  
+		</if>
+		
+		<if test=' start_time != null and start_time != "" '>
+			and a.create_time >= #{start_time}
+		</if>
+		<if test=' end_time != null and end_time != "" '>
+			and  #{end_time} >= a.create_time
+		</if>
+		order by a.create_time desc
+	</select>
+</mapper>

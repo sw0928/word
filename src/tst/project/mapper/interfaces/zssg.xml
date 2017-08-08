@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.ZSSGDao">
+
+	<select id="getUnDistributions1" parameterType="memberBean" resultType="distributionBean">
+		select  user_name,user_id,
+			head_path as user_img,'vip1' as distribution_relation,
+			create_time,
+			(select percent_value from tst_percent where percent_type='svip')*(select percent_value from tst_percent where percent_type='vip1')/100 as distribution_price
+		from ecs_users
+		where fill_invitation_code=#{invitation_code} and (now() > FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+		order by create_time desc
+	</select>
+	
+	<select id="getUnDistributionsCount1" parameterType="memberBean" resultType="float">
+		select ( case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip1')/100) 
+		is null then 0 else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip1')/100)  end)
+		as total_price
+		from ecs_users
+		where fill_invitation_code=#{invitation_code} and (now() >  FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s') or indate is null or indate ='' )
+	</select>
+	<select id="getUnDistributionsCount2" parameterType="memberBean" resultType="float">
+		select (case when sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		) is null then 0  else sum(
+		(select percent_value from tst_percent where percent_type='svip')
+		*(select percent_value from tst_percent where percent_type='vip2')/100
+		)  end) as total_price
+		from ecs_users as a
+		inner join ecs_users as b on a.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where a.fill_invitation_code=#{invitation_code} 
+	</select>
+	
+	<select id="getUnDistributions2" parameterType="memberBean" resultType="distributionBean">
+		select * from(
+		select  b.user_name,b.user_id,
+		b.head_path as user_img,'vip2' as distribution_relation,
+		b.create_time,
+		(select percent_value from tst_percent where percent_type='svip')*(select percent_value from tst_percent where percent_type='vip2')/100 as distribution_price
+		from ecs_users as a
+		inner join ecs_users as b on a.invitation_code=b.fill_invitation_code and (now() > FROM_UNIXTIME(b.indate,'%Y-%m-%d %h:%i:%s') or b.indate is null or b.indate ='' )
+		where a.fill_invitation_code=#{invitation_code}
+		) as a
+		order by a.create_time desc
+	</select>
+
+	<select id="getApplyCashs" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select * from tst_cash_apply
+		where merchants_id=#{merchants_id}
+	</select>
+	
+	<insert id="applyCash" parameterType="cashApplyBean">
+		insert into tst_cash_apply
+		(merchants_id,cash_time,cash_price,brank_name,brank_code,brank_open_name,brank_open_usr
+		,brank_open_mobile,apply_state,create_time,cash_type)
+		values
+		(#{merchants_id},#{cash_time},#{cash_price},#{brank_name},#{brank_code},#{brank_open_name},#{brank_open_usr}
+		,#{brank_open_mobile},'wait_review',now(),#{cash_type})
+	</insert>
+	
+	<select id="getDistributions" parameterType="distributionBean" resultType="distributionBean">
+		select a.*,b.nick_name as user_name,b.head_path as user_img from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id} 
+		<if test=' distribution_relation != null and distribution_relation != "" '>
+			and distribution_relation=#{distribution_relation}
+		</if>	
+		order by a.create_time desc	
+	</select>
+
+
+	<select id="getDistributionsCount" parameterType="distributionBean" resultType="float">
+		select (case when sum(distribution_price) is null then 0 else sum(distribution_price) end) as total_price 
+		from tst_distribution as a 
+		inner join ecs_users as b on a.user_id=b.user_id
+		where a.member_id=#{member_id}
+		<if test=' distribution_relation != null and distribution_relation != "" '>
+			and distribution_relation=#{distribution_relation}
+		</if>	
+	</select>
+	
+	<select id="getCardDetail" parameterType="cardBean" resultType="cardBean">
+		select * from tst_distribution_card
+		where card_code=#{card_code} and is_delete='0'
+	</select>
+	<update id="updateCardState" parameterType="distributionBean" >
+		update tst_distribution_card
+		set is_used='1',member_id=#{member_id}
+		where card_code=#{card_code}
+	</update>
+	<insert id='insertDistribution' parameterType="distributionBean">
+		insert into tst_distribution
+		(member_id,order_id,distribution_relation,distribution_price,distribution_percent,create_time,distribution_type,user_id)
+		values
+		(#{member_id},#{order_id},#{distribution_relation},#{distribution_price},#{distribution_percent},now(),#{distribution_type},#{user_id})
+	</insert>
+	
+	<select id="getOrderDetail" parameterType="orderBean" resultType="orderBean">
+		select * from tst_order
+		where order_no=#{order_no}
+	</select>
+	
+	<insert id="insertOrder" parameterType="orderBean" useGeneratedKeys="true" keyProperty="order_id">
+		insert into tst_order(member_id,order_no,order_type,order_state,order_total_price,valid_time)
+		values(#{member_id},#{order_no},"zssg",'wait_pay',(select percent_value from tst_percent where percent_type='svip'),(select percent_value from tst_percent where percent_type='svip_day'))
+	</insert>
+	
+	<update id="payOrder" parameterType="orderBean">
+		update tst_order set order_state='end'
+		where order_no=#{order_no}
+	</update>
+</mapper>

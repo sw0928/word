@@ -1,0 +1,48 @@
+package tts.project.livek.ui.holder;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.hyphenate.easeui.widget.EaseImageView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tts.project.livek.R;
+import tts.project.livek.bean.LiveRoom;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class HotItemHolder extends BaseViewHolder<LiveRoom> {
+
+    @BindView(R.id.avatar)
+    EaseImageView avatar;
+    @BindView(R.id.photo)
+    ImageView imageView;
+    @BindView(R.id.author)
+    TextView anchor;
+    @BindView(R.id.audience_num)
+    TextView audienceNum;
+    private LiveRoom liveRoom;
+
+    public HotItemHolder(Context mContext, OnItemClickRecyclerListener listener, View itemView) {
+        super(mContext, listener, itemView);
+        ButterKnife.bind(this, itemView);
+    }
+
+    @Override
+    public void refreshView() {
+        liveRoom = getData();
+        anchor.setText(liveRoom.getName());
+        audienceNum.setText(liveRoom.getAudienceNum() + "人");
+        Glide.with(mContext)
+                .load(liveRoom.getAvatar())
+                .placeholder(R.color.placeholder)
+                .into(avatar);
+        Glide.with(mContext)
+                .load(liveRoom.getCover())
+                .placeholder(R.color.placeholder)
+                .into(imageView);
+    }
+}

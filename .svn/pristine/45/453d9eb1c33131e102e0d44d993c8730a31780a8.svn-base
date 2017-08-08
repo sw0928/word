@@ -1,0 +1,98 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="height_top_bar">46dp</dimen>
+    <dimen name="padding_search_bar">5dp</dimen>
+    <dimen name="height_row_weixin">59dp</dimen>
+    <dimen name="size_avatar">50dp</dimen>
+    <dimen name="margin_chat_activity">5dp</dimen>
+    <dimen name="field_textsize">14sp</dimen>
+    <dimen name="field_margin_right">5dp</dimen>
+    <dimen name="call_button_padding_vertical">10dp</dimen>
+    <dimen name="call_button_padding_left">25dp</dimen>
+    <dimen name="call_button_padding_right">25dp</dimen>
+    <dimen name="sidebar_text_size">10dp</dimen>
+    <dimen name="image_thumbnail_size">100dp</dimen>
+    <dimen name="image_thumbnail_spacing">1dp</dimen>
+
+    <dimen name="zero_dimen">0dp</dimen>
+    <dimen name="one_half_dimen">0.5dp</dimen>
+    <dimen name="one_dimen">1dp</dimen>
+    <dimen name="two_dimen">2dp</dimen>
+    <dimen name="three_dimen">3dp</dimen>
+    <dimen name="four_dimen">4dp</dimen>
+    <dimen name="five_dimen">5dp</dimen>
+    <dimen name="six_dimen">6dp</dimen>
+    <dimen name="seven_dimen">7dp</dimen>
+    <dimen name="eight_dimen">8dp</dimen>
+    <dimen name="nine_dimen">9dp</dimen>
+    <dimen name="ten_dimen">10dp</dimen>
+    <dimen name="eleven_dimen">11dp</dimen>
+    <dimen name="twelve_dimen">12dp</dimen>
+    <dimen name="thirteen_dimen">13dp</dimen>
+    <dimen name="fourteen_dimen">14dp</dimen>
+    <dimen name="fifteen_dimen">15dp</dimen>
+    <dimen name="sixteen_dimen">16dp</dimen>
+    <dimen name="seventeen_dimen">17dp</dimen>
+    <dimen name="eighteen_dimen">18dp</dimen>
+    <dimen name="nineteen_dimen">19dp</dimen>
+    <dimen name="twenty_dimen">20dp</dimen>
+    <dimen name="twenty_one_dimen">21dp</dimen>
+    <dimen name="twenty_two_dimen">22dp</dimen>
+    <dimen name="twenty_three_dimen">23dp</dimen>
+    <dimen name="twenty_four_dimen">24dp</dimen>
+    <dimen name="twenty_five_dimen">25dp</dimen>
+    <dimen name="thirty_dimen">30dp</dimen>
+    <dimen name="fourty_dimen">40dp</dimen>
+    <dimen name="fourty_add_five_dimen">45dp</dimen>
+    <dimen name="fifty_dimen">50dp</dimen>
+    <dimen name="sixty_dimen">60dp</dimen>
+    <dimen name="seventy_dimen">70dp</dimen>
+    <dimen name="eighty_dimen">80dp</dimen>
+    <dimen name="ninty_dimen">90dp</dimen>
+    <dimen name="one_hundred_dimen">100dp</dimen>
+    <dimen name="one_hundred_add_ten_dimen">110dp</dimen>
+    <dimen name="one_hundred_add_twenty_dimen">120dp</dimen>
+    <dimen name="one_hundred_add_thirty_dimen">130dp</dimen>
+    <dimen name="one_hundred_add_fourty_dimen">140dp</dimen>
+    <dimen name="one_hundred_add_fifty_dimen">150dp</dimen>
+    <dimen name="one_hundred_add_sixty_dimen">160dp</dimen>
+    <dimen name="one_hundred_add_seventy_dimen">170dp</dimen>
+    <dimen name="one_hundred_add_eighty_dimen">180dp</dimen>
+    <dimen name="one_hundred_add_ninty_dimen">190dp</dimen>
+    <dimen name="two_hundred_dimen">200dp</dimen>
+
+
+
+
+    <dimen name="zero_sp">0sp</dimen>
+    <dimen name="one_sp">1sp</dimen>
+    <dimen name="two_sp">2sp</dimen>
+    <dimen name="three_sp">3sp</dimen>
+    <dimen name="four_sp">4sp</dimen>
+    <dimen name="five_sp">5sp</dimen>
+    <dimen name="six_sp">6sp</dimen>
+    <dimen name="seven_sp">7sp</dimen>
+    <dimen name="eight_sp">8sp</dimen>
+    <dimen name="nine_sp">9sp</dimen>
+    <dimen name="ten_sp">10sp</dimen>
+    <dimen name="eleven_sp">11sp</dimen>
+    <dimen name="twelve_sp">12sp</dimen>
+    <dimen name="thirteen_sp">13sp</dimen>
+    <dimen name="fourteen_sp">14sp</dimen>
+    <dimen name="fifteen_sp">15sp</dimen>
+    <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="seventeen_sp">17sp</dimen>
+    <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="nineteen_sp">19sp</dimen>
+    <dimen name="twenty_sp">20sp</dimen>
+    <dimen name="twenty_one_sp">21sp</dimen>
+    <dimen name="twenty_two_sp">22sp</dimen>
+    <dimen name="twenty_three_sp">23sp</dimen>
+    <dimen name="twenty_four_sp">24sp</dimen>
+    <dimen name="twenty_five_sp">25sp</dimen>
+
+</resources>

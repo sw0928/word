@@ -1,0 +1,113 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.GiftBeans;
+
+/**
+ * Created by zhangxutong on 2016/2/16.
+ */
+public class HomeClaseeGridViewAdapter extends BaseAdapter {
+    private List<GiftBeans.GiftBean> mDatas;
+    private LayoutInflater mLayoutInflater;
+    /**
+     * 页数下标,从0开始(通俗讲第几页)
+     */
+    private int mIndex;
+    /**
+     * 每页显示最大条目个数 ,默认是dimes.xml里 HomePageHeaderColumn 属性值的两倍(每页多少个图标)
+     */
+    private int mPageSize;
+
+    public HomeClaseeGridViewAdapter(Context context, List<GiftBeans.GiftBean> mDatas, int mIndex) {
+        this.mDatas = mDatas;
+        mLayoutInflater = LayoutInflater.from(context);
+        this.mIndex = mIndex;
+        mPageSize = 8;
+    }
+
+    /**
+     * 先判断数据集的大小是否足够显示满本页？mDatas.size() > (mIndex+1)*mPageSize,
+     * 如果够，则直接返回每一页显示的最大条目个数mPageSize,
+     * 如果不够，则有几项返回几,(mDatas.size() - mIndex * mPageSize);(说白了 最后一页就显示剩余item)
+     */
+    @Override
+    public int getCount() {
+        return mDatas.size() > (mIndex + 1) * mPageSize ? mPageSize : (mDatas.size() - mIndex * mPageSize);
+
+    }
+
+    @Override
+    public GiftBeans.GiftBean getItem(int position) {
+        return mDatas.get(position + mIndex * mPageSize);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position + mIndex * mPageSize;
+    }
+
+    @Override
+    public View getView(int position, View convertView, final ViewGroup parent) {
+//        Log.i("TAG", "position:" + position + "   :" + this);
+        ViewHolder vh = null;
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.item_gift_gridview, parent, false);
+            vh = new ViewHolder();
+            vh.xuanzhong = (ImageView) convertView.findViewById(R.id.xuanzhong);
+            vh.img = (ImageView) convertView.findViewById(R.id.img);
+
+            vh.rl_parentview= (RelativeLayout)convertView.findViewById(R.id.rl_parentview);
+            vh.count_price= (TextView)convertView.findViewById(R.id.count_price);
+            convertView.setTag(vh);
+        } else {
+            vh = (ViewHolder) convertView.getTag();
+        }
+        /**
+         * 在给View绑定显示的数据时，计算正确的position = position + mIndex * mPageSize，
+         */
+        final int pos = position + mIndex * mPageSize;
+        if (mDatas.get(pos).ischecked()){
+            vh.xuanzhong.setVisibility(View.VISIBLE);
+        }else{
+            vh.xuanzhong.setVisibility(View.GONE);
+        }
+        vh.count_price.setText(mDatas.get(pos).getPrice());
+        vh.rl_parentview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i=0;i<mDatas.size();i++){
+                    if (i==pos){
+                        mDatas.get(i).setIschecked(true);
+                    }else{
+                        mDatas.get(i).setIschecked(false);
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        });
+        Glide.with(parent.getContext()).load(mDatas.get(pos).getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into(vh.img);
+        return convertView;
+    }
+
+
+    class ViewHolder {
+        public ImageView xuanzhong;
+        public ImageView img;
+        public RelativeLayout rl_parentview;
+        public TextView count_price;
+    }
+}

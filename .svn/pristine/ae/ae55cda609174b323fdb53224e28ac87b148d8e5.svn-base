@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.CodeDao">
+	<select id="getVerificationSetting" parameterType="verificationBean" resultType="verificationBean">
+		select * from tst_verification_setting
+	</select>
+	<select id="getCodeBeanByMobile" resultType="codeBean">
+		select * from tst_verification_code where mobile=#{mobile} and code_type=#{code_type} 
+		and effective_time>#{create_time} and is_delete='0'
+		LIMIT 0,1
+	</select>
+	<select id="getCodeBeanByMobileAndCode" resultType="codeBean">
+		select * from tst_verification_code where mobile=#{mobile} and code=#{code} and code_type=#{code_type} and effective_time>#{create_time} and is_delete='0'
+		LIMIT 0,1
+	</select>
+	
+	<insert id="insertCode" parameterType="codeBean">
+		insert into tst_verification_code 
+		(mobile,code,code_type,code_desc,create_time,effective_time)
+		values(#{mobile},#{code},#{code_type},#{code_desc},#{create_time},#{effective_time})
+	</insert>
+	
+	<update id="deleteCodeByMobileAndCode" parameterType="codeBean">
+		update tst_verification_code set is_delete='1' where mobile=#{mobile} and code=#{code}
+	</update>
+</mapper>

@@ -1,0 +1,427 @@
+package tts.project.livek.ui.activity;
+
+import android.Manifest;
+import android.content.ClipboardManager;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArrayMap;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
+
+import java.io.File;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.activity.CustomPictureSelectorView;
+import tts.moudle.api.bean.BarBean;
+import tts.moudle.api.bean.ImgBean;
+import tts.moudle.api.bean.MenuItemBean;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.bean.UserCenterBean;
+import tts.project.livek.utils.BitmapUtils;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+import tts.project.livek.utils.ToastUtils;
+
+
+/**
+ * Created by lenove on 2016/9/8.
+ */
+public class PersonalDataActivity extends BaseActivity implements View.OnClickListener{
+
+    public static final int DATA=0;
+    public static final int UPDATE_PERSONAL_DATA=1;
+    public static final int AUTOGRAPH_DATA=1000;
+    public static final int UPLOAD_PICTURE=2;
+    public static final int READ_CONTACTS_REQUEST_CODE = 101;
+    public static final int GET_PATH=3;
+    public static final int NICKNAME_DATA=4;
+    private UserBean userBean;
+    private RelativeLayout mAddress;
+    private RelativeLayout mIcon;
+    private ImageView mPhoto;
+    private String path;
+    private TextView mId;
+    private TextView mAutograph;
+    private TextView mName;
+    private TextView mSex;
+    private TextView mProvince;
+    private Button mCopy;
+    private ClipboardManager manager;
+    private RelativeLayout mRl_Autograph;
+    private RelativeLayout mWangHongRenZheng;
+    private Bitmap bitmap;
+    private RelativeLayout mMy_Zxing;
+    private RelativeLayout mRoute;
+    private String provinces,citys,areas;
+    private RelativeLayout personal_sex_rl;
+    private RelativeLayout personalactivity_location_rl;
+    private String digits = "/\\:*?<>|\"\n\t;";
+    private UserCenterBean usercenterbean;
+    private TextView birthday;
+    private TextView touxiang;
+    private RelativeLayout rl_personal_nickname;
+    private String format;
+    private String autoGraph;
+    private String nickname;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.personaldata_activity);
+        usercenterbean = (UserCenterBean) getIntent().getSerializableExtra(Constant.USERCENTERBEAN);
+        findAllView();
+        initData();
+    }
+
+
+    private void initData() {
+        userBean = SpSingleInstance.getSpSingleInstance().getUserBean(this);
+        BarBean barBean = new BarBean();
+        barBean.setMsg("个人资料");
+        setTitle(barBean);
+        MenuItemBean menuItemBean = new MenuItemBean();
+        menuItemBean.setTitle("确定");
+        menuItemBean.setType("2");
+        addMenu(menuItemBean);
+        mSex.setOnClickListener(this);
+        mRl_Autograph.setOnClickListener(this);
+        mIcon.setOnClickListener(this);
+        if (usercenterbean==null){
+            return;
+        }
+        if (usercenterbean.getAge().equals("-1")){
+            birthday.setText("未设置");
+        }else {
+            birthday.setText(usercenterbean.getAge());
+        }
+
+        if (!TextUtils.isEmpty(usercenterbean.getImg())){
+            Glide.with(this).load(usercenterbean.getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into(mPhoto);
+        }
+        mId.setText(usercenterbean.getId());
+
+        if (usercenterbean.getAutograph()!=null){
+            mAutograph.setText(usercenterbean.getAutograph().toString());
+        }else {
+            mAutograph.setText("未设置");
+        }
+
+        mName.setText(usercenterbean.getUsername());
+
+        if (usercenterbean.getSex().equals("1")){
+            mSex.setText("男");
+        }else if(usercenterbean.getSex().equals("2")){
+            mSex.setText("女");
+        }else if(usercenterbean.getSex().equals("3")){
+            mSex.setText("男");
+        }else if(usercenterbean.getSex().equals("0")){
+            mSex.setText("男");
+        }
+
+
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    protected void doMenu(MenuItemBean menuItemBean) {
+        startRequestData(UPDATE_PERSONAL_DATA);
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (index){
+            case UPDATE_PERSONAL_DATA:
+//                uid	int	Y
+//                token	string	Y
+//                key	int	N		头像 不传或传空，不上传， 传1代表上传
+//                nickname	string	N		昵称
+//                sex	int	N		1：男 2：女
+//                autograph	string	N		个性签名（监理、评委简介）
+//                birth_day	date	N		生日
+//                tel	string	N		装修公司电话
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+
+                if (!TextUtils.isEmpty(mName.getText().toString())){
+                    if (!mName.getText().toString().equals(userBean.getUsername())){
+                        map.put("nickname", mName.getText().toString());
+                    }
+                }
+                if (!TextUtils.isEmpty(format)){
+                    map.put("birth_day",format);
+                }
+                if (!TextUtils.isEmpty(autoGraph)){
+                    map.put("autograph",autoGraph);
+                }
+
+                if (mSex.getText().equals("男")){
+                    map.put("sex","1");
+                }else if(mSex.getText().equals("女")){
+                    map.put("sex", "2");
+                }else{
+                    map.put("sex","1");
+                }
+                if (TextUtils.isEmpty(path)){
+                    getDataWithPost(UPDATE_PERSONAL_DATA, Host.hostUrl+"&c=User&a=edit_user",map);
+                }else{
+                    map.put("key","1");
+                    List<PostFormBuilder.FileInput> files=new ArrayList<>();
+                    File scal = BitmapUtils.scal(URI.create(path));
+                    files.add(new PostFormBuilder.FileInput("1","1.jpg",scal));
+                    uploadFile(UPDATE_PERSONAL_DATA, Host.hostUrl+"&c=User&a=edit_user",map,files);
+                }
+//                if (!TextUtils.isEmpty((String) mAutograph.getText())){
+//                    map.put("autograph",(String)mAutograph.getText());
+//                }
+//                if (!TextUtils.isEmpty((String) birthday.getText())){
+//                    map.put("birth_day",(String)birthday.getText());
+//                }
+
+                break;
+            case UPLOAD_PICTURE:
+//                try {
+//                    List<PostFormBuilder.FileInput> files=new ArrayList<>();
+//                    File file = BitmapUtils.saveFile(bitmap, path, "1.jpg");
+//                    files.add(new PostFormBuilder.FileInput("1","1.jpg",file));
+//                    map.put("uid", userBean.getUser_id());
+//                    map.put("token", userBean.getToken());
+//                    map.put("key", "1");
+//                    uploadFile(UPLOAD_PICTURE,Host.hostUrl+"&c=User&a=update_user",map,files);
+//                } catch (IOException e) {
+//
+//                }
+                List<PostFormBuilder.FileInput> files=new ArrayList<>();
+                File scal = BitmapUtils.scal(URI.create(path));
+                files.add(new PostFormBuilder.FileInput("1","1.jpg",scal));
+                    map.put("uid", userBean.getUser_id());
+                    map.put("token", userBean.getToken());
+                    map.put("key", "1");
+                    uploadFile(UPLOAD_PICTURE, Host.hostUrl+"&c=User&a=update_user",map,files);
+                break;
+            case GET_PATH:
+                List<PostFormBuilder.FileInput> files1=new ArrayList<>();
+                if (TextUtils.isEmpty(path)){
+                  return;
+                }
+                File scal1= BitmapUtils.scal(URI.create(path));
+                files1.add(new PostFormBuilder.FileInput("1","1.jpg",scal1));
+                map.put("uid", userBean.getUser_id());
+                map.put("token", userBean.getToken());
+                uploadFile(GET_PATH,"http://weixiu.tstmobile.com/api.php?m=Api&c=User&a=upload",map,files1);
+                break;
+        }
+    }
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case UPDATE_PERSONAL_DATA:
+                ToastUtils.show(this,"修改成功");
+                finish();
+                break;
+            case UPLOAD_PICTURE:
+                Logger.e(response);
+                break;
+        }
+    }
+
+    private void findAllView() {
+        birthday = (TextView) findViewById(R.id.personal_activity_birthday);
+        touxiang = (TextView)findViewById(R.id.touxiang);
+        TextView id =  (TextView)findViewById(R.id.id);
+        TextView nicheng = (TextView)findViewById(R.id.nicheng);
+        TextView xingbie = (TextView)findViewById(R.id.xingbie);
+        TextView birthday1 = (TextView)findViewById(R.id.birthday);
+        TextView qianming = (TextView)findViewById(R.id.qianming);
+
+        rl_personal_nickname = (RelativeLayout)findViewById(R.id.rl_personal_nickname);
+        personalactivity_location_rl = (RelativeLayout)findViewById(R.id.personalactivity_location_rl);
+        personalactivity_location_rl.setOnClickListener(this);
+        personal_sex_rl = (RelativeLayout)findViewById(R.id.personal_sex_rl);
+        personal_sex_rl.setOnClickListener(this);
+        mName=(TextView)findViewById(R.id.personal_activity_name);
+        mIcon = (RelativeLayout) findViewById(R.id.personal_activity_icon);
+        mRl_Autograph = (RelativeLayout) findViewById(R.id.personal_activity_rl_autograph);
+        mPhoto = (ImageView) findViewById(R.id.personal_activity_my_icon);
+        mId = (TextView) findViewById(R.id.personal_activity_id);
+        mAutograph = (TextView) findViewById(R.id.personal_activity_autograph);
+        mSex = (TextView) findViewById(R.id.personal_activity_sex);
+        findViewById(R.id.rl_personal_id).setOnClickListener(this);
+        rl_personal_nickname.setOnClickListener(this);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case READ_CONTACTS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // TODO 用户已经授予了权限
+                    startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+                } else {
+                    // TODO 用户拒绝授予权限
+                    ToastUtils.show(this,"获取权限失败");
+                }
+                break;
+        }
+
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.personal_activity_icon:
+                //  判断照相权限是否有
+                if (Build.VERSION.SDK_INT >= 23) {
+                    // 如果是大于6.0
+                    // 如果权限没有被授予
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                            PackageManager.PERMISSION_GRANTED) {
+                        // 申请权限
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, READ_CONTACTS_REQUEST_CODE);
+                    } else {
+                        // TODO 权限已经被授予
+                        startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+                    }
+                }else {
+                    // 如果小于6.0
+                    startActivityForResult(new Intent(this, CustomPictureSelectorView.class).putExtra("maxCount", 1), 1001);
+
+                }
+                break;
+            case R.id.personal_activity_rl_autograph:
+                Intent intent1 = new Intent(this, AutoGraphSetActivity.class);
+                if (usercenterbean!=null &&usercenterbean.getAutograph()!=null){
+                    intent1.putExtra(Constant.AUTOGRAPH,usercenterbean.getAutograph().toString());
+                }
+                startActivityForResult(intent1, AUTOGRAPH_DATA);
+                break;
+            case R.id.personal_activity_name:
+                break;
+            case R.id.personal_activity_sex:
+                break;
+            case R.id.personalactivity_location_rl:
+                TimePickerView tv=new TimePickerView(this, TimePickerView.Type.YEAR_MONTH_DAY);
+                tv.setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date) {
+                        if (date!=null){
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            format = simpleDateFormat.format(date);
+                            birthday.setText(format);
+                        }
+                    }
+                });
+                tv.show();
+//                new CityMoudle().showProvincePopupwindow(this, mProvince,2,new ProvinceSelectPopupwindow.OnClickListener() {
+//                    @Override
+//                    public void doClick(String province, String city, String area) {
+//                        provinces=province;
+//                        citys=city;
+//                        areas=area;
+//                        mProvince.setText(province+city+area);
+//                    }
+//                });
+                break;
+            case R.id.personal_sex_rl:
+                OptionsPickerView op=new OptionsPickerView(this);
+                final ArrayList<String> datas = new ArrayList<>();
+                datas.add("男");
+                datas.add("女");
+                op.setPicker(datas);
+                op.setCyclic(false);
+                op.setTitle("设置性别");
+                op.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int option2, int options3) {
+                        mSex.setText(datas.get(options1));
+                    }
+                });
+                op.show();
+                break;
+            case R.id.rl_personal_id:
+                ClipboardManager manager =  (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                manager.setText(mId.getText());
+                ToastUtils.show(this,"复制成功");
+                break;
+            case R.id.rl_personal_nickname:
+                Intent intent = new Intent(PersonalDataActivity.this, NicknameSetActivity.class);
+                if (usercenterbean!=null){
+                    intent.putExtra(Constant.NICKNAME,usercenterbean.getUsername());
+                }
+                startActivityForResult(intent, NICKNAME_DATA);
+                break;
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1001:
+                if (resultCode == RESULT_OK) {
+                    if (((List<ImgBean>) data.getSerializableExtra("imgBeans")).size()>0){
+                        ImgBean imgBean = ((List<ImgBean>) data.getSerializableExtra("imgBeans")).get(0);
+                        if (imgBean!=null){
+                            bitmap = BitmapFactory.decodeFile(imgBean.getPath());
+                            mPhoto.setImageBitmap(bitmap);
+                            path=imgBean.getPath();
+                        }
+                    }
+
+
+                }
+                break;
+            case AUTOGRAPH_DATA:
+                if (resultCode==RESULT_OK){
+                    autoGraph = data.getStringExtra(Constant.AUTOGRAPH);
+                    mAutograph.setText(autoGraph);
+                }
+                break;
+            case NICKNAME_DATA:
+                if (resultCode==RESULT_OK){
+                    nickname = data.getStringExtra(Constant.NICKNAME);
+                    mName.setText(nickname);
+                }
+                break;
+        }
+    }
+}

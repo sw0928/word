@@ -1,0 +1,62 @@
+package tts.project.livek.bean;
+
+/**
+ * Created by lenove on 2016/12/5.
+ */
+
+public class ChargeItemBean {
+
+    /**
+     * price_list_id : 1
+     * price : 1.00
+     * diamond : 10
+     * intime : 0
+     * uptime : null
+     */
+
+    private String price_list_id;
+    private String price;
+    private String diamond;
+    private String intime;
+    private Object uptime;
+
+    public String getPrice_list_id() {
+        return price_list_id;
+    }
+
+    public void setPrice_list_id(String price_list_id) {
+        this.price_list_id = price_list_id;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getDiamond() {
+        return diamond;
+    }
+
+    public void setDiamond(String diamond) {
+        this.diamond = diamond;
+    }
+
+    public String getIntime() {
+        return intime;
+    }
+
+    public void setIntime(String intime) {
+        this.intime = intime;
+    }
+
+    public Object getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(Object uptime) {
+        this.uptime = uptime;
+    }
+}

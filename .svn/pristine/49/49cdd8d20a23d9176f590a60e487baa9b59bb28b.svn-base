@@ -1,0 +1,27 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import com.hyphenate.chat.EMMessage;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.ui.holder.BaseViewHolder;
+import tts.project.livek.ui.holder.RoomMessageItemHolder;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class RoomMessageAdapter extends BaseRecyclerViewAdapter<EMMessage> {
+
+    public RoomMessageAdapter(Context mContext, List<EMMessage> mDatas) {
+        super(mContext, mDatas);
+    }
+
+    @Override
+    public BaseViewHolder getItemHolder(Context mContext, OnItemClickRecyclerListener listener, ViewGroup parent) {
+        return new RoomMessageItemHolder(mContext, listener, LayoutInflater.from(mContext).
+                inflate(R.layout.holder_item_room_msg, parent, false));
+    }
+}

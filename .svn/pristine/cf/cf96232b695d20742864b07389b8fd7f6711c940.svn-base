@@ -1,0 +1,21 @@
+package tts.project.livek.ui.listener;
+
+import android.view.View;
+
+public interface OnLiveListener {
+
+    /**
+     * 点击切换摄像头
+     */
+    void onCamreClick(View view);
+
+    /**
+     * 点击切换闪光灯
+     */
+    void onLightClick(View view);
+
+    /**
+     * 点击切换声音
+     */
+    void onVoiceClick(View view);
+}

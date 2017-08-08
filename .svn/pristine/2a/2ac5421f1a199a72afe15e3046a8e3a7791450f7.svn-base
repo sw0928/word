@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.AssessmentDao">
+
+	<select id='getAssessmentDetail' parameterType="assessmentBean" resultType="assessmentBean">
+		select * from tst_assessment
+		where assessment_id=#{assessment_id}
+	</select>
+	
+	<select id='getAssessmentImgs' parameterType="assessmentImgBean" resultType="assessmentImgBean">
+		select * from tst_assessment_img 
+		where assessment_id=#{assessment_id}
+	</select>
+	<select id="getAssessments" parameterType="assessmentBean" resultType="assessmentBean">
+		select * from (
+			select a.*,b.merchants_name as name,c.nick_name  from tst_assessment as a
+			inner join tst_merchants as b on a.relation_id=b.merchants_id and a.assessment_type='merchants'
+			<if test=' merchants_name != null and merchants_name != "" '>
+				and b.merchants_name like concat('%',#{merchants_name},'%')
+			</if>
+			<if test=' merchants_id != null and merchants_id != "" '>
+				and a.relation_id=#{merchants_id}
+			</if>
+			inner join tst_member as c on a.member_id=c.member_id
+			where a.is_delete='0'
+			union
+			select a.*,b.goods_name as name,c.nick_name from tst_assessment as a
+			inner join tst_goods as b on a.relation_id=b.goods_id and a.assessment_type='goods'
+			<if test=' goods_name != null and goods_name != "" '>
+				and b.goods_name like concat ('%',#{goods_name},'%')
+			</if>
+			<if test=' goods_id != null and goods_id != "" '>
+				and a.relation_id=#{goods_id}
+			</if>
+			inner join tst_member as c on a.member_id=c.member_id
+			where a.is_delete='0' 
+		) as a where 1=1
+		
+		<if test=' nick_name != null and nick_name != "" '>
+				and c.nick_name like concat('%',#{nick_name},'%')
+		</if>
+		
+		<if test=' member_id != null and member_id != "" '>
+				and a.member_id=#{member_id}
+		</if>
+			
+		<if test=' assessment_type != null and assessment_type != "" '>
+			and #{assessment_type} like concat('%',a.assessment_type,'%')
+		</if>
+		order by a.create_time desc
+	</select>
+	
+	<update id="deleteAssessment" parameterType="assessmentBean">
+		update tst_assessment 
+		set is_delete='1'
+		where assessment_id=#{assessment_id}
+	</update>
+</mapper>

@@ -1,0 +1,234 @@
+package tts.project.livek.bean;
+
+import java.io.Serializable;
+
+/**
+ * Created by lenove on 2016/12/4.
+ */
+
+public class UserCenterBean implements Serializable{
+
+    /**
+     * user_id : 1
+     * phone : 15801075991
+     * img : http://fkdc1.tstmobile.com/public/admin/touxiang.png
+     * sex : 1
+     * type : 2
+     * username : 残月
+     * autograph : 每天好一点
+     * id : 66173244
+     * alias : p5ahrw1ewsdk
+     * hx_username : p5ahrw1ewsdk
+     * hx_password : 123456
+     * province : 上海
+     * city : 上海
+     * area : 浦东新区
+     * address : 长青路
+     * zan : 0
+     * money : 0
+     * u_money : 0
+     * is_authen : -1
+     * my_follow_count : 0
+     * follow_my_count : 0
+     *  "age": -1          // -1表示没有填写生日
+     */
+    private String age;
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    private String user_id;
+    private String phone;
+    private String img;
+    private String sex;
+    private String type;
+    private String username;
+    private String autograph;
+    private String id;
+    private String alias;
+    private String hx_username;
+    private String hx_password;
+    private String province;
+    private String city;
+    private String area;
+    private String address;
+    private String zan;
+    private String money;
+    private String u_money;
+    private String is_authen;
+    private String my_follow_count;
+    private String follow_my_count;
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getHx_username() {
+        return hx_username;
+    }
+
+    public void setHx_username(String hx_username) {
+        this.hx_username = hx_username;
+    }
+
+    public String getHx_password() {
+        return hx_password;
+    }
+
+    public void setHx_password(String hx_password) {
+        this.hx_password = hx_password;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZan() {
+        return zan;
+    }
+
+    public void setZan(String zan) {
+        this.zan = zan;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getU_money() {
+        return u_money;
+    }
+
+    public void setU_money(String u_money) {
+        this.u_money = u_money;
+    }
+
+    public String getIs_authen() {
+        return is_authen;
+    }
+
+    public void setIs_authen(String is_authen) {
+        this.is_authen = is_authen;
+    }
+
+    public String getMy_follow_count() {
+        return my_follow_count;
+    }
+
+    public void setMy_follow_count(String my_follow_count) {
+        this.my_follow_count = my_follow_count;
+    }
+
+    public String getFollow_my_count() {
+        return follow_my_count;
+    }
+
+    public void setFollow_my_count(String follow_my_count) {
+        this.follow_my_count = follow_my_count;
+    }
+}

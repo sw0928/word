@@ -1,0 +1,160 @@
+package tts.project.livek.ui.application;
+
+import android.os.Handler;
+import android.support.multidex.MultiDex;
+
+import com.dou361.baseutils.utils.LogUtils;
+import com.dou361.baseutils.utils.UtilsManager;
+import com.hyphenate.easeui.controller.EaseUI;
+import com.qiniu.pili.droid.streaming.StreamingEnv;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import tts.moudle.api.TTSBaseApplication;
+import tts.project.livek.ui.activity.BaseActivity;
+
+public class BaseApplication extends TTSBaseApplication {
+
+    private static BaseApplication instance;
+    /**
+     * 记录所有活动的Activity
+     */
+    private static final List<BaseActivity> mActivities = new LinkedList<BaseActivity>();
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(context);
+//
+//    }
+
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        initHost("http://yomi.tstmobile.com/api.php?m=Api");
+        /**工具类库初始化*/
+        UtilsManager.init(this, "", new Handler(), Thread.currentThread());
+        UtilsManager.getInstance().setDebugEnv(true);
+        UtilsManager.getInstance().setLogLevel(LogUtils.LogType.LEVEL_ERROR);
+        /**环信IM初始化*/
+        EaseUI.getInstance().init(this, null);
+        StreamingEnv.init(getApplicationContext());
+        // 友盟的初始化
+        UMShareAPI.get(this);
+        PlatformConfig.setWeixin("wxb8e65030cc14b170", "fdbf889fb0bf224f421c08d860278f8f");
+        PlatformConfig.setSinaWeibo("3122177715", "a6b16c869e32308578cba50f0f24540f");
+        PlatformConfig.setQQZone("1105661411", "nTeiqkB0OYb6QEaq");
+        MultiDex.install(this);
+        Config.REDIRECT_URL = "http://tst.com";
+
+    }
+
+    public static BaseApplication getInstance() {
+        return instance;
+    }
+
+
+    /**
+     * 关闭所有Activity
+     */
+    public static void finishAll() {
+        List<BaseActivity> copy;
+        synchronized (mActivities) {
+            copy = new ArrayList<BaseActivity>(mActivities);
+        }
+        for (BaseActivity activity : copy) {
+            activity.finish();
+        }
+        mActivities.clear();
+    }
+
+    /**
+     * 添加页面
+     */
+    public static void addActivity(BaseActivity activity) {
+        for (int i = 0; i < mActivities.size(); i++) {
+            if (mActivities.get(i) == activity) {
+                mActivities.remove(i);
+                break;
+            }
+        }
+        mActivities.add(activity);
+    }
+
+    /**
+     * 添加页面
+     */
+    public static void finishActivity(BaseActivity activity) {
+        for (int i = 0; i < mActivities.size(); i++) {
+            if (mActivities.get(i) == activity) {
+                activity.finish();
+                mActivities.remove(i);
+                break;
+            }
+        }
+
+    }
+
+    /**
+     * 关闭所有Activity，除了参数传递的Activity
+     */
+    public static void finishAll(BaseActivity except) {
+        List<BaseActivity> copy;
+        synchronized (mActivities) {
+            copy = new ArrayList<BaseActivity>(mActivities);
+        }
+        for (BaseActivity activity : copy) {
+            if (activity != except)
+                activity.finish();
+        }
+    }
+
+    /**
+     * 是否有启动的Activity
+     */
+    public static boolean hasActivity() {
+        return mActivities.size() > 0;
+    }
+
+    /**
+     * 是否有其他启动的Activity除掉当前的
+     */
+    public static boolean hasElseActivity(BaseActivity activity) {
+        int i = 0;
+        for (; i < mActivities.size(); i++) {
+            if (mActivities.get(i) == activity) {
+                break;
+            }
+        }
+        return mActivities.size() != i;
+    }
+
+    /**
+     * 获取当前处于栈顶的activity，无论其是否处于前台
+     */
+    public static BaseActivity getCurrentActivity() {
+        List<BaseActivity> copy;
+        synchronized (mActivities) {
+            copy = new ArrayList<BaseActivity>(mActivities);
+        }
+        if (copy.size() > 0) {
+            return copy.get(copy.size() - 1);
+        }
+        return null;
+    }
+
+    /**
+     * 退出应用
+     */
+    public void exitApp() {
+        finishAll();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+}

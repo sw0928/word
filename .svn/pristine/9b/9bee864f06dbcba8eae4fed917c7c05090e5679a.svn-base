@@ -1,0 +1,35 @@
+package tts.project.livek.ui.adapter;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+
+import java.util.List;
+
+import tts.project.livek.bean.AttentionBean;
+import tts.project.livek.utils.ToastUtils;
+
+
+/**
+ * Created by wql on 2016/10/10.
+ */
+
+public class AttentionListAdapter extends BaseQuickAdapter<AttentionBean, BaseViewHolder> {
+    public AttentionListAdapter(int layoutResId, List<AttentionBean> data) {
+        super(layoutResId, data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder baseViewHolder, AttentionBean goodsBean) {
+        ToastUtils.show(mContext,"1");
+//        Glide.with(mContext).load(goodsBean.getImg()).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) baseViewHolder.getView(R.id.item_attention_icon));
+//        baseViewHolder.setText(R.id.item_attention_nickname, goodsBean.getUsername());
+//        baseViewHolder.setText(R.id.item_attention_money,goodsBean.getAutograph().toString());
+//        ImageView into=baseViewHolder.getView(R.id.item_attention_into);
+//        into.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+    }
+}

@@ -1,0 +1,59 @@
+{
+  "version": "1.0.3",
+  "name": "react-native-root-toast",
+  "description": "react native toast like component, pure javascript solution",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magicismight/react-native-root-toast.git"
+  },
+  "license": "MIT",
+  "main": "./index.js",
+  "keywords": [
+    "react-component",
+    "react-native",
+    "ios",
+    "android",
+    "image",
+    "video",
+    "focus"
+  ],
+  "dependencies": {
+    "react-native-root-siblings": "^1.0.7"
+  },
+  "gitHead": "3457bf8d230a875ac4f3d8f474a99a610a42550b",
+  "bugs": {
+    "url": "https://github.com/magicismight/react-native-root-toast/issues"
+  },
+  "homepage": "https://github.com/magicismight/react-native-root-toast#readme",
+  "_id": "react-native-root-toast@1.0.3",
+  "scripts": {},
+  "_shasum": "3518043e5696d7f6f5ba42a2ba81c496cf0da11c",
+  "_from": "react-native-root-toast@latest",
+  "_npmVersion": "3.7.3",
+  "_nodeVersion": "5.9.1",
+  "_npmUser": {
+    "name": "magicismight",
+    "email": "master@horcrux.cn"
+  },
+  "dist": {
+    "shasum": "3518043e5696d7f6f5ba42a2ba81c496cf0da11c",
+    "size": 4399979,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/react-native-root-toast/download/react-native-root-toast-1.0.3.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "magicismight",
+      "email": "530337602@qq.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/react-native-root-toast-1.0.3.tgz_1463621419880_0.4592798224184662"
+  },
+  "directories": {},
+  "publish_time": 1463621423794,
+  "_cnpm_publish_time": 1463621423794,
+  "_resolved": "https://registry.npm.taobao.org/react-native-root-toast/download/react-native-root-toast-1.0.3.tgz",
+  "readme": "ERROR: No README data found!"
+}

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.GoodsDao2">
+	
+	<select id="getGoodsSales" parameterType="goodsBean" resultType="Map">
+		select a.goods_name,a.goods_sku,
+		sum(case when c.order_state='cancel'  then 0
+		when  c.order_state='wait_pay'  then 0
+		else b.goods_num end) as goods_num,
+		sum(case when c.order_state='cancel'  then 0
+		when  c.order_state='wait_pay'  then 0
+		else b.goods_price end) as total_price 
+		from tst_goods as a 
+		left join tst_order_goods as b
+		on a.goods_id = b.goods_id
+		left join tst_order as c 
+		on b.order_id=c.order_id and c.is_delete='0'
+		where a.is_delete='0'
+		group by a.goods_id
+		order by total_price desc
+	</select>
+	
+	<update id="deleteTimingGoods" parameterType="timingGoodsBean">
+		update tst_goods_timing
+		set is_delete='1'
+		where timing_id=#{timing_id}
+	</update>
+	
+	<select id="getTimingGoodss" parameterType="timingGoodsBean" resultType="timingGoodsBean">
+		select * from tst_goods_timing
+		where is_delete='0'
+		order by create_time desc
+	</select>
+	
+	<insert id="insertGoodsTiming" parameterType="timingGoodsBean">
+		insert into tst_goods_timing
+		(goods_sku,goods_now_price,goods_origin_price,goods_new_price,create_time,modify_time
+		,timing_state,remark)
+		values
+		(#{goods_sku},#{goods_now_price},#{goods_origin_price},#{goods_new_price},now(),#{modify_time},
+		#{timing_state},#{remark})
+	</insert>
+	
+	<select id="getGoodsBySku" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where is_delete='0' and goods_sku=#{goods_sku}
+	</select>
+	
+	<select id="searchGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_type='2' and goods_state='1' and is_delete='0'
+		and goods_name like concat('%',#{goods_name},'%')
+	</select>
+
+	<insert id="insertGoodsTag" parameterType="goodsTagBean">
+		insert into tst_goods_tag
+		(tag_name,parent_id,create_time,sort)
+		values
+		(#{tag_name},#{parent_id},now(),#{sort})
+	</insert>
+
+	<update id="updateGoodsTag" parameterType="goodsTagBean">
+		update tst_goods_tag
+		set tag_name=#{tag_name},sort=#{sort}
+		where tag_id=#{tag_id}
+	</update>
+	
+	<update id="deleteGoodsTag" parameterType="goodsTagBean">
+		update tst_goods_tag
+		set is_delete='1'
+		where tag_id=#{tag_id}
+	</update>
+
+	<select id="getGoodsTags" parameterType="goodsTagBean" resultType="goodsTagBean">
+		select * from tst_goods_tag
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	
+	<update id="updateGoodsDetail" parameterType="goodsBean">
+		update tst_goods set is_delete=is_delete
+		
+		<if test=' qrcode_img != null and qrcode_img != "" '>
+			,qrcode_img=#{qrcode_img}
+		</if>
+		
+		<if test=' goods_pc_price != null and goods_pc_price != "" '>
+			,goods_pc_price=#{goods_pc_price}
+		</if>
+		
+		<if test=' deduct_integral_value != null and deduct_integral_value != "" '>
+			,deduct_integral_value=#{deduct_integral_value}
+		</if>
+		<if test=' is_deduct_integral != null and is_deduct_integral != "" '>
+			,is_deduct_integral=#{is_deduct_integral}
+		</if>
+	
+		<if test=' send_goods_time != null and send_goods_time != "" '>
+			,send_goods_time=#{send_goods_time}
+		</if>
+		<if test=' is_pre_sale != null and is_pre_sale != "" '>
+			,is_pre_sale=#{is_pre_sale}
+		</if>
+		<if test=' is_pre_sale_id != null and is_pre_sale_id != "" '>
+			,is_pre_sale_id=#{is_pre_sale_id}
+		</if>
+		
+		<if test=' is_give_integral != null and is_give_integral != "" '>
+			,is_give_integral=#{is_give_integral}
+		</if>
+		<if test=' give_integral_value != null and give_integral_value != "" '>
+			,give_integral_value=#{give_integral_value}
+		</if>
+		
+		<if test=' goods_img != null and goods_img != "" '>
+			,goods_img=#{goods_img}
+		</if>
+		
+		<if test='is_new != null and is_new !="" '>
+			,is_new=#{is_new}
+		</if>
+		
+		<if test='goods_sku != null and goods_sku !="" '>
+			,goods_sku=#{goods_sku}
+		</if>
+		<if test='goods_skus != null and goods_skus !="" '>
+			,goods_skus=#{goods_skus}
+		</if>
+		<if test='goods_storehouse != null and goods_storehouse !="" '>
+			,goods_storehouse=#{goods_storehouse}
+		</if>
+		<if test='goods_excise_tax != null and goods_excise_tax !="" '>
+			,goods_excise_tax=#{goods_excise_tax}
+		</if>
+		
+		<if test='goods_name!=null and goods_name!="" '>
+			,goods_name=#{goods_name}
+		</if>
+		<if test='is_cross_border != null and is_cross_border !="" '>
+			,is_cross_border=#{is_cross_border}
+		</if>
+		<if test='cross_border_tax != null and cross_border_tax !="" '>
+			,cross_border_tax=#{cross_border_tax}
+		</if>
+		<if test='is_recommend != null and is_recommend !="" '>
+			,is_recommend=#{is_recommend}
+		</if>
+		<if test='sort_time != null and sort_time !="" '>
+			,sort_time=#{sort_time}
+		</if>
+		
+		<if test='is_express != null and is_express !="" '>
+			,is_express=#{is_express}
+		</if>
+		<if test='express_price != null and express_price !="" '>
+			,express_price=#{express_price}
+		</if>
+		<if test='goods_address != null and goods_address !="" '>
+			,goods_address=#{goods_address}
+		</if>
+		<if test='day_sales != null and day_sales !="" '>
+			,day_sales=#{day_sales}
+		</if>
+		<if test='month_sales != null and month_sales !="" '>
+			,month_sales=#{month_sales}
+		</if>
+		<if test='year_sales != null and year_sales !="" '>
+			,year_sales=#{year_sales}
+		</if>
+		<if test='brand_id != null and brand_id !="" '>
+			,brand_id=#{brand_id}
+		</if>
+		<if test='goods_stock != null and goods_stock !="" '>
+			,goods_stock=#{goods_stock}
+		</if>
+		<if test='brand_id != null and brand_id !="" '>
+			,brand_id=#{brand_id}
+		</if>
+		<if test='goods_state != null and goods_state !="" '>
+			,goods_state=#{goods_state}
+		</if>
+		<if test='goods_now_price != null and goods_now_price !="" '>
+			,goods_now_price=#{goods_now_price}
+		</if>
+		<if test='goods_origin_price != null and goods_origin_price !="" '>
+			,goods_origin_price=#{goods_origin_price}
+		</if>
+		<if test='is_hot != null and is_hot !="" '>
+			,is_hot=#{is_hot}
+		</if>
+		<if test='is_selling != null and is_selling !="" '>
+			,is_selling=#{is_selling}
+		</if>
+		<if test='is_group_buy != null and is_group_buy !="" '>
+			,is_group_buy=#{is_group_buy}
+		</if>
+
+		where goods_id=#{goods_id}
+	</update>
+	<insert id="insertGoodsDetail" parameterType="goodsBean" useGeneratedKeys="true" keyProperty="goods_id">
+		insert into tst_goods
+		(goods_name,goods_no,goods_parameters,merchants_id,goods_type,
+		sort_time,parent_id,create_time
+		,is_express,express_price,goods_address,day_sales,month_sales,year_sales,brand_id,goods_stock
+		,goods_state,goods_url,goods_now_price,goods_origin_price,goods_pc_price,
+		is_hot,is_selling
+		,is_recommend,is_cross_border,cross_border_tax
+		,goods_sku,goods_skus,goods_storehouse,goods_excise_tax,is_new,goods_img,
+		is_give_integral,give_integral_value,is_deduct_integral,deduct_integral_value,
+		is_pre_sale,is_pre_sale_id,send_goods_time)
+		values
+		(#{goods_name},#{goods_no},#{goods_parameters},'1',"2",
+		#{sort_time},#{parent_id},now(),
+		#{is_express},#{express_price},#{goods_address},#{day_sales},#{month_sales},#{year_sales},#{brand_id},#{goods_stock}
+		,#{goods_state},#{goods_url},#{goods_now_price},#{goods_origin_price},#{goods_pc_price}
+		,#{is_hot},#{is_selling}
+		,#{is_recommend},#{is_cross_border},#{cross_border_tax},
+		#{goods_sku},#{goods_skus},#{goods_storehouse},#{goods_excise_tax},#{is_new},#{goods_img},
+		#{is_give_integral},#{give_integral_value},#{is_deduct_integral},#{deduct_integral_value},
+		#{is_pre_sale},#{is_pre_sale_id},#{send_goods_time})
+	</insert>
+
+	<select id="getGoodsByNo" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_no=#{goods_no} and is_delete='0'
+	</select>
+	
+	<select id="getGoodsParametersByNo" parameterType="goodsParameterBean" resultType="goodsParameterBean">
+		select * from tst_goods_parameter
+		where goods_no=#{goods_no} and is_delete='0' and parent_id=#{parent_id}
+	</select>
+	
+	<insert id="insertGoodsParameter" parameterType="goodsParameterBean" useGeneratedKeys="true" keyProperty="parameter_id">
+		insert into tst_goods_parameter
+		(goods_id,parameter_name,parameter_type,parent_id,sort,create_time,goods_no)
+		values
+		(#{goods_id},#{parameter_name},#{parameter_type},#{parent_id},#{sort},now(),#{goods_no})
+	</insert>
+
+	<select id="getClassGoodsByClassAndGodosId" parameterType="goodsRelationClassBean" resultType="goodsRelationClassBean">
+		select * from tst_goods_relation_class
+		where class_id=#{class_id} and goods_id=#{goods_id} and is_delete='0'
+	</select>
+	
+	<update id="deleteClassGoods" parameterType="goodsRelationClassBean">
+		update tst_goods_relation_class
+		set is_delete='1'
+		where FIND_IN_SET(goods_class_id,#{goods_class_ids})
+	</update>
+
+	<insert id="insertClassGoods" parameterType="goodsRelationClassBean">
+		insert into tst_goods_relation_class
+		(class_id,goods_id,create_time,uuid,parent_uuid)
+		values
+		(#{class_id},#{goods_id},now(),#{uuid},
+		concat((select class_parent_uuid from tst_goods_class where class_id=#{class_id}),"#",#{uuid}))
+	</insert>
+	
+	<select id="getClassGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from (
+			select b.*,a.goods_class_id from tst_goods_relation_class as a
+			inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+			where class_id=#{class_id} and a.is_delete='0' 
+		) as t where 1=1
+		<if test=" goods_id != null and goods_id != 0 ">
+			and t.goods_id=#{goods_id}
+		</if>
+		
+		<if test=' goods_name != null and goods_name != "" '> 
+			and t.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != "" '> 
+			and t.goods_sku  like concat('%',#{goods_sku},'%') 
+		</if>
+	</select>
+	
+	<insert id="insertGoodsClass" parameterType="goodsClassBean">
+		insert into tst_goods_class
+		(class_name,class_desc,class_state,class_img,class_url,parent_id,
+		class_uuid,class_parent_uuid,create_time,sort,class_desc_img,is_recommend)
+		values
+		(#{class_name},#{class_desc},#{class_state},#{class_img},#{class_url},#{parent_id},
+		#{class_uuid},
+		CONCAT(case when (select a.class_parent_uuid from (
+		select class_parent_uuid  
+		from tst_goods_class where class_id=#{parent_id}
+		) a) is null then "" else 
+		(select a.class_parent_uuid from (
+		select class_parent_uuid  
+		from tst_goods_class where class_id=#{parent_id}
+		) a) end,"#",#{class_uuid})
+		,now(),#{sort},#{class_desc_img},#{is_recommend})
+	</insert>
+	<update id="updateClassExpress" parameterType="goodsClassBean">
+		update tst_goods_relation_class as a
+		inner join tst_goods as b 
+		on a.goods_id=b.goods_id and b.is_delete='0'
+		set is_express=#{is_express}
+		where a.parent_uuid like 
+		concat('%',#{class_uuid},'%')
+		and a.is_delete='0'
+	</update>
+	<update id="updateGoodsClass" parameterType="goodsClassBean">
+		update tst_goods_class
+		set class_id=class_id
+		<if test=" class_name != null and class_name != '' ">
+			,class_name=#{class_name}
+		</if>
+		<if test=" class_desc != null and class_desc != '' ">
+			,class_desc=#{class_desc}
+		</if>
+		<if test=" class_state != null and class_state != '' ">
+			,class_state=#{class_state}
+		</if>
+		<if test=" class_img != null and class_img != '' ">
+			,class_img=#{class_img}
+		</if>
+		<if test=" class_url != null and class_url != '' ">
+			,class_url=#{class_url}
+		</if>
+		<if test=" parent_id != null and parent_id != '' ">
+			,parent_id=#{parent_id}
+		</if>
+		<if test=" sort != null and sort != '' ">
+			,sort=#{sort}
+		</if>
+		<if test=" class_desc_img != null and class_desc_img != '' ">
+			,class_desc_img=#{class_desc_img}
+		</if>
+		<if test=" is_recommend != null and is_recommend != '' ">
+			,is_recommend=#{is_recommend}
+		</if>
+		<if test=" is_express != null and is_express != '' ">
+			,is_express=#{is_express}
+		</if>
+		
+		where class_id=#{class_id}
+	</update>
+	
+	<update id="deleteGoodsClass" parameterType="goodsClassBean">
+		update tst_goods_class
+		set is_delete='1'
+		where class_id=#{class_id}
+	</update>
+	
+	<select id="getGoodsClasss" parameterType="goodsClassBean" resultType="goodsClassBean">
+		select * from tst_goods_class
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	<select id="getGoodsClasssNoPage" parameterType="goodsClassBean" resultType="goodsClassBean">
+		select * from tst_goods_class
+		where is_delete='0' 
+		order by sort asc
+	</select>
+</mapper>

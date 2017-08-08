@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.SWDaoC">
+
+	<insert id="insertClassBanner" parameterType="classBannerBean" >
+		insert into tst_class_banner
+		(banner_img,class_id,banner_url,sort,create_time)
+		values
+		(#{banner_img},#{class_id},#{banner_url},#{sort},now())
+	</insert>
+
+	<update id="updateClassBanner" parameterType="classBannerBean">
+		update tst_class_banner
+		set banner_img=#{banner_img}
+		,banner_url=#{banner_url},
+		sort=#{sort}
+		where banner_id=#{banner_id}
+	</update>
+
+	<update id="deleteClassBanner" parameterType="classBannerBean">
+		update tst_class_banner
+		set is_delete='1'
+		where banner_id=#{banner_id}
+	</update>
+	
+	<select id="getClassBanners" parameterType="classBannerBean" resultType="classBannerBean">
+			select * from tst_class_banner
+			where is_delete='0' and class_id=#{class_id}
+			order by sort desc
+	</select>
+
+	<select id="getExactGoodss" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where goods_state='1' and is_delete='0' and is_goods_exact='1'
+		and goods_type='2'
+	</select>
+	
+	<update id="deleteAlbumGoods" parameterType="albumBean">
+		update tst_activity_album_goods
+		set is_delete='1'
+		where album_id=#{album_id} and goods_id=#{goods_id}
+	</update>
+	
+	<insert id="insertAlbumGoods" parameterType="albumBean">
+		insert into tst_activity_album_goods
+		(album_id,goods_id,create_time)
+		values
+		(#{album_id},#{goods_id},now())
+	</insert>
+	
+	<select id="getAlbumGoods" parameterType="albumBean" resultType="albumBean">
+		select a.* from tst_activity_album_goods as a
+		where a.album_id=#{album_id} and a.is_delete='0' and a.goods_id=#{goods_id}
+	</select>
+	
+	<select id="getAlbumGoodss" parameterType="albumBean" resultType="goodsBean">
+		select b.* from tst_activity_album_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0' and b.goods_state='1'
+		where a.album_id=#{album_id} and a.is_delete='0'
+	</select>
+	
+	
+	<select id="getAlbums" parameterType="albumBean" resultType="albumBean">
+		select * from tst_activity_album
+		where is_delete='0'
+		order by sort asc
+	</select>
+	
+	<insert id="insertAlbum" parameterType="albumBean">
+		insert into tst_activity_album
+		(ablum_img,ablum_name,ablum_desc,create_time,sort)
+		values
+		(#{ablum_img},#{ablum_name},#{ablum_desc},now(),#{sort})
+	</insert>
+	
+	<update id="updateAlbum" parameterType="albumBean">
+		update tst_activity_album
+		set ablum_img=#{ablum_img},
+		ablum_name=#{ablum_name},ablum_desc=#{ablum_desc},
+		sort=#{sort}
+		where album_id=#{album_id}
+	</update>
+	
+	<update id="deleteAlbum" parameterType="albumBean">
+		update tst_activity_album
+		set is_delete='1'
+		where album_id=#{album_id}
+	</update>
+</mapper>

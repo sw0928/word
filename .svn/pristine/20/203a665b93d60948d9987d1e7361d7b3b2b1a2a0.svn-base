@@ -1,0 +1,224 @@
+package tts.project.livek.ui.fragment;
+
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import butterknife.BindView;
+import tts.moudle.api.Host;
+import tts.project.livek.R;
+import tts.project.livek.bean.HomeBean;
+import tts.project.livek.ui.activity.PlayerLiveActivity;
+import tts.project.livek.ui.adapter.FollowAdapter;
+import tts.project.livek.ui.widget.GridMarginDecoration;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SpSingleInstance;
+
+public class FollowLiveFragment extends BaseFragment implements  SwipeRefreshLayout.OnRefreshListener {
+    public static final int GET_DATA = 1;
+    public static final int INIT_DATA = 2;
+    public static final int LOAD_MORE_DATA=3;
+    public static final int GUAN_ZHU =4;
+    @BindView(R.id.sfl_refresh)
+    SwipeRefreshLayout sfl_refresh;
+    @BindView(R.id.recycleview)
+    RecyclerView recyclerView;
+    //    private List<WangHongListBean> list;
+    private List<HomeBean.WangHongListBean> mlist = new ArrayList<>();
+    private FollowAdapter adapter;
+    private int page=1;
+    private String user_id;
+
+
+    @Override
+    public View initView(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_live_follow, container, false);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            startRequestData(GET_DATA);
+        }
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        recyclerView.addItemDecoration(new GridMarginDecoration(6));
+        sfl_refresh.setOnRefreshListener(this);
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                int itemViewType = baseQuickAdapter.getItemViewType(i);
+                if (itemViewType==1){
+                    if (EMClient.getInstance().isConnected()){
+                        startActivity(PlayerLiveActivity.class, adapter.getData().get(i));
+                    }else{
+                        EMClient.getInstance().login(SpSingleInstance.getSpSingleInstance().getUserBean(getContext()).getHx_username().toLowerCase(),
+                                SpSingleInstance.getSpSingleInstance().getUserBean(getContext()).getHx_password(), new EMCallBack() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Logger.e("登录成功");
+                                    }
+
+                                    @Override
+                                    public void onError(int i, String s) {
+                                        Logger.e("登录失败");
+                                    }
+
+                                    @Override
+                                    public void onProgress(int i, String s) {
+
+                                    }
+                                });
+                    }
+                }
+
+            }
+        });
+
+        recyclerView.addOnItemTouchListener(new OnItemChildClickListener() {
+            @Override
+            public void onSimpleItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                List<HomeBean.WangHongListBean> data = baseQuickAdapter.getData();
+                user_id = data.get(i).getUser_id();
+                switch (view.getId()){
+                    case R.id.audience_num:
+                        startRequestData(GUAN_ZHU);
+                        break;
+                }
+            }
+        });
+        initAdapter();
+//        startRequestData(GET_DATA);
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        HashMap<String, String> map = new HashMap<>();
+        switch (index) {
+            case GET_DATA:
+                map.put("uid", SpSingleInstance.getSpSingleInstance().getUserBean(getContext()).getUser_id());
+                map.put("token", SpSingleInstance.getSpSingleInstance().getUserBean(getContext()).getToken());
+                getDataWithPost(GET_DATA, Host.hostUrl + "&c=Index&a=live_list",map);
+                break;
+            case INIT_DATA:
+                map.put("uid", SpSingleInstance.getSpSingleInstance().userBean.getUser_id());
+                map.put("token", SpSingleInstance.getSpSingleInstance().userBean.getToken());
+                getDataWithPost(INIT_DATA, Host.hostUrl + "&c=Index&a=live_list", map);
+                break;
+            case LOAD_MORE_DATA:
+                map.put("uid", SpSingleInstance.getSpSingleInstance().userBean.getUser_id());
+                map.put("token", SpSingleInstance.getSpSingleInstance().userBean.getToken());
+                map.put("p",page+"");
+                getDataWithPost(LOAD_MORE_DATA, Host.hostUrl + "&c=Index&a=live_list",map);
+                break;
+            case GUAN_ZHU:
+//                uid	int	Y
+//                token	string	Y
+//                user_id2	int	Y		主播id
+//                type	int	Y		1：关注 2：取消关注
+                map.put("uid", SpSingleInstance.getSpSingleInstance().userBean.getUser_id());
+                map.put("token", SpSingleInstance.getSpSingleInstance().userBean.getToken());
+                map.put("user_id2", user_id);
+                map.put("type", "1");
+                getDataWithPost(GUAN_ZHU, Host.hostUrl + "&c=Index&a=follow",map);
+                break;
+
+        }
+    }
+
+
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        List<HomeBean.WangHongListBean> list;
+        switch (index) {
+            case GET_DATA:
+                sfl_refresh.setRefreshing(false);
+                Logger.e(response);
+                HomeBean homeBean = new Gson().fromJson(response, HomeBean.class);
+                adapter.setNewData(homeBean.getList());
+                if (homeBean.getList().size() == 0) {
+                    adapter.setEmptyView(View.inflate(getContext(),R.layout.empty_layout,null));
+                }
+                break;
+            case INIT_DATA:
+                HomeBean homeBean1 = new Gson().fromJson(response, HomeBean.class);
+//                mlist.clear();
+//                mlist.addAll(list);
+//                adapter.notifyDataSetChanged();
+                adapter.setNewData(homeBean1.getList());
+                break;
+            case LOAD_MORE_DATA:
+                HomeBean homeBean2 = new Gson().fromJson(response, HomeBean.class);
+                adapter.addData(homeBean2.getList());
+                adapter.loadMoreComplete();
+                if (homeBean2.getList().size() < 10) {
+                    adapter.loadMoreEnd();
+                }
+                break;
+        }
+    }
+
+    private void initAdapter() {
+        adapter = new FollowAdapter(new ArrayList<HomeBean.WangHongListBean>());
+//        adapter.setLoadMoreView(new LoadMoreView() {
+//            @Override
+//            public int getLayoutId() {
+//                return 0;
+//            }
+//
+//            @Override
+//            protected int getLoadingViewId() {
+//                return 0;
+//            }
+//
+//            @Override
+//            protected int getLoadFailViewId() {
+//                return 0;
+//            }
+//
+//            @Override
+//            protected int getLoadEndViewId() {
+//                return 0;
+//            }
+//        });
+        recyclerView.setAdapter(adapter);
+        adapter.setEmptyView(View.inflate(getContext(),R.layout.empty_layout,null));
+        adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                page++;
+                startRequestData(LOAD_MORE_DATA);
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        startRequestData(GET_DATA);
+        sfl_refresh.setRefreshing(true);
+    }
+
+}

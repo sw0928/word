@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.ActivityDaoC">
+	
+	<update id="updateHomeOthers" parameterType="homeOthersBean">
+		update tst_home_others
+		set others_img=#{others_img}
+		where others_type=#{others_type}
+	</update>
+
+	<select id="getActivityOthers" parameterType="homeOthersBean" resultType="homeOthersBean">
+		select * from tst_home_others
+		where others_type=#{others_type} and is_delete='0'
+	</select>
+	
+	<update id="deleteActivityDetail" parameterType="activityBean">
+		update tst_activity 
+		set is_delete='1'
+		where activity_id=#{activity_id}
+	</update>
+	<update id="deleteActivityGoodss" parameterType="activityBean">
+		update tst_activity_goods
+		set is_delete='1'
+		where activity_id=#{activity_id}
+	</update>
+	
+	<insert id="insertActivityDetail" parameterType="activityBean" useGeneratedKeys="true" keyProperty="activity_id">
+		insert into tst_activity
+		(activity_name,activity_desc,activity_img,sort,create_time,activity_type,activity_state)
+		values
+		(#{activity_name},#{activity_desc},#{activity_img},#{sort},now(),#{activity_type},#{activity_state})
+	</insert>
+
+	<insert id="insertActivityGive" parameterType="giveBean">
+		insert into tst_activity_give
+		(activity_id,give_need_count,give_count,create_time,sort,is_add)
+		values
+		(#{activity_id},#{give_need_count},#{give_count},now(),#{sort},#{is_add})
+	</insert>
+	
+	<insert id="insertActivityReduce" parameterType="reduceBean">
+		insert into tst_activity_reduce
+		(activity_id,reduce_need_price,reduce_price,create_time,sort,is_add)
+		values
+		(#{activity_id},#{reduce_need_price},#{reduce_price},now(),#{sort},#{is_add})
+	</insert>
+	
+	<insert id="insertActivityGift" parameterType="giftBean">
+		insert into tst_activity_gift
+		(activity_id,gift_need_price,gift_desc,create_time,sort)
+		values
+		(#{activity_id},#{gift_need_price},#{gift_desc},now(),#{sort})
+	</insert>
+	<insert id="insertActivityHalf" parameterType="halfBean">
+		insert into tst_activity_half
+		(activity_id,half_count,create_time,sort,is_add)
+		values
+		(#{activity_id},#{half_count},now(),#{sort},#{is_add})
+	</insert>
+	
+	<insert id="insertActivityExempt" parameterType="exemptBean">
+		insert into tst_activity_exempt
+		(activity_id,exempt_need_count,exempt_count,create_time,sort)
+		values
+		(#{activity_id},#{exempt_need_count},#{exempt_count},now(),#{sort})
+	</insert>
+	
+	<update id="updateActivityDetail" parameterType="activityBean">
+		update tst_activity
+		set activity_name=#{activity_name},
+		activity_desc=#{activity_desc},activity_img=#{activity_img}
+		,sort=#{sort},activity_state=#{activity_state}
+		where activity_id=#{activity_id}
+	</update>
+	
+	<update id="updateActivityGive" parameterType="giveBean">
+		update tst_activity_give 
+		set give_need_count=#{give_need_count},
+		give_count=#{give_count},sort=#{sort},
+		is_add=#{is_add}
+		where give_id=#{give_id}
+	</update>
+
+	<update id="updateActivityReduce" parameterType="reduceBean">
+		update tst_activity_reduce
+		set reduce_need_price=#{reduce_need_price},
+		reduce_price=#{reduce_price},sort=#{sort},
+		is_add=#{is_add}
+		where reduce_id=#{reduce_id}
+	</update>
+	
+	<update id="updateActivityGift" parameterType="giftBean">
+		update tst_activity_gift
+		set gift_need_price=#{gift_need_price},
+		gift_desc=#{gift_desc},sort=#{sort}
+		where gift_id=#{gift_id}
+	</update>
+	
+	<update id="updateActivityHalf" parameterType="halfBean">
+		update tst_activity_half
+		set half_count=#{half_count},sort=#{sort},
+		is_add=#{is_add}
+		where half_id=#{half_id}
+	</update>
+	
+	<update id="updateActivityExempt" parameterType="exemptBean">
+		update tst_activity_exempt
+		set exempt_need_count=#{exempt_need_count},
+		exempt_count=#{exempt_count},sort=#{sort}
+		where exempt_id=#{exempt_id}
+	</update>
+	
+	<update id="deleteAllActivityGoods" parameterType="activityBean">
+		update tst_activity as a 
+		inner join tst_activity_goods as b on a.activity_id=b.activity_id and b.is_delete='0'
+		inner join tst_goods as c on b.goods_id=c.goods_id and c.is_delete='0'
+		
+		set b.is_delete='1'
+		
+		where a.is_delete='0' and a.activity_id=#{activity_id} and c.goods_type='2'
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and c.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and c.goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		</if>
+		
+		<if test=' goods_id != null and goods_id != 0 '>
+			and c.goods_id=#{goods_id}
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != "" '>
+			and c.goods_sku like concat('%',#{goods_sku},'%')
+		</if>
+	</update>
+	<select id="getActivityGoods" parameterType="activityBean" resultType="goodsBean">
+		select c.*,b.activity_goods_id from tst_activity as a 
+		inner join tst_activity_goods as b on a.activity_id=b.activity_id and b.is_delete='0'
+		inner join tst_goods as c on b.goods_id=c.goods_id and c.is_delete='0'
+		where a.is_delete='0' and a.activity_id=#{activity_id} and c.goods_type='2'
+		
+		<if test=' goods_name != null and goods_name != "" '>
+			and c.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and c.goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		</if>
+		
+		<if test=' goods_id != null and goods_id != 0 '>
+			and c.goods_id=#{goods_id}
+		</if>
+		
+		<if test=' goods_sku != null and goods_sku != "" '>
+			and c.goods_sku like concat('%',#{goods_sku},'%')
+		</if>
+	</select>
+	<select id="getActivityGoodsByGoods" parameterType="activityBean" resultType="activityBean">
+		select b.* from tst_activity_goods as a
+		inner join tst_activity as b on a.activity_id=b.activity_id
+		
+		where  a.goods_id=#{goods_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getActivityGoodsByActivity" parameterType="activityBean" resultType="activityBean">
+		select * from tst_activity_goods
+		where goods_id=#{goods_id} and is_delete='0'
+	</select>
+	
+	<update id="deleteActivityGoods" parameterType="activityBean">
+		update tst_activity_goods
+		set is_delete='1'
+		where FIND_IN_SET(activity_goods_id,#{activity_goods_ids})
+	</update>
+	
+	<insert id="insertActivityGoods" parameterType="activityBean" >
+		insert into tst_activity_goods
+		(activity_id,goods_id,create_time,sort)
+		values
+		(#{activity_id},#{goods_id},now(),#{sort})
+	</insert>
+	<insert id="insertAllActivityGoods" parameterType="activityBean">
+		insert into tst_activity_goods
+		(activity_id,goods_id,create_time,sort)
+		select  #{activity_id},a.goods_id,now(),1
+		from tst_goods as a
+		left join 
+		(
+		select b.* from tst_activity_goods as b 
+		inner join tst_activity as c 
+		on b.activity_id=c.activity_id and c.is_delete='0' 
+		) as b on a.goods_id=b.goods_id  and b.is_delete='0' 
+		where a.goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		and a.is_delete='0' and a.goods_type='2' and b.activity_goods_id is null
+	</insert>
+	
+	<select id="getActivityGift" parameterType="giftBean" resultType="giftBean">
+		select * from tst_activity_gift
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	
+	<select id="getActivityHalf" parameterType="halfBean" resultType="halfBean">
+		select * from tst_activity_half
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getActivityExempt" parameterType="exemptBean" resultType="exemptBean">
+		select * from tst_activity_exempt
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getActivityReduce" parameterType="reduceBean" resultType="reduceBean">
+		select * from tst_activity_reduce
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getActivityGive" parameterType="giveBean" resultType="giveBean">
+		select * from tst_activity_give 
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+
+	<select id="getActivityDetail" parameterType="activityBean" resultType="activityBean">
+		select * from tst_activity 
+		where is_delete='0' and activity_id=#{activity_id}
+	</select>
+	
+	<select id="getActivitys" parameterType="activityBean" resultType="activityBean">
+		select * from tst_activity
+		where is_delete='0'
+	</select>
+
+
+	<select id="getActivitysNoPage" parameterType="activityBean" resultType="activityBean">
+		select * from tst_activity
+		where is_delete='0'
+	</select>
+
+
+	<update id="deleteHomeGoods" parameterType="homeGoodsBean">
+		update tst_home_goods
+		set is_delete='1'
+		where home_goods_id=#{home_goods_id}
+	</update>
+
+	<insert id="insertHomeGoods" parameterType="homeGoodsBean">
+		insert into tst_home_goods
+		(goods_id,parent_id,create_time,goods_img,sort,goods_type,goods_name)
+		values
+		(#{goods_id},#{parent_id},now(),#{goods_img},#{sort},#{goods_type},#{goods_name})
+	</insert>
+	<update id="updateHomeGoods" parameterType="homeGoodsBean">
+		update tst_home_goods
+		set goods_id=#{goods_id},goods_img=#{goods_img},
+		sort=#{sort},goods_name=#{goods_name}
+		where home_goods_id=#{home_goods_id}
+	</update>
+	
+	<select id="getHomeGoods" parameterType="homeGoodsBean" resultType="homeGoodsBean">
+		select * from tst_home_goods
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+
+	<update id="deleteHomeActivity" parameterType="homeActivityBean">
+		update tst_home_activity
+		set is_delete='1'
+		where activity_id=#{activity_id}
+	</update>
+	
+	<insert id="insertHomeActivity" parameterType="homeActivityBean">
+		insert into tst_home_activity
+		(activity_name,activity_img,sort,activity_type,parent_id,relation_id,create_time)
+		values
+		(#{activity_name},#{activity_img},#{sort},#{activity_type},#{parent_id},#{relation_id},now())
+	</insert>	
+
+	<update id="updateHomeActivity" parameterType="homeActivityBean">
+		update tst_home_activity
+		set activity_name=#{activity_name},
+		sort=#{sort} ,activity_img=#{activity_img}
+		,relation_id=#{relation_id},activity_type=#{activity_type}
+		where activity_id=#{activity_id}
+	</update>
+	
+	<select id="getHomeActivitys" parameterType="homeActivityBean" resultType="homeActivityBean">
+		select * from tst_home_activity
+		where is_delete='0' and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+	
+	<update id="updateHomeLabel" parameterType="homeLabelBean">
+		update tst_home_label
+		set label_name=#{label_name},
+		sort=#{sort},label_img=#{label_img},
+		label_desc_img=#{label_desc_img}
+		where label_id=#{label_id}
+	</update>
+
+	<select id="getHomeLabels" parameterType="homeLabelBean" resultType="homeLabelBean">
+		select * from tst_home_label
+		where is_delete='0'
+		order by sort asc
+	</select>
+
+
+	<select id="getPromotionGoodssByGoodsId" parameterType="promotionGoodsBean" resultType="promotionGoodsBean">
+		select * from tst_activity_promotion_goods
+		where promotion_id=#{promotion_id} and is_delete='0'
+		and goods_id=#{goods_id}
+	</select>
+	
+	<insert id="insertPromotionGoods" parameterType="promotionGoodsBean">
+		insert into tst_activity_promotion_goods
+		(goods_id,promotion_id,promotion_price,create_time,sort,promotion_stock)
+		values
+		(#{goods_id},#{promotion_id},#{promotion_price},now(),#{sort},#{promotion_stock})
+	</insert>
+	
+	<insert id="insertAllPromotionGoods" parameterType="promotionGoodsBean">
+		insert into tst_activity_promotion_goods
+		(goods_id,promotion_id,promotion_price,create_time,sort,promotion_stock)
+		select a.goods_id,#{promotion_id},a.goods_now_price*#{promotion_price},now(),1,#{promotion_stock}
+		from tst_goods as a
+		left join tst_activity_promotion_goods as b 
+		on a.goods_id=b.goods_id  and b.is_delete='0' and b.promotion_id=#{promotion_id}
+		where a.goods_parent_uuid like concat('%',#{goods_uuid},'%') and a.is_delete='0'
+		and a.goods_type='2' and b.promotion_goods_id is null
+	</insert>
+
+	<update id="updatePromotionGoods" parameterType="promotionGoodsBean">
+		update tst_activity_promotion_goods set
+		promotion_price=#{promotion_price},sort=#{sort}
+		where promotion_goods_id=#{promotion_goods_id}
+	</update>
+	
+	<update id="deletePromotionGoods" parameterType="promotionGoodsBean">
+		update tst_activity_promotion_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and b.goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		</if>
+		set a.is_delete='1'
+		where a.promotion_id=#{promotion_id} and a.is_delete='0'
+	</update>
+	
+	<select id="getPromotionGoodss" parameterType="promotionGoodsBean" resultType="promotionGoodsBean">
+		select a.* from tst_activity_promotion_goods as a
+		inner join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		where a.promotion_id=#{promotion_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getPromotions" parameterType="promotionBean" resultType="promotionBean">
+		select * from tst_activity_promotion
+		where is_delete='0'
+	</select>
+	
+	<insert id="insertPromotion"  parameterType="promotionBean">
+		insert into tst_activity_promotion
+		(promotion_name,promotion_img,promotion_url,create_time,start_time,end_time,promotion_type)
+		values
+		(#{promotion_name},#{promotion_img},#{promotion_url},now(),#{start_time},#{end_time},#{promotion_type})
+	</insert>
+	
+	<update id="updatePromotion"  parameterType="promotionBean">
+		update tst_activity_promotion
+		set promotion_name=#{promotion_name}
+		,promotion_img=#{promotion_img}
+		,start_time=#{start_time}
+		,end_time=#{end_time}
+		where promotion_id=#{promotion_id}
+	</update>
+	
+	<update id="deletePromotion"  parameterType="promotionBean">
+		update tst_activity_promotion
+		set is_delete='1'
+		where promotion_id=#{promotion_id}
+	</update>
+
+</mapper>

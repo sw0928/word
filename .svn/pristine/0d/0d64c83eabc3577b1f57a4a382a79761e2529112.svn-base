@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.MemberDao">
+	<update id="deleteMemberMsg" parameterType="messageBean" >
+		update tst_member_msg
+		set is_delete='1'
+		where msg_id=#{msg_id}
+	</update>
+	<select id="getMemberMsgs" parameterType="messageBean" resultType="messageBean">
+		select * from tst_member_msg
+		where member_id=#{member_id} and is_delete='0'
+	</select>
+
+	<select id="getMemberBalanceRecord" parameterType="billBean" resultType="billBean">
+	select * from 
+	(
+		select order_actual_price as bill_price,
+		"order_pay" as bill_type,create_time as bill_time
+		,"余额订单支付" as bill_remark from tst_order
+		where pay_way='balance' and member_id=#{member_id}
+		and FIND_IN_SET(order_state,'wait_send,wait_receive,wait_assessment,end')
+		union
+		select order_actual_price as bill_price,
+		"balance_recharge" as bill_type,create_time as bill_time
+		,"余额充值" as bill_remark from tst_order
+		where order_source_way='recharge' and member_id=#{member_id}
+		and FIND_IN_SET(order_state,'wait_send,wait_receive,wait_assessment,end')
+		union
+		select cash_price as bill_price,
+		"balance_apply" as bill_type,create_time as bill_time
+		,"余额提现" as bill_remark from tst_cash_apply
+		where merchants_id=#{member_id} and apply_state='end' 
+		) as a 
+		order by a.bill_time desc
+	</select>
+
+	<select id="getMemberTrustRecord" parameterType="billBean" resultType="billBean">
+	select * from 
+	(
+		select order_actual_price as bill_price,
+		"order_trust_pay" as bill_type,create_time as bill_time
+		,"信用额度订单支付" as bill_remark from tst_order
+		where pay_way='trust' and member_id=#{member_id}
+		and FIND_IN_SET(order_state,'wait_send,wait_receive,wait_assessment,end')
+		) as a 
+		order by a.bill_time desc
+	</select>
+	
+	<update id="updateMemberBalancePassword" parameterType="memberBean">
+		update tst_member
+		set balance_password=#{balance_password}
+		where member_id=#{member_id} and member_account=#{member_account}
+	</update>
+	
+	<update id="updateMemberTrustPassword" parameterType="memberBean">
+		update tst_member
+		set trust_password=#{trust_password}
+		where member_id=#{member_id} and member_account=#{member_account}
+	</update>
+	
+	<update id="updateMemberAttach" parameterType="memberBean">
+		update tst_member
+		set fill_invitation_code=#{fill_invitation_code}
+		where member_id = #{member_id}
+	</update>
+
+	<insert id="insertMemberIntegral" parameterType="integralBean">
+		insert into tst_member_integral
+		(member_id,integral_value,integral_type,create_time,relation_id)
+		values
+		(#{member_id},#{integral_value},#{integral_type},now(),#{relation_id})
+	</insert>
+
+	<select id="getMemberIntegral" parameterType="integralBean" resultType="integralBean">
+		select a.*,b.order_no from tst_member_integral as a
+		inner join tst_order as b on a.relation_id=b.order_id
+		where a.is_delete='0' and a.member_id=#{member_id}
+		order by create_time desc
+	</select>
+
+	<select id="getApplyCashs" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select * from tst_cash_apply
+		where merchants_id=#{merchants_id}
+	</select>
+	
+	<select id="getLastApplyCash" parameterType="cashApplyBean" resultType="cashApplyBean">
+		select * from tst_cash_apply
+		where merchants_id=#{merchants_id}
+		order by create_time desc limit 0,1
+	</select>
+	
+	<insert id="applyCash" parameterType="cashApplyBean">
+		insert into tst_cash_apply
+		(merchants_id,cash_time,cash_price,brank_name,brank_code,brank_open_name,brank_open_usr
+		,brank_open_mobile,apply_state,create_time,cash_type)
+		values
+		(#{merchants_id},#{cash_time},#{cash_price},#{brank_name},#{brank_code},#{brank_open_name},#{brank_open_usr}
+		,#{brank_open_mobile},'wait_review',now(),#{cash_type})
+	</insert>
+	
+	<select id="getOrderPorfit" parameterType="orderProfitBean" resultType="orderProfitBean">
+		select a.*,b.nick_name as user_name,b.head_path as user_img from tst_order_distribution as a
+		inner join tst_member as b on a.user_id=b.member_id
+
+		where a.member_id=#{member_id} and a.distribution_relation = #{distribution_relation} 
+		and a.distribution_state=#{distribution_state}
+	</select>
+
+	<update id="memberBindMobile" parameterType="memberBean">
+		update tst_member
+		set member_role=member_role
+		<if test=' member_account != null and member_account != "" '>
+			,member_account=#{member_account}
+		</if>
+		<if test=' password != null and password != "" '>
+			,password=#{password}
+		</if>
+		where member_id=#{member_id}
+	</update>
+
+	<update id="memberBindMobileZSSG" parameterType="memberBean">
+		update ecs_users
+		set wx_pub_openid=#{wx_pub_openid},nick_name=#{nick_name},
+		head_path=#{head_path},create_time=now(),member_token=uuid(),
+		invitation_code=uuid(),fill_invitation_code=#{fill_invitation_code},
+		create_time=now(),country='1',province=#{province},city=#{city},district=#{district}
+		where mobile_phone=#{member_account}
+	</update>
+	
+	
+	<update id="memberForgetPassword" parameterType="memberBean" >
+		update tst_member
+		set password=#{password}
+		where member_account=#{member_account}
+	</update>
+	
+	<select id="getMemberByInvitation_code" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where invitation_code=#{invitation_code}
+	</select>
+	
+	<select id="getMemberByInvitation_codeZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where invitation_code=#{invitation_code} and FROM_UNIXTIME(indate,'%Y-%m-%d %h:%i:%s')>now()
+	</select>
+	
+	<update id="updateMemberBusiness" parameterType="memberBean" >
+		update tst_member
+		set business_id=#{business_id},merchants_account_id=#{merchants_account_id}
+		where member_id=#{member_id}
+	</update>
+	
+	<select id="verificationToken" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where member_id=#{member_id} and member_token=#{member_token}
+		and is_delete='0'
+	</select>
+	
+	<select id="verificationTokenZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users 
+		where user_id=#{member_id} and member_token=#{member_token}
+		and is_delete='0'
+	</select>
+	
+	<select id="getMemberByMobile" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member
+		where member_account=#{member_account}
+		and is_delete='0'
+	</select>
+	<select id="getMemberByMobileZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where mobile_phone=#{member_account}
+		and is_delete='0'
+	</select>
+	
+	
+	<select id="getMemberByID" parameterType="memberBean" resultType="memberBean">
+		
+		select a.*,b.nick_name as recommend_name,b.member_account as recommend_phone,b.member_id as recommend_id from tst_member as a 
+		left join tst_member as b on a.fill_invitation_code=b.invitation_code and b.is_delete='0' 
+		where a.member_id=#{member_id} and a.is_delete='0'
+
+	</select>
+	
+	<select id="getMemberByIDZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where user_id=#{member_id}
+		and is_delete='0'
+	</select>
+	<select id="getMemberByOpenidZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where wx_pub_openid=#{wx_pub_openid}
+		and is_delete='0'
+	</select>
+	
+	<insert id="memberRegister" parameterType="memberBean" keyProperty="member_id" useGeneratedKeys="true">
+		insert into tst_member
+		 (member_account,password,invitation_code
+		,fill_invitation_code,hx_account,hx_pass,hx_nick_name,create_time,qrcode_img,
+		sex,real_name,nick_name,age,phone,card_id,is_vip,integral
+			<if test=' member_role != null and member_role != "" '>
+				,member_role
+			</if>
+			<if test=' member_code != null and member_code != "" '>
+				,member_code
+			</if>
+			<if test=' stored_code != null and stored_code != "" '>
+				,stored_code
+			</if>
+			<if test=' vip_level != null and vip_level != "" '>
+				,vip_level
+			</if>
+		) 
+		values 
+		(#{member_account},#{password},#{invitation_code}
+		,#{fill_invitation_code},#{hx_account},#{hx_pass},#{hx_nick_name},now(),#{qrcode_img},
+		#{sex},#{real_name},#{nick_name},#{age},#{phone},#{card_id},#{is_vip},#{integral}
+			<if test=' member_role != null and member_role != "" '>
+				,#{member_role}
+			</if>
+			<if test=' member_code != null and member_code != "" '>
+				,#{member_code}
+			</if>
+			<if test=' stored_code != null and stored_code != "" '>
+				,#{stored_code}
+			</if>
+			<if test=' vip_level != null and vip_level != "" '>
+				,#{vip_level}
+			</if>
+		)
+	</insert>
+	
+	<update id="updateMemberToken" parameterType="memberBean">
+		update tst_member set member_token=#{member_token}
+		where member_account=#{member_account}
+	</update>
+	
+	<select id="memberLogin" parameterType="memberBean" resultType="memberBean">
+		select * from tst_member where
+		member_account=#{member_account} and password=#{password} and is_delete='0'
+	</select>
+	
+	<select id="wxPubMemberLoginZSSG" parameterType="memberBean" resultType="memberBean">
+		select * from ecs_users
+		where wx_pub_openid=#{wx_pub_openid} and is_delete='0'
+	</select>
+	
+	<select id="wxPubMemberLogin" parameterType="memberBean" resultType="memberBean">
+		select a.*,b.nick_name as recommend_name,b.member_account as recommend_phone,b.member_id as recommend_id from tst_member as a 
+		left join tst_member as b on a.fill_invitation_code=b.invitation_code and b.is_delete='0' 
+		where a.wx_pub_openid=#{wx_pub_openid} and a.is_delete='0'
+	</select>
+	
+	<insert id="wxPubMemberRegister" parameterType="memberBean">
+		insert into tst_member
+		(wx_pub_openid,member_token,nick_name,head_path,
+		invitation_code,fill_invitation_code,create_time,qrcode_img)
+		values
+		(#{wx_pub_openid},#{member_token},#{nick_name},#{head_path},
+		#{invitation_code},#{fill_invitation_code},now(),#{qrcode_img})
+	</insert>
+	<update id="wxPubMemberUpdate" parameterType="memberBean">
+		update tst_member
+		set member_token=uuid(),nick_name=#{nick_name},head_path=#{head_path}
+		where wx_pub_openid=#{wx_pub_openid} and is_delete='0'
+	</update>
+	<insert id="wxPubMemberRegisterZSSG" parameterType="memberBean">
+		insert into ecs_users
+		(wx_pub_openid,member_token,nick_name,user_name,head_path,headimg,
+		invitation_code,fill_invitation_code,create_time,mobile_phone,password
+		,country,province,city,district)
+		values
+		(#{wx_pub_openid},#{member_token},#{nick_name},#{user_name},#{head_path},#{headimg},
+		uuid(),#{fill_invitation_code},now(),#{member_account},#{password}
+		,'1',#{province},#{city},#{district})
+	</insert>
+	
+	<update id="updateMemberDetailVip" parameterType="memberBean">
+		update tst_member set member_account=member_account,
+		is_vip='1'
+			
+		<if test=' vip_level != null and vip_level != "" '>
+			,vip_level=#{vip_level}
+		</if>
+		
+		
+		<if test=' card_id != null and card_id != "" '>
+			,card_id=#{card_id}
+		</if>
+		
+		<if test=' member_code != null and member_code != "" '>
+			,member_code=#{member_code}
+		</if>
+		
+		<if test=' stored_code != null and stored_code != "" '>
+			,stored_code=#{stored_code}
+		</if>
+		
+		<if test=' month_time != null and month_time != "" '>
+			,month_time=#{month_time}
+		</if>
+		
+		<if test=' month_integral != null and month_integral != "" and month_integral!="0" and month_integral!=0 '>
+			,month_integral=#{month_integral}
+		</if>
+			
+		<if test=' vip_start_time != null and vip_start_time != "" '>
+			,vip_start_time=#{vip_start_time}
+		</if>
+		
+		<if test=' vip_end_time != null and vip_end_time != "" '>
+			,vip_end_time=#{vip_end_time}
+		</if>
+		
+		<if test=' cviptime != null and cviptime != "" and cviptime != "0" '>
+			,cviptime=#{cviptime}
+		</if>
+		
+		<if test=' indate != null and indate != "" and indate != "0" '>
+			,indate=#{indate}
+		</if>
+			
+		<if test='phone!=null and phone!="" '>
+			,phone=#{phone}
+		</if>
+		<if test='nick_name!=null and nick_name!="" '>
+			,nick_name=#{nick_name}
+		</if>
+		<if test='real_name !=null and real_name !="" '>
+			,real_name=#{real_name}
+		</if>
+		<if test='age!=null and age!="" '>
+			,age=#{age}
+		</if>
+		<if test='sex!=null and sex!="" '>
+			,sex=#{sex}
+		</if>
+		<if test='head_path!=null and head_path!="" '>
+			,head_path=#{head_path}
+		</if>	
+		<if test='is_remind_group != null and is_remind_group != "" '>
+			,is_remind_group=#{is_remind_group}
+		</if>	
+		<if test='is_remind_pre != null and is_remind_pre != "" '>
+			,is_remind_pre=#{is_remind_pre}
+		</if>	
+		<if test='integral != null and integral != "" and integral != "0" and integral != 0 '>
+			,integral=#{integral}
+		</if>
+		<if test='balance != null and balance != "" '>
+			,balance=#{balance}
+		</if>
+		where member_id=#{member_id}
+	</update>
+	
+	<update id="updateMemberDetail" parameterType="memberBean">
+		update tst_member set member_account=member_account
+		
+		
+		<if test=' job_unit != null and job_unit != "" '>
+			,job_unit=#{job_unit}
+		</if>
+		
+		<if test=' card_id != null and card_id != "" '>
+			,card_id=#{card_id}
+		</if>
+		<if test=' month_time != null and month_time != "" '>
+			,month_time=#{month_time}
+		</if>
+		
+		<if test=' month_integral != null and month_integral != "" '>
+			,month_integral=#{month_integral}
+		</if>
+			
+		<if test=' vip_start_time != null and vip_start_time != "" '>
+			,vip_start_time=#{vip_start_time}
+		</if>
+		
+		<if test=' vip_end_time != null and vip_end_time != "" '>
+			,vip_end_time=#{vip_end_time}
+		</if>
+		
+		<if test=' cviptime != null and cviptime != "" and cviptime != "0" '>
+			,cviptime=#{cviptime}
+		</if>
+		
+		<if test=' indate != null and indate != "" and indate != "0" '>
+			,indate=#{indate}
+		</if>
+		
+		<if test='phone!=null and phone!="" '>
+			,phone=#{phone}
+		</if>
+		<if test='nick_name!=null and nick_name!="" '>
+			,nick_name=#{nick_name}
+		</if>
+		<if test='age!=null and age!="" '>
+			,age=#{age}
+		</if>
+		<if test='sex!=null and sex!="" '>
+			,sex=#{sex}
+		</if>
+		<if test='head_path!=null and head_path!="" '>
+			,head_path=#{head_path}
+		</if>	
+		<if test='is_remind_group != null and is_remind_group != "" '>
+			,is_remind_group=#{is_remind_group}
+		</if>	
+		<if test='is_remind_pre != null and is_remind_pre != "" '>
+			,is_remind_pre=#{is_remind_pre}
+		</if>	
+		<if test='integral != null and integral != "" '>
+			,integral=#{integral}
+		</if>
+		<if test='balance != null and balance != "" '>
+			,balance=#{balance}
+		</if>
+		<if test=' trust_balance != null and trust_balance != "" '>
+			,trust_balance=#{trust_balance}
+		</if>
+		where member_id=#{member_id}
+	</update>
+	
+	<update id="updateMemberDetailZSSG" parameterType="memberBean">
+			update ecs_users set user_name=user_name
+			
+			<if test=' is_vip="1" '>
+				,is_vip=#{is_vip}
+			</if>
+			
+			<if test=' user_rank="11" '>
+				,user_rank=#{user_rank}
+			</if>
+			
+			<if test=' cviptime != null and cviptime != "" and cviptime != "0" '>
+				,cviptime=#{cviptime}
+			</if>
+			
+			<if test=' indate != null and indate != "" and indate != "0" '>
+				,indate=#{indate}
+			</if>
+	
+			<if test='user_money != null and user_money != "" '>
+				,user_money=#{user_money}
+			</if>
+		where user_id=#{member_id}
+	</update>
+</mapper>

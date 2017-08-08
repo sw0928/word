@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.ActivityDao">
+
+	<select id="getActivityClass3" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT d.* from tst_activity as a 
+		inner join tst_activity_goods as b 
+		on a.activity_id=b.activity_id and b.is_delete='0'
+		inner join tst_goods as c 
+		on b.goods_id=c.goods_id
+		and c.is_delete='0' and c.goods_state='1' and c.goods_type='2'
+		inner join tst_goods as d 
+		on c.parent_id=d.goods_id and d.is_delete='0' and d.goods_state='1'
+		and d.parent_id=#{parent_id}
+		where a.activity_id=#{activity_id} and a.is_delete='0'
+
+	</select>
+	
+	<select id="getActivityClass2" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT e.* from tst_activity as a 
+		inner join tst_activity_goods as b 
+		on a.activity_id=b.activity_id and b.is_delete='0'
+		inner join tst_goods as c 
+		on b.goods_id=c.goods_id
+		and c.is_delete='0' and c.goods_state='1' and c.goods_type='2'
+		inner join tst_goods as d 
+		on c.parent_id=d.goods_id and d.is_delete='0' and d.goods_state='1'
+		inner join tst_goods as e
+		on d.parent_id=e.goods_id and e.is_delete='0' and e.goods_state='1'
+		and e.parent_id=#{parent_id}
+		
+		where a.activity_id=#{activity_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getActivityClass1" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT f.* from tst_activity as a 
+		inner join tst_activity_goods as b 
+		on a.activity_id=b.activity_id and b.is_delete='0'
+		inner join tst_goods as c 
+		on b.goods_id=c.goods_id
+		and c.is_delete='0' and c.goods_state='1' and c.goods_type='2'
+		inner join tst_goods as d 
+		on c.parent_id=d.goods_id and d.is_delete='0' and d.goods_state='1'
+		inner join tst_goods as e
+		on d.parent_id=e.goods_id and e.is_delete='0' and e.goods_state='1'
+		inner join tst_goods as f
+		on e.parent_id=f.goods_id and f.is_delete='0' and f.goods_state='1'
+		and f.parent_id=#{parent_id}
+		
+		where a.activity_id=#{activity_id} and a.is_delete='0'
+	</select>
+	
+	
+	<select id="getActivityOthers" parameterType="homeOthersBean" resultType="homeOthersBean">
+		select * from tst_home_others
+		where others_type=#{others_type} and is_delete='0'
+	</select>
+
+	<select id="getActivityGoods" parameterType="goodsBean" resultType="goodsBean">
+		select * from (	
+		select *
+		from (	
+		select DISTINCT a.* from tst_goods as a
+		<if test=' business_id != null and business_id != "" and business_id != "-1" '>
+			inner join tst_business_goods as b 
+			on a.goods_id=b.goods_id and b.is_delete='0' and b.merchants_id=#{business_id}
+		</if>
+		
+		<if test=' storehouse_name != null and storehouse_name != "" '>
+			inner join tst_goods_storehouse as d on a.goods_storehouse=d.storehouse_name
+			and FIND_IN_SET(d.storehouse_name,#{storehouse_name})  and d.is_delete='0'
+		</if>
+		
+		<if test=' label_id != null and label_id != "" '>
+			inner join tst_goods_relation_label as f 
+			on a.goods_id=f.goods_id and FIND_IN_SET(f.label_id,#{label_id}) and f.is_delete='0'
+		</if>
+		
+		inner join tst_activity_goods as h 
+		on a.goods_id=h.goods_id and h.is_delete='0'
+		inner join tst_activity as i 
+		on i.activity_id=h.activity_id and i.is_delete='0' and i.activity_id=#{activity_id}
+		where a.is_delete='0' and a.goods_type='2' and a.goods_state='1'
+		
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and a.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>
+		<if test=' parent_id != null and parent_id != "" '>
+			and FIND_IN_SET(a.parent_id,#{parent_id})
+		</if>
+		
+		<if test='goods_name!= null and goods_name!="" '>
+			and a.goods_name like concat('%',#{goods_name},'%')
+		</if>
+		
+		<if test='is_business_buy != null and is_business_buy == "1" '>
+			and a.is_business_buy ='1'
+		</if>
+		
+		<if test=" brand_id != null and brand_id != ''">
+			and FIND_IN_SET(a.brand_id,#{brand_id})
+		</if>
+		
+		<if test=" is_group_buy != null and is_group_buy == '1' ">
+			and a.is_group_buy='1'
+		</if>
+		
+		<if test=" is_pre_sale != null and is_pre_sale == '1' ">
+			and a.is_pre_sale='1'
+		</if>
+		
+		<if test=' min_price != null and min_price != "" '>
+			<if test="sort!='' and sort!=null and sort=='pc_price'">
+				and convert(goods_pc_price,double) >convert(#{min_price},double)
+			</if>
+			<if test="sort!='' and sort!=null and sort=='price'">
+				and convert(goods_now_price,double) >convert(#{min_price},double)
+			</if>
+		</if>
+		
+		<if test=' max_price != null and max_price != "" '>
+			<if test="sort!='' and sort != null and sort=='price'">
+				and convert(#{max_price},double) >convert(goods_now_price,double)
+			</if>
+			<if test="sort!='' and sort != null and sort=='pc_price'">
+				and convert(#{max_price},double) >convert(goods_pc_price,double)
+			</if>
+		</if>
+		
+		) as a where 1=1
+		
+		)as a where 1=1
+		<if test=" sort=='' or sort==null or sort=='default' ">
+			order by a.sort_time desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'assessment' ">
+			order by a.assessment_count desc
+		</if>
+		
+		<if test="sort != '' and sort != null and sort== 'sales' ">
+			order by a.year_sales desc
+		</if>
+		
+		<if test="sort!='' and sort!=null and sort=='price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_now_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_now_price desc
+			</if>
+		</if>	
+		<if test="sort!='' and sort!=null and sort=='pc_price'">
+			<if test="sort_way=='' or sort_way==null or sort_way=='asc'">
+				order by a.goods_pc_price asc
+			</if>
+			<if test="sort_way!='' and sort_way!=null and sort_way=='desc'">
+				order by a.goods_pc_price desc
+			</if>
+		</if>	
+	</select>
+	
+	<select id="getActivityGift" parameterType="giftBean" resultType="giftBean">
+		select * from tst_activity_gift
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	<select id="getActivityHalf" parameterType="halfBean" resultType="halfBean">
+		select * from tst_activity_half
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	<select id="getActivityExempt" parameterType="exemptBean" resultType="exemptBean">
+		select * from tst_activity_exempt
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getActivityReduce" parameterType="reduceBean" resultType="reduceBean">
+		select * from tst_activity_reduce
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getActivityGive" parameterType="giveBean" resultType="giveBean">
+		select * from tst_activity_give 
+		where activity_id=#{activity_id} and is_delete='0'
+	</select>
+	
+	<select id="getGoodsActivity" parameterType="ActivityBean" resultType="activityBean">
+		select b.* from tst_activity_goods as a
+		inner join tst_activity as b on a.activity_id=b.activity_id and b.is_delete='0' and b.activity_state='1'
+		where a.goods_id=#{goods_id} and a.is_delete='0' 
+	</select>
+	
+	<update id="updateGroupBuyState" parameterType="groupBuyBean">
+		update tst_group_buy
+		set group_buy_state=#{group_buy_state}
+		where member_id=#{member_id} and member_group_buy_id=#{member_group_buy_id} and order_id=#{order_id}
+	</update>
+	
+	<update id="updateGroupBuyStateByMember" parameterType="groupBuyBean">
+		update tst_group_buy
+		set group_buy_state='end'
+		where member_group_buy_id=#{member_group_buy_id} and group_buy_state="wait_send"
+	</update>
+
+	<select id="getMyGroupBuysIng" parameterType="groupBuyBean" resultType="groupBuyBean">
+		select * from tst_group_buy as a
+		inner join tst_group_buy_member as b 
+		on a.member_group_buy_id=b.member_group_buy_id
+		and b.is_delete='0' and b.end_time>now()
+		inner join tst_group_buy_goods as c 
+		on b.goods_group_buy_id=c.goods_group_buy_id
+		and c.is_delete='0' and CONVERT(c.group_buy_need_people,double)>CONVERT(b.group_buy_now_people,double)
+		where a.member_id=#{member_id} and a.group_buy_state='wait_send'
+	</select>
+	
+	<select id="getMyGroupBuysEnd" parameterType="groupBuyBean" resultType="groupBuyBean">
+		select * from tst_group_buy as a
+		inner join tst_group_buy_member as b 
+		on a.member_group_buy_id=b.member_group_buy_id
+		and b.is_delete='0'
+		inner join tst_group_buy_goods as c 
+		on b.goods_group_buy_id=c.goods_group_buy_id
+		and c.is_delete='0' and CONVERT(b.group_buy_now_people,double) >= CONVERT(c.group_buy_need_people,double)
+		where a.member_id=#{member_id} and a.group_buy_state='end'
+	</select>
+	
+	<select id="getMyGroupBuysFailed" parameterType="groupBuyBean" resultType="groupBuyBean">
+		select * from tst_group_buy as a
+		inner join tst_group_buy_member as b 
+		on a.member_group_buy_id=b.member_group_buy_id
+		and b.is_delete='0' and now()>b.end_time
+		inner join tst_group_buy_goods as c 
+		on b.goods_group_buy_id=c.goods_group_buy_id
+		and c.is_delete='0' and  CONVERT(c.group_buy_need_people,double)>CONVERT(b.group_buy_now_people,double)
+		where a.member_id=#{member_id} and a.group_buy_state in ('wait_send','refund')
+	</select>
+	
+	<select id='getOneGroupBuyDetail' parameterType="groupBuyMemberBean" resultType="groupBuyMemberBean">
+		select a.*,b.group_buy_need_people,
+		b.group_buy_name ,b.group_buy_need_time,b.group_buy_price,
+		(case when
+		CONVERT(a.group_buy_now_people,double)>=
+		CONVERT(b.group_buy_need_people,double)
+		then 2
+ 		when now()>a.end_time then 1
+		else 0 end) as is_end
+		
+		from tst_group_buy_member as a
+		inner join tst_group_buy_goods as b 
+		on a.goods_group_buy_id=b.goods_group_buy_id
+		and b.is_delete='0'
+		where a.member_group_buy_id=#{member_group_buy_id}
+		and a.is_delete='0'
+	</select>
+
+	<select id="getGroupBugList" parameterType="groupBuyBean" resultType="groupBuyBean">
+		Select * from tst_group_buy
+		where member_group_buy_id=#{member_group_buy_id}
+		and group_buy_state='wait_send'
+		order by create_time asc
+	</select>
+	
+	<update id="updateGroupBugState" parameterType="groupBuyBean" >
+		update tst_group_buy set group_buy_state=#{group_buy_state}
+		where member_id=#{member_id}
+		and member_group_buy_id=#{member_group_buy_id}
+	</update>
+	
+	<select id="getGoodsGroupBuys" parameterType="groupBuyGoodsBean" resultType="groupBuyGoodsBean">
+		select b.*,a.group_buy_now_people,a.end_time,a.member_id,a.member_group_buy_id
+		from tst_group_buy_member as a
+		inner join tst_group_buy_goods as b
+		on a.goods_group_buy_id=b.goods_group_buy_id and b.is_delete='0'
+		where a.goods_id=#{goods_id} and a.is_delete='0'
+		and CONVERT(b.group_buy_need_people,double)>CONVERT(a.group_buy_now_people,double)
+		and a.end_time>now() and CONVERT(a.group_buy_now_people,double)>0
+		<if test='goods_group_buy_id!=null and goods_group_buy_id!="" '>
+			and b.goods_group_buy_id=#{goods_group_buy_id}		
+		</if>
+	</select>
+	
+	<update id="updateGroupBuyNum" parameterType="groupBuyMemberBean">
+		update tst_group_buy_member as a, tst_group_buy_goods as b
+		set a.group_buy_now_people=
+		(CONVERT(group_buy_now_people,double)+
+		CONVERT(#{group_buy_now_people},double))
+		where a.member_group_buy_id=#{member_group_buy_id}
+		and a.goods_group_buy_id=b.goods_group_buy_id
+	</update>
+	
+	<select id="getGoodsGroupBuyByMember" parameterType="groupBuyMemberBean" resultType="groupBuyGoodsBean">
+		select b.*,a.group_buy_now_people,a.end_time from tst_group_buy_member as a
+		inner join tst_group_buy_goods as b 
+		on a.goods_group_buy_id=b.goods_group_buy_id and b.is_delete='0'
+		where member_group_buy_id=#{member_group_buy_id}
+		and a.is_delete='0' 
+	</select>
+	
+	<select id="getMemberGroupBuy" parameterType="groupBuyMemberBean" resultType="groupBuyMemberBean">
+		select b.*,a.group_buy_now_people,a.end_time,a.member_id
+		from tst_group_buy_member as a
+		inner join tst_group_buy_goods as b
+		on a.goods_group_buy_id=b.goods_group_buy_id and b.is_delete='0'
+		where a.goods_id=#{goods_id} and a.is_delete='0'
+		and CONVERT(b.group_buy_need_people,double)>CONVERT(a.group_buy_now_people,double)
+		and a.end_time>now()
+		and b.goods_group_buy_id=#{goods_group_buy_id}	and a.member_id=#{member_id}	
+	</select>
+		
+	<insert id="memberInsertGroupBuy" parameterType="groupBuyMemberBean" useGeneratedKeys="true" keyProperty="member_group_buy_id">
+		insert into tst_group_buy_member
+		(member_id,goods_id,create_time,goods_group_buy_id,end_time)
+		values
+		(#{member_id},#{goods_id},now(),#{goods_group_buy_id},
+		DATE_ADD(now(),INTERVAL (select group_buy_need_time from tst_group_buy_goods 
+		where goods_group_buy_id=#{goods_group_buy_id}) MINUTE))
+	</insert>
+	
+	<update id="updateGroupQrCode" parameterType="groupBuyMemberBean">
+		update tst_group_buy_member 
+		set qrcode_img=#{qrcode_img}
+		where member_group_buy_id=#{member_group_buy_id}
+	</update>
+	
+	<insert id="insertGroupBuy" parameterType="groupBuyBean" >
+		insert into tst_group_buy
+		(member_id,member_group_buy_id,group_buy_state,create_time,order_id,group_buy_num)
+		values
+		(#{member_id},#{member_group_buy_id},#{group_buy_state},now(),#{order_id},#{group_buy_num})
+	</insert>
+	
+	<select id="getNewPromotionActivity" parameterType="promotionBean" resultType="promotionBean">
+		select  * from tst_activity_promotion
+		where is_delete='0' and end_time>now() 
+		<if test=' promotion_type != null and promotion_type != "" '>
+			and promotion_type=#{promotion_type}
+		</if>
+		order by start_time asc limit 0,1
+	</select>
+	
+	<select id="getPromotionActivitys" parameterType="promotionBean" resultType="promotionBean">
+		select * from tst_activity_promotion
+		where is_delete='0' and end_time>now() 
+		<if test=' promotion_type != null and promotion_type != "" '>
+			and promotion_type=#{promotion_type}
+		</if>
+		and start_time>#{start_time} and #{end_time} > start_time
+		order by start_time asc
+	</select>
+	
+	<select id="getPromotionGoodss" parameterType="promotionGoodsBean" resultType="promotionGoodsBean">
+		select a.*,b.start_time,b.end_time from
+		 tst_activity_promotion_goods as a
+		inner join tst_activity_promotion as b 
+		on a.promotion_id=b.promotion_id and b.is_delete='0'
+		inner join tst_goods  as c on a.goods_id=c.goods_id
+		<if test=' goods_uuid != null and goods_uuid != "" '>
+			and c.goods_parent_uuid like concat('%',#{goods_uuid},'%')		
+		</if>	
+		and c.is_delete='0'
+		where a.promotion_id=#{promotion_id} and a.is_delete='0'		
+	</select>	
+	
+	<select id="getPromotionGoodsClass" parameterType="promotionGoodsBean" resultType="goodsBean">
+		select distinct d.* from
+		tst_activity_promotion_goods as a
+		inner join tst_activity_promotion as b 
+		on a.promotion_id=b.promotion_id and b.is_delete='0'
+		inner join tst_goods  as c on a.goods_id=c.goods_id
+		and c.is_delete='0'
+		inner join tst_goods as d on c.parent_id=d.goods_id
+		where a.promotion_id=#{promotion_id} and a.is_delete='0'
+	</select>
+	
+	<select id="getOnePromotionGoods" parameterType="promotionGoodsBean" resultType="promotionGoodsBean">
+		select * from tst_activity_promotion_goods
+		where goods_id=#{goods_id} and promotion_id=#{promotion_id} and is_delete='0'
+	</select>
+	
+</mapper>

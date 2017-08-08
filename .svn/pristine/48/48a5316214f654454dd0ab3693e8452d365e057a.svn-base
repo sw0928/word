@@ -1,0 +1,26 @@
+package tts.project.livek.ui.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import java.util.List;
+
+import tts.project.livek.R;
+import tts.project.livek.bean.LiveRoom;
+import tts.project.livek.ui.holder.BaseViewHolder;
+import tts.project.livek.ui.holder.HotItemHolder;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class HotAdapter extends BaseRecyclerViewAdapter<LiveRoom> {
+
+    public HotAdapter(Context mContext, List<LiveRoom> mDatas) {
+        super(mContext, mDatas);
+    }
+
+    @Override
+    public BaseViewHolder getItemHolder(Context mContext, OnItemClickRecyclerListener listener, ViewGroup parent) {
+        return new HotItemHolder(mContext, listener, LayoutInflater.from(mContext).
+                inflate(R.layout.holder_item_hot, parent, false));
+    }
+}

@@ -1,0 +1,96 @@
+'use strict'
+var gitHosts = require('./git-host-info.js')
+
+var GitHost = module.exports = function (type, user, auth, project, committish, defaultRepresentation) {
+  var gitHostInfo = this
+  gitHostInfo.type = type
+  Object.keys(gitHosts[type]).forEach(function (key) {
+    gitHostInfo[key] = gitHosts[type][key]
+  })
+  gitHostInfo.user = user
+  gitHostInfo.auth = auth
+  gitHostInfo.project = project
+  gitHostInfo.committish = committish
+  gitHostInfo.default = defaultRepresentation
+}
+Gitprototype = {}
+
+Gitprototype.hash = function () {
+  return this.committish ? '#' + this.committish : ''
+}
+
+Gitprototype._fill = function (template, vars) {
+  if (!template) return
+  if (!vars) vars = {}
+  var self = this
+  Object.keys(this).forEach(function (key) {
+    if (self[key] != null && vars[key] == null) vars[key] = self[key]
+  })
+  var rawAuth = vars.auth
+  var rawComittish = vars.committish
+  Object.keys(vars).forEach(function (key) {
+    vars[key] = encodeURIComponent(vars[key])
+  })
+  vars['auth@'] = rawAuth ? rawAuth + '@' : ''
+  vars['#committish'] = rawComittish ? '#' + rawComittish : ''
+  vars['/tree/committish'] = vars.committish
+                          ? '/' + vars.treepath + '/' + vars.committish
+                          : ''
+  vars['/committish'] = vars.committish ? '/' + vars.committish : ''
+  vars.committish = vars.committish || 'master'
+  var res = template
+  Object.keys(vars).forEach(function (key) {
+    res = res.replace(new RegExp('[{]' + key + '[}]', 'g'), vars[key])
+  })
+  return res
+}
+
+Gitprototype.ssh = function () {
+  return this._fill(this.sshtemplate)
+}
+
+Gitprototype.sshurl = function () {
+  return this._fill(this.sshurltemplate)
+}
+
+Gitprototype.browse = function () {
+  return this._fill(this.browsetemplate)
+}
+
+Gitprototype.docs = function () {
+  return this._fill(this.docstemplate)
+}
+
+Gitprototype.bugs = function () {
+  return this._fill(this.bugstemplate)
+}
+
+Gitprototype.https = function () {
+  return this._fill(this.httpstemplate)
+}
+
+Gitprototype.git = function () {
+  return this._fill(this.gittemplate)
+}
+
+Gitprototype.shortcut = function () {
+  return this._fill(this.shortcuttemplate)
+}
+
+Gitprototype.path = function () {
+  return this._fill(this.pathtemplate)
+}
+
+Gitprototype.file = function (P) {
+  return this._fill(this.filetemplate, {
+    path: P.replace(/^[/]+/g, '')
+  })
+}
+
+Gitprototype.getDefaultRepresentation = function () {
+  return this.default
+}
+
+Gitprototype.toString = function () {
+  return (this[this.default] || this.sshurl).call(this)
+}

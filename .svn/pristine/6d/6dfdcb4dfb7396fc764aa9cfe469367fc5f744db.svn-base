@@ -1,0 +1,132 @@
+package tts.moudle.api.bean;
+
+/**
+ * Created by sjb on 2016/2/26.
+ */
+public class BannerBean {
+
+
+    /**
+     * banner_id : 15
+     * img : http://weixiu.tstmobile.com/Uploads/image/banner/20160927/57ea861060e37.jpg
+     * url :
+     * type : 1
+     * status : 2
+     * create_time : 1472453787
+     * sort : 0
+     * uptime : 1475998057
+     * red_net_id : 10000009
+     * promoter_id : 0
+     * activity_id : 0
+     * user_id : null
+     */
+
+    private String banner_id;
+    private String img;
+    private String url;
+    private String type;
+    private String status;
+    private String create_time;
+    private String sort;
+    private String uptime;
+    private String red_net_id;
+    private String promoter_id;
+    private String activity_id;
+    private String user_id;
+
+    public String getBanner_id() {
+        return banner_id;
+    }
+
+    public void setBanner_id(String banner_id) {
+        this.banner_id = banner_id;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
+    }
+
+    public String getRed_net_id() {
+        return red_net_id;
+    }
+
+    public void setRed_net_id(String red_net_id) {
+        this.red_net_id = red_net_id;
+    }
+
+    public String getPromoter_id() {
+        return promoter_id;
+    }
+
+    public void setPromoter_id(String promoter_id) {
+        this.promoter_id = promoter_id;
+    }
+
+    public String getActivity_id() {
+        return activity_id;
+    }
+
+    public void setActivity_id(String activity_id) {
+        this.activity_id = activity_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+}

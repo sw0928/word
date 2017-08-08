@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.interfaces.MerchantsDaoI">
+
+	<select id="getMerchantsClass1" parameterType="goodsBean" resultType="goodsBean">
+	
+	
+		select DISTINCT d.* ,(select count(*) from tst_goods 
+where goods_type='2' and is_delete='0' and goods_state='1' 
+and goods_parent_uuid like concat('%',d.goods_uuid,'%') and merchants_id=#{merchants_id}) as goods_count
+ 
+ from tst_goods as a 
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.goods_state='1' and b.is_delete='0' 
+		inner join tst_goods as c
+		on b.parent_id=c.goods_id and c.goods_state='1' and c.is_delete='0' 
+		inner join tst_goods as d
+		on c.parent_id=d.goods_id and d.goods_state='1' and d.is_delete='0'
+		and d.parent_id=#{parent_id}
+		where a.merchants_id=#{merchants_id} and a.goods_type='2'
+		and a.goods_state='1' and a.is_delete='0'
+	</select>
+	
+	<select id="getMerchantsClass2" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT c.* ,(select count(*) from tst_goods 
+		where goods_type='2' and is_delete='0' and goods_state='1' 
+		and goods_parent_uuid like concat('%',c.goods_uuid,'%') and merchants_id=#{merchants_id}) as goods_count
+		from tst_goods as a 
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.goods_state='1' and b.is_delete='0' 
+		inner join tst_goods as c
+		on b.parent_id=c.goods_id and c.goods_state='1' and c.is_delete='0' 
+		and c.parent_id=#{parent_id}
+		where a.merchants_id=#{merchants_id} and a.goods_type='2'
+		and a.goods_state='1' and a.is_delete='0'
+	</select>
+	
+	<select id="getMerchantsClass3" parameterType="goodsBean" resultType="goodsBean">
+		select DISTINCT b.*,(select count(*) from tst_goods 
+		where goods_type='2' and is_delete='0' and goods_state='1' 
+		and goods_parent_uuid like concat('%',b.goods_uuid,'%') and merchants_id=#{merchants_id}) as goods_count
+		
+		from tst_goods as a 
+		inner join tst_goods as b 
+		on a.parent_id=b.goods_id and b.goods_state='1' and b.is_delete='0' 	
+		and b.parent_id=#{parent_id}
+		where a.merchants_id=#{merchants_id} and a.goods_type='2'
+		and a.goods_state='1' and a.is_delete='0'
+	</select>
+	
+	
+	<select id="searchMerchants" parameterType="merchantsbean" resultType="merchantsbean">
+		select * from tst_merchants
+		where merchants_name like concat('%',#{merchants_name},'%')
+		and is_delete='0' and merchants_state='1'
+	</select>
+
+	<update id="updateMerchantsAccountDetail" parameterType="merchantsBean">
+		update tst_merchants_account
+		set balance=#{balance}
+		where merchants_account_id=#{merchants_account_id}
+	</update>
+	
+	<update id="updateMerchantsDetail" parameterType="merchantsBean">
+		update tst_merchants
+		set balance=#{balance}
+		where merchants_id=#{merchants_id}
+	</update>
+
+	<select id="getAllQualifications" parameterType="qualificationBean" resultType="qualificationBean">
+		select * from tst_merchants_qualification
+		where is_delete='0'
+	</select>
+
+	<select id="getMerchantsGoodss" parameterType="goodsBean" resultType="goodsBean">
+		select * from tst_goods
+		where merchants_id=#{merchants_id} and goods_type='2'
+		and goods_state='1' and is_delete='0'
+		<if test=' goods_uuid != null and  goods_uuid != "" '>
+			and goods_parent_uuid like concat('%',#{goods_uuid},'%')
+		</if>
+		<if test=' is_new != null and  is_new == 1 '>
+			and is_new='1'
+		</if>
+		<if test=' is_recommend != null and is_recommend == 1 '>
+			and is_recommend='1'
+		</if>		
+		
+		<if test=' sort_type != null and sort_type != "" and sort_type == "pc_price" and sort_way == "desc" '>
+			order by goods_pc_price desc
+		</if>
+		<if test=' sort_type != null and sort_type != "" and sort_type == "pc_price" and sort_way == "desc" '>
+			order by goods_pc_price desc
+		</if>
+		
+		<if test=' sort_type != null and sort_type != "" and sort_type == "price" and sort_way == "desc" '>
+			order by goods_now_price desc
+		</if>
+		
+		<if test=' sort_type != null and sort_type != "" and sort_type == "price" and sort_way == "asc" '>
+			order by goods_now_price asc
+		</if>
+		
+		<if test=' sort_type != null and sort_type != "" and sort_type == "sales" '>
+			order by year_sales desc
+		</if>
+	</select>
+	
+	<select id="getOneMerchantsDetail" parameterType="merchantsBean" resultType="merchantsBean">
+		select a.*,c.collection_id,(case when c.collection_id is null then "0" else "1" end)
+		as is_collection ,
+		(select sum(year_sales) from tst_goods where merchants_id='1' and goods_type='2' and goods_state='1' and is_delete='0') as year_sales,
+		(select sum(month_sales) from tst_goods where merchants_id='1' and goods_type='2' and goods_state='1' and is_delete='0') as month_sales,
+		(select sum(day_sales) from tst_goods where merchants_id='1' and goods_type='2' and goods_state='1' and is_delete='0') as day_sales,
+		(select count(*) from tst_goods where merchants_id='1' and goods_type='2' and goods_state='1' and is_delete='0') as goods_total_num
+		
+		from tst_merchants  as a
+		left join tst_collection as c on a.merchants_id=c.relation_id and c.collection_type='merchants' 
+		and c.is_delete='0' and c.member_id=#{member_id}
+		where a.merchants_id=#{merchants_id}
+		and a.merchants_state="1" and a.is_delete='0'
+	</select>
+	
+	<select id="getMerchantsByMember" parameterType="merchantsBean" resultType="merchantsBean">
+		select * from tst_merchants where member_id=#{member_id}
+	</select>
+	
+	<select id="getMerchantsLabels" parameterType="merchantsLabelBean" resultType="merchantsLabelBean">
+		select * from tst_merchants_label
+		where is_delete='0' 
+		order by sort asc
+	</select>
+	<select id="getLabelQualifications" parameterType="labelQualificationBean" resultType="labelQualificationBean">
+		select a.*,b.qualification_name from tst_merchants_label_qualification as a
+		inner join tst_merchants_qualification as b 
+		on a.qualification_id=b.qualification_id 
+		and b.is_delete='0'
+		where a.is_delete='0'
+		and (a.label_id='-1' or a.label_id=#{label_id})
+	</select>
+	<update id="updateApplyMerchants" parameterType="merchantsBean">
+		update tst_merchants
+		set merchants_name=#{merchants_name},
+		merchants_img=#{merchants_img},merchants_type=#{merchants_type},
+		contact_mobile=#{contact_mobile},contact_name=#{contact_name},
+		merchants_address=#{merchants_address},merchants_state=#{merchants_state},
+		merchants_province=#{merchants_province},merchants_desc_img=#{merchants_desc_img},
+		express_free_price=#{express_free_price},card_id=#{card_id},merchants_email=#{merchants_email},
+		zip_code=#{zip_code},merchants_city=#{merchants_city},merchants_area=#{merchants_area},
+		company_mobile=#{company_mobile},label_ids=#{label_ids},company_name=#{company_name},
+		apply_state=#{apply_state}
+		where member_id=#{member_id}
+	</update>
+	
+	<insert id="applyMerchants" parameterType="merchantsBean" useGeneratedKeys="true" keyProperty="merchants_id">
+		insert into tst_merchants
+		(merchants_name,merchants_img,merchants_type,
+		contact_mobile,contact_name,merchants_address,merchants_state,merchants_province,merchants_desc_img,
+		express_free_price,create_time,card_id,merchants_email,zip_code,member_id,merchants_city,merchants_area
+		,company_mobile,label_ids,company_name,apply_state)
+		values
+		(#{merchants_name},#{merchants_img},#{merchants_type},
+		#{contact_mobile},#{contact_name},#{merchants_address},#{merchants_state},#{merchants_province},#{merchants_desc_img},
+		#{express_free_price},now(),#{card_id},#{merchants_email},#{zip_code},#{member_id},#{merchants_city},#{merchants_area}
+		,#{company_mobile},#{label_ids},#{company_name},#{apply_state})
+	</insert>
+	
+	<select id="getMerchantsImgs" parameterType="merchantsImgBean" resultType="merchantsImgBean">
+		select a.*,
+		(case when 
+		a.img_type='card_positive' 
+		then '身份证正面照'  
+		when a.img_type='card_opposite' 
+		then '身份证反面照' 
+		when a.img_type='business1' 
+		then '企业三证1' 
+		when a.img_type='business2' 
+		then '企业三证2' 
+		when a.img_type='business3' 
+		then '企业三证3' 
+		when a.img_type='card_hand' 
+		then '手持身份证' 
+		when a.img_type='business_license' 
+		then '营业执照'  else
+		b.qualification_name end) as qualification_name from tst_merchants_img as a
+		left join tst_merchants_qualification
+		as b on a.qualification_id=b.qualification_id
+		where a.merchants_id=#{merchants_id} and a.is_delete='0'
+	</select>
+	<select id="getMerchantsDescImgs" parameterType="merchantsDescImgBean" resultType="merchantsDescImgBean">
+		select * from tst_merchants_desc_img
+		where merchants_id=#{merchants_id} and is_delete='0'
+	</select>
+	<select id="getLabels" parameterType="String" resultType="merchantsLabelBean">
+		select * from tst_merchants_label
+		where label_id in 
+		<foreach item="item" index="index" collection="ids" 
+		open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</select>
+	
+	<insert id="insertMerchantsImg" parameterType="merchantsImgBean">
+		insert into tst_merchants_img
+		(merchants_id,merchants_img,img_type,qualification_id)
+		values
+		(#{merchants_id},#{merchants_img},#{img_type},#{qualification_id})
+	</insert>
+	
+	<update id="deleteMerchantsImgs" parameterType="merchantsImgBean">
+		update tst_merchants_img
+		set is_delete='1'
+		where merchants_id=#{merchants_id}
+	</update>
+	
+</mapper>

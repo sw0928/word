@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/RGB255_255_255">
+
+    <ListView
+        android:id="@+id/dirList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/RGB248_248_248"
+        android:dividerHeight="@dimen/y10"></ListView>
+
+</RelativeLayout>

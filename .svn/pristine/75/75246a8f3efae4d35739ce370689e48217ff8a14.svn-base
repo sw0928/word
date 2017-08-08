@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="tts_banner">
+        <attr name="banner_indicator" format="reference" />
+        <attr name="banner_pager" format="reference" />
+        <attr name="banner_time_interval" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="FlowIndicator">
+        <attr name="count" format="integer" />
+        <attr name="space" format="dimension" />
+        <attr name="point_size" format="dimension" />
+        <attr name="point_seleted_color" format="color|reference" />
+        <attr name="point_normal_color" format="color|reference" />
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ProgressBarUpdate">
+        <attr name="max" format="float" />
+        <attr name="progress" format="float" />
+        <attr name="colorid" format="color|reference"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="TTSRadioButton">
+        <attr name="widthSize" format="string" />
+        <attr name="heightSize" format="string" />
+        <attr name="ttsDrawable" format="reference" />
+        <attr name="ttsDrawableTop" format="reference" />
+        <attr name="ttsDrawableLeft" format="reference" />
+        <attr name="ttsDrawableRight" format="reference" />
+        <attr name="ttsDrawableBottom" format="reference" />
+
+        <attr name="ttsDrawable_check" format="reference" />
+        <attr name="ttsDrawableTop_check" format="reference" />
+        <attr name="ttsDrawableLeft_check" format="reference" />
+        <attr name="ttsDrawableRight_check" format="reference" />
+        <attr name="ttsDrawableBottom_check" format="reference" />
+    </declare-styleable>
+
+    <!-- 圆形图标 -->
+    <declare-styleable name="CircleImageView">
+        <attr name="tts_borderthickness" format="dimension"></attr>
+        <attr name="tts_border_outside_color" format="color"></attr>
+        <attr name="tts_border_inside_color" format="color"></attr>
+    </declare-styleable>
+</resources>

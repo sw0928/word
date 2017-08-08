@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    signingConfigs {
+        release {
+            keyAlias 'livek'
+            keyPassword 'livek123456'
+            storeFile file('D:/sdk_demo/livek/livek.jks')
+            storePassword 'livek123456'
+        }
+    }
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "tts.project.livek"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        ndk {
+            abiFilters 'armeabi', 'arm64-v8a'
+        }
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    dexOptions {
+        jumboMode true
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.jakewharton:butterknife:8.0.1'
+    compile rootProject.ext.jjdxm_v7
+    compile rootProject.ext.jjdxm_design
+    compile 'com.github.florent37:viewanimator:1.0.4'
+    //自定义view类库
+    compile 'com.dou361.customui:jjdxm-customui:1.0.2'
+    //工具类类库
+    compile 'com.dou361.baseutils:jjdxm-baseutils:1.0.4'
+    //沉浸式一体化
+    compile 'com.dou361.statusbar:jjdxm-statusbar:1.0.0'
+    //环信im
+    compile project(':easeui')
+    //pililive直播
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':okhttputils')
+    compile project(':ttsmoduleapi')
+    compile 'com.qiniu:happy-dns:0.2.+'
+    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
+    compile 'com.qiniu:happy-dns:0.2.7'
+    compile files('libs/pldroid-media-streaming-2.1.1.jar')
+    compile files('libs/pldroid-player-1.4.0.jar')
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.6.+'
+    compile 'com.bigkoo:pickerview:2.1.1'
+    compile files('libs/umeng_social_api.jar')
+    compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_view.jar')
+    compile files('libs/SocialSDK_WeiXin_2.jar')
+    compile files('libs/SocialSDK_QQZone_3.jar')
+    compile files('libs/open_sdk_r5756_lite.jar')
+    compile files('libs/mta-sdk-1.6.2.jar')
+    compile files('libs/weiboSDKCore_3.1.4.jar')
+    compile files('libs/SocialSDK_Sina.jar')
+    compile files('libs/SocialSDK_WeiXin_1.jar')
+    compile 'com.android.support:multidex:1.0.1'
+
+//    ping++
+    compile 'com.pingxx:pingpp-core:2.1.+'
+    //必须添加
+    compile 'com.pingxx:pingpp-alipay:2.1.+'
+    //使用支付宝时添加
+    //    compile 'com.pingxx:pingpp-upacp:2.1.+' //使用银联支付时添加
+    compile 'com.pingxx:pingpp-wxpay:2.1.+'
+    //使用微信支付时添加
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+}

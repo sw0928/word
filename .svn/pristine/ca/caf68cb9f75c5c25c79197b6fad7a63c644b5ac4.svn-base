@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_with_draw"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+    <include layout="@layout/toolbar_item"/>
+    <TextView
+        android:text="当前剩余U币 : 0"
+        android:layout_marginTop="@dimen/y50"
+        android:id="@+id/count_left"
+        android:textColor="#000000"
+        android:textSize="@dimen/y40"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/y90"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_marginLeft="@dimen/x50"
+            android:text="支付宝:"
+            android:textColor="#000000"
+            android:textSize="@dimen/y28"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:textSize="@dimen/y30"
+            android:phoneNumber="true"
+            android:id="@+id/alipay_cont"
+            android:layout_marginLeft="@dimen/x90"
+            android:background="@null"
+            android:textColor="#000000"
+            android:textColorHint="@color/RGB_909090"
+            android:hint="请输入支付宝号"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y90"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_marginLeft="@dimen/x50"
+            android:text="U币:"
+            android:textColor="#000000"
+            android:textSize="@dimen/y28"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:phoneNumber="true"
+            android:id="@+id/u_count"
+            android:layout_marginLeft="@dimen/x132"
+            android:background="@null"
+            android:textSize="@dimen/y30"
+            android:textColor="#000000"
+            android:textColorHint="@color/RGB_909090"
+            android:hint="请输入提现的U币"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="@dimen/y30"
+        android:id="@+id/renming_count"
+        android:layout_marginLeft="@dimen/x50"
+        android:text="可获得的人民币:     0元"
+        android:textColor="#000000"
+        android:textSize="@dimen/y28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:background="@drawable/register_bg"
+        android:id="@+id/login_activity_login"
+        android:textSize="@dimen/y34"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/y61"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/x600"
+        android:layout_height="@dimen/y90"
+        android:text="提现"
+        android:gravity="center"
+        />
+</LinearLayout>

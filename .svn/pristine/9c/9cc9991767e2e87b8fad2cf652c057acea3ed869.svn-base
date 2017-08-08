@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/container_send"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:visibility="invisible"
+        android:background="#E9E9E9"
+        >
+        <ImageView
+            android:id="@+id/close_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/ic_arrow_close"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="9dp"
+            android:clickable="true"
+            />
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/danmu_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/live_danmu_selector"
+            android:clickable="true"
+            android:layout_marginRight="4dp"
+            />
+
+
+        <tts.project.livek.ui.widget.MentionEditText
+            android:id="@+id/edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="说点什么吧..."
+            android:layout_weight="1"
+            android:maxLines="3"
+            android:minHeight="36dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="1dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:textSize="18sp"
+            android:background="#fff"
+            />
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="36dp"
+            android:text="发送"
+            android:layout_weight="0"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="4dp"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/live_blue_selector"
+            />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/y120"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="99dp" />
+</RelativeLayout>

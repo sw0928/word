@@ -1,0 +1,40 @@
+package tts.project.livek.ui.holder;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tts.project.livek.R;
+import tts.project.livek.bean.LiveRoom;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class NearbyItemHolder extends BaseViewHolder<LiveRoom> {
+
+    @BindView(R.id.photo)
+    ImageView imageView;
+    @BindView(R.id.author)
+    TextView anchor;
+    @BindView(R.id.audience_num)
+    TextView audienceNum;
+
+    public NearbyItemHolder(Context mContext, OnItemClickRecyclerListener listener, View itemView) {
+        super(mContext, listener, itemView);
+        ButterKnife.bind(this, itemView);
+    }
+
+    @Override
+    public void refreshView() {
+        LiveRoom liveRoom = getData();
+        anchor.setText(liveRoom.getName());
+        audienceNum.setText(liveRoom.getAudienceNum() + "人");
+        Glide.with(mContext)
+                .load(liveRoom.getCover())
+                .placeholder(R.color.placeholder)
+                .into(imageView);
+    }
+}

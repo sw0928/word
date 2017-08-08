@@ -1,0 +1,36 @@
+package tts.project.livek.ui.holder;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import tts.project.livek.R;
+import tts.project.livek.bean.HeadImageBean;
+import tts.project.livek.ui.listener.OnItemClickRecyclerListener;
+
+public class AnchorItemHolder extends BaseViewHolder<HeadImageBean.ListBean> {
+
+    @BindView(R.id.avatar)
+    ImageView avatar;
+    private HeadImageBean.ListBean anchorBean;
+
+    public AnchorItemHolder(Context mContext, OnItemClickRecyclerListener listener, View itemView) {
+        super(mContext, listener, itemView);
+        ButterKnife.bind(this, itemView);
+    }
+
+    @Override
+    public void refreshView() {
+        anchorBean = getData();
+        //暂时使用测试数据
+        Glide.with(mContext)
+                .load(anchorBean.getImg())
+                .placeholder(R.drawable.ease_default_avatar)
+                .into(avatar);
+
+    }
+}

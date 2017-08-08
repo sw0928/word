@@ -1,0 +1,134 @@
+package tts.project.livek.utils;
+
+import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import tts.project.livek.R;
+
+/**
+ * Created by lenove on 2016/12/23.
+ */
+
+public class OthersInformationPopUtils {
+    private Context mContext;
+    private PopupWindow popupWindow;
+    private ImageView icon;
+    private TextView nickname;
+    private TextView youmihao;
+    private TextView guanzhu_count;
+    private TextView fans_count;
+    public guanzhuListener mguanzhuListener;
+
+    public void setGuanzhuListener(guanzhuListener guanzhuListener) {
+        mguanzhuListener = guanzhuListener;
+    }
+
+    public interface guanzhuListener {
+        void guanzhu();
+    }
+
+    public TalkPrivateListener mtalkPrivateListener;
+
+    public void setTalkPrivateListener(TalkPrivateListener guanzhuListener) {
+        mtalkPrivateListener = guanzhuListener;
+    }
+
+    public interface TalkPrivateListener {
+        void click();
+    }
+
+    public OthersInformationPopUtils(Context context) {
+        mContext = context;
+        initPop();
+    }
+
+    private void initPop() {
+        popupWindow = new PopupWindow();
+        View view = View.inflate(mContext, R.layout.othersinformationpop, null);
+        RelativeLayout parentview1 = (RelativeLayout) view.findViewById(R.id.parentview);
+        parentview1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        ImageView close = (ImageView) view.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        icon = (ImageView) view.findViewById(R.id.icon);
+        nickname = (TextView) view.findViewById(R.id.nickname);
+        youmihao = (TextView) view.findViewById(R.id.youmihao);
+        guanzhu_count = (TextView) view.findViewById(R.id.guanzhu_count);
+        fans_count = (TextView) view.findViewById(R.id.fans_count);
+        TextView talk_private = (TextView) view.findViewById(R.id.talk_private);
+        talk_private.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mtalkPrivateListener.click();
+            }
+        });
+
+        TextView guanzhu = (TextView) view.findViewById(R.id.guanzhu);
+        guanzhu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mguanzhuListener.guanzhu();
+            }
+        });
+        popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setContentView(view);
+
+    }
+
+    public void setIcon(String img) {
+        Glide.with(mContext).load(img).diskCacheStrategy(DiskCacheStrategy.ALL).into(icon);
+    }
+
+    public void setNickname(String nickname1) {
+        nickname.setText(nickname1);
+    }
+
+    public void setYoumiHao(String nickname1) {
+        youmihao.setText(nickname1);
+    }
+
+    public void setGuZhuCount(String nickname1) {
+        guanzhu_count.setText(nickname1);
+    }
+
+    public void setFansCount(String nickname1) {
+        fans_count.setText(nickname1);
+    }
+
+
+    public void closePop() {
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
+    }
+
+    public void showPop(View view) {
+        if (popupWindow != null) {
+            popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        }
+    }
+
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tst.project.dao.controller.InformationDaoC">
+	<insert id="insertInformationImg" parameterType="informationImgBean">
+		insert into tst_information_img 
+		(information_id,goods_id,create_time,information_img)
+		values
+		(#{information_id},#{goods_id},now(),#{information_img})
+	</insert>
+
+	<update id="deleteInformationImgs" parameterType="informationImgBean">
+		update tst_information_img
+		set is_delete='1'
+		where information_id=#{information_id}
+	</update>
+
+	<select id="getInformationImgs" parameterType="informationImgBean" resultType="informationImgBean">
+		select a.*,b.goods_name from tst_information_img as a 
+		left join tst_goods as b on a.goods_id=b.goods_id and b.is_delete='0'
+		where a.information_id=#{information_id} and a.is_delete='0'
+	</select>
+
+	<update id="updateGoodsStateByMerchants" parameterType="goodsBean">
+		update tst_goods set goods_state='0'
+		where merchants_id=#{merchants_id}
+	</update>
+
+	<update id="deleteInformation" parameterType="informationBean">
+		update tst_information
+		set is_delete='1'
+		where information_id=#{information_id}
+	</update>
+
+	<update id="updateInformation" parameterType="informationBean">
+		update tst_information
+		set information_title=#{information_title},
+		information_desc=#{information_desc},
+		information_img=#{information_img},
+		is_recommend=#{is_recommend},
+		sort=#{sort},infotmation_tag=#{infotmation_tag}
+		where information_id=#{information_id}
+	</update>
+
+	<insert id="insertInformation" parameterType="informationBean" useGeneratedKeys="true" keyProperty="information_id">
+		insert into tst_information
+		(information_title,information_desc,information_img,information_url,information_type,
+		create_time,parent_id,is_recommend,sort,infotmation_tag)
+		values
+		(#{information_title},#{information_desc},#{information_img},#{information_url},#{information_type},
+		now(),#{parent_id},#{parent_id},#{sort},#{infotmation_tag})
+	</insert>
+
+	<select id="getInformations" parameterType="informationBean" resultType="informationBean">
+		select * from tst_information
+		where is_delete='0' and information_type=#{information_type} and parent_id=#{parent_id}
+		order by sort asc
+	</select>
+</mapper>

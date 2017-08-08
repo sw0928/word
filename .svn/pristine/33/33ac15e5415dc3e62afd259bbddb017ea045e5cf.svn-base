@@ -1,0 +1,317 @@
+package tts.project.livek.ui.activity;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.util.ArrayMap;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import tts.moudle.api.Host;
+import tts.moudle.api.bean.BarBean;
+import tts.moudle.api.bean.MenuItemBean;
+import tts.moudle.api.utils.TextUtils;
+import tts.project.livek.R;
+import tts.project.livek.bean.UserBean;
+import tts.project.livek.utils.Constant;
+import tts.project.livek.utils.Logger;
+import tts.project.livek.utils.SPUtils;
+
+
+/**
+ * Created by lenove on 2016/8/30.
+ */
+public class FindPwdBackActivity extends BaseActivity implements View.OnClickListener{
+    public static final int GET_DATA=2;
+    private EditText mPhoneNumber;
+    private EditText mPwd;
+    private EditText mCode;
+    private static final int  SMS_VERIFY=0;
+    private static final int  LOGIN=1;
+    private String phonenumber;
+    private String pwd;
+    private String code;
+    private TextView getCoude;
+    private int recLen;
+    private boolean isFirst;
+    private Timer timer = new Timer();
+    private TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+
+            runOnUiThread(new Runnable() {      // UI thread
+                @Override
+                public void run() {
+                    recLen--;
+                    getCoude.setBackgroundResource(R.drawable.btn_login_bg);
+                    getCoude.setTextColor(Color.parseColor("#999999"));
+                    getCoude.setText("剩余"+recLen+"秒");
+                    if(recLen < 0){
+                        getCoude.setBackgroundResource(R.drawable.btn_login_blue_bg);
+                        getCoude.setTextColor(Color.parseColor("#ffffff"));
+                        getCoude.setEnabled(true);
+                        getCoude.setText("获取验证码");
+                    }
+                }
+            });
+        }
+    };
+    private boolean isPhoneEnable;
+    private boolean isPwdEnable;
+    private boolean isCodeEnable;
+    private TextView login;
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.findpwdback_activity);
+        findallviewbyid();
+        initview();
+
+    }
+
+
+    private void initview() {
+        MenuItemBean menuItemBean = new MenuItemBean();
+        menuItemBean.setTextSise(getResources().getDimensionPixelOffset(R.dimen.y36));
+        menuItemBean.setTitle("注册");
+        BarBean barBean = new BarBean();
+        barBean.setMsg("找回密码");
+        setTitle(barBean);
+        addMenu(menuItemBean);
+    }
+
+    private void findallviewbyid() {
+        mPhoneNumber = (EditText) findViewById(R.id.findpwdback_phone_number);
+        mPwd = (EditText) findViewById(R.id.findpwdback_put_newpwd);
+        mCode = (EditText) findViewById(R.id.findpwdback_put_verification_code);
+        getCoude = (TextView)findViewById(R.id.findpwdback_get_verificationcode);
+        TextView tishi= (TextView) findViewById(R.id.tishi);
+        getCoude.setOnClickListener(this);
+        getCoude.setBackgroundResource(R.drawable.btn_login_blue_bg);
+        getCoude.setTextColor(Color.parseColor("#ffffff"));
+        login = (TextView) findViewById(R.id.findpwdback_login);
+        login.setOnClickListener(this);
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString())){
+                    isPhoneEnable=true;
+                    if (isPwdEnable){
+                        //如果两个都是有数据，则是蓝色背景，白色文字
+                        if (isCodeEnable){
+                            login.setBackgroundResource(R.drawable.btn_login_blue_bg);
+                            login.setTextColor(Color.parseColor("#ffffff"));
+                            login.setEnabled(true);
+                        }else{
+                            login.setBackgroundResource(R.drawable.btn_login_bg);
+                            login.setTextColor(Color.parseColor("#999999"));
+                            login.setEnabled(false);
+                        }
+
+                    }else{
+                        login.setBackgroundResource(R.drawable.btn_login_bg);
+                        login.setTextColor(Color.parseColor("#999999"));
+                        login.setEnabled(false);
+                    }
+                }else{
+                    isPhoneEnable=false;
+                    login.setBackgroundResource(R.drawable.btn_login_bg);
+                    login.setTextColor(Color.parseColor("#999999"));
+                    login.setEnabled(false);
+                }
+            }
+        });
+        mPwd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString())){
+                    isPwdEnable=true;
+                    //如果两个都是有数据，则是蓝色背景，白色文字
+                    if (isPhoneEnable){
+                        //如果两个都是有数据，则是蓝色背景，白色文字
+                        if (isCodeEnable){
+                            login.setBackgroundResource(R.drawable.btn_login_blue_bg);
+                            login.setTextColor(Color.parseColor("#ffffff"));
+                            login.setEnabled(true);
+                        }else{
+                            login.setBackgroundResource(R.drawable.btn_login_bg);
+                            login.setTextColor(Color.parseColor("#999999"));
+                            login.setEnabled(false);
+                        }
+                    }else{
+                        login.setBackgroundResource(R.drawable.btn_login_bg);
+                        login.setTextColor(Color.parseColor("#999999"));
+                        login.setEnabled(false);
+                    }
+                }else{
+                    isPwdEnable=false;
+                    login.setBackgroundResource(R.drawable.btn_login_bg);
+                    login.setTextColor(Color.parseColor("#999999"));
+                    login.setEnabled(false);
+                }
+            }
+        });
+
+        mCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString())){
+                    isCodeEnable=true;
+                    //如果两个都是有数据，则是蓝色背景，白色文字
+                    if (isPhoneEnable){
+                        //如果两个都是有数据，则是蓝色背景，白色文字
+                        if (isPwdEnable){
+                            login.setBackgroundResource(R.drawable.btn_login_blue_bg);
+                            login.setTextColor(Color.parseColor("#ffffff"));
+                            login.setEnabled(true);
+                        }else{
+                            login.setBackgroundResource(R.drawable.btn_login_bg);
+                            login.setTextColor(Color.parseColor("#999999"));
+                            login.setEnabled(false);
+                        }
+                    }else{
+                        login.setBackgroundResource(R.drawable.btn_login_bg);
+                        login.setTextColor(Color.parseColor("#999999"));
+                        login.setEnabled(false);
+                    }
+                }else{
+                    isPwdEnable=false;
+                    login.setBackgroundResource(R.drawable.btn_login_bg);
+                    login.setTextColor(Color.parseColor("#999999"));
+                    login.setEnabled(false);
+                }
+            }
+        });
+    }
+    @Override
+    public void onClick(View v) {
+        ArrayMap<String, String> map = new ArrayMap<>();
+        switch (v.getId()){
+            case  R.id.findpwdback_get_verificationcode:
+                phonenumber = mPhoneNumber.getText().toString().trim();
+                if (TextUtils.isEmpty(phonenumber)){
+                    Toast.makeText(this,"手机号为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                getCoude.setBackgroundResource(R.drawable.btn_login_bg);
+                getCoude.setTextColor(Color.parseColor("#999999"));
+                getCoude.setEnabled(false);
+                recLen=60;
+                if (!isFirst){
+                    timer.schedule(task,0,1000);
+                }
+                isFirst=true;
+                map.put("mobile", phonenumber);
+                map.put("type","2");
+                getDataWithPost(SMS_VERIFY, Host.hostUrl+"&c=Login&a=sendSMS", map);
+                break;
+            case  R.id.findpwdback_login:
+                pwd = mPwd.getText().toString().trim();
+                code = mCode.getText().toString().trim();
+                if (TextUtils.isEmpty(phonenumber)){
+                    Toast.makeText(this,"手机号不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(pwd)){
+                    Toast.makeText(this,"密码不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(code)){
+                    Toast.makeText(this,"验证码不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                map.put("phone", phonenumber);
+                map.put("yzm",code);
+                map.put("newpwd",pwd);
+                getDataWithPost(LOGIN, Host.hostUrl+"&c=Login&a=forgetpwd", map);
+                break;
+
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        timer.cancel();
+        super.onDestroy();
+    }
+    @Override
+    protected void doSuccess(int index, String response) {
+        super.doSuccess(index, response);
+        switch (index){
+            case SMS_VERIFY:
+                Log.e("tag",response);
+                break;
+            case LOGIN:
+                Logger.e(response);
+                Toast.makeText(this,"密码已修改",Toast.LENGTH_SHORT).show();
+                startRequestData(GET_DATA);
+                break;
+            case GET_DATA:
+                UserBean userBean = new Gson().fromJson(response, UserBean.class);
+                SPUtils.saveObJ1(this, Constant.USER_BEAN,userBean);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    protected void startRequestData(int index) {
+        super.startRequestData(index);
+        switch (index){
+            case GET_DATA:
+                ArrayMap<String, String> map = new ArrayMap<>();
+//                phone	int	Y		手机号
+//                password	string	Y		密码
+                phonenumber = mPhoneNumber.getText().toString().trim();
+                pwd = mPwd.getText().toString().trim();
+                map.put("phone", phonenumber);
+                map.put("password",pwd);
+                getDataWithPost(GET_DATA, Host.hostUrl+"&c=Login&a=login", map);
+                break;
+        }
+    }
+
+    @Override
+    public void doIcon() {
+        finish();
+    }
+
+    @Override
+    protected void doMenu(MenuItemBean menuItemBean) {
+        startActivity(new Intent(this,RegisterActivity.class));
+    }
+}

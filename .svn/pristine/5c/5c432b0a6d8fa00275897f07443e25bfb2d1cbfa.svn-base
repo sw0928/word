@@ -1,0 +1,96 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "node-apk-parser@^0.2.3",
+        "scope": null,
+        "escapedName": "node-apk-parser",
+        "name": "node-apk-parser",
+        "rawSpec": "^0.2.3",
+        "spec": ">=0.2.3 <0.3.0",
+        "type": "range"
+      },
+      "/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update"
+    ]
+  ],
+  "_cnpm_publish_time": 1414722120664,
+  "_from": "node-apk-parser@>=0.2.3 <0.3.0",
+  "_id": "node-apk-parser@0.2.3",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/node-apk-parser",
+  "_npmUser": {
+    "name": "zhangya_no1",
+    "email": "zhangya_no1@qq.com"
+  },
+  "_npmVersion": "1.4.28",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "node-apk-parser@^0.2.3",
+    "scope": null,
+    "escapedName": "node-apk-parser",
+    "name": "node-apk-parser",
+    "rawSpec": "^0.2.3",
+    "spec": ">=0.2.3 <0.3.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/react-native-update"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/node-apk-parser/download/node-apk-parser-0.2.3.tgz",
+  "_shasum": "385a141a6da38de562e5d9f08961bf9724d35fc4",
+  "_shrinkwrap": null,
+  "_spec": "node-apk-parser@^0.2.3",
+  "_where": "/Users/shenjiabo/Documents/rnspace/Indiana/node_modules/react-native-update",
+  "author": {
+    "name": "Arthur Zhang",
+    "email": "zhangya_no1@qq.com"
+  },
+  "bugs": {
+    "url": "https://github.com/arthur-zhang/node-apk-parser/issues"
+  },
+  "dependencies": {
+    "adm-zip": "~0.4.4",
+    "debug": "~0.7.4"
+  },
+  "description": "Extracts information from APK files.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "385a141a6da38de562e5d9f08961bf9724d35fc4",
+    "size": 7524,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/node-apk-parser/download/node-apk-parser-0.2.3.tgz"
+  },
+  "engines": {
+    "node": ">= 0.10.4"
+  },
+  "gitHead": "a15180d36639057ea373f298400233dd1506b591",
+  "homepage": "https://github.com/arthur-zhang/node-apk-parser",
+  "keywords": [
+    "adb",
+    "adbkit",
+    "android",
+    "apk",
+    "manifest",
+    "AndroidManifest"
+  ],
+  "license": "Apache-2.0",
+  "main": "./index.js",
+  "maintainers": [
+    {
+      "name": "zhangya_no1",
+      "email": "zhangya_no1@qq.com"
+    }
+  ],
+  "name": "node-apk-parser",
+  "optionalDependencies": {},
+  "publish_time": 1414722120664,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arthur-zhang/node-apk-parser.git"
+  },
+  "scripts": {},
+  "version": "0.2.3"
+}
